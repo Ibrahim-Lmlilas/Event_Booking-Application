@@ -1,0 +1,85 @@
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:latest
+    container_name: event-booking-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: event_booking
+    ports:
+      - '27019:27017'
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - event-booking-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/event_booking --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: event-booking-api
+    restart: unless-stopped
+    ports:
+      - '3001:3001'
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      MONGODB_URI: mongodb://admin:admin123@mongodb:27017/event_booking?authSource=admin
+      JWT_SECRET: dev-secret-key-please-change-in-production-2026
+      JWT_EXPIRES_IN: 24h
+      CORS_ORIGIN: http://localhost:3000
+    volumes:
+      - ./apps/api/src:/app/src
+      - ./apps/api/uploads:/app/uploads
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - event-booking-network
+    healthcheck:
+      test: ['CMD', 'node', '-e', "require('http').get('http://localhost:3001')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Frontend Web
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    container_name: event-booking-web
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api
+      NEXT_PUBLIC_APP_NAME: Event Booking App
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+    volumes:
+      - ./apps/web/src:/app/src
+      - ./apps/web/public:/app/public
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - event-booking-network
+
+networks:
+  event-booking-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local
+  mongodb_config:
+    driver: local

@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log
+.next
+out
+.env
+.env.local
+.env*.local
+.git
+.gitignore
+README.md
+.eslintrc.js
+.prettierrc.js
+coverage
+.vscode

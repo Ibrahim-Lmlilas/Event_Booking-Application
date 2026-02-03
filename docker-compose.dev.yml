@@ -1,0 +1,75 @@
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:latest
+    container_name: event-booking-mongodb-dev
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: event_booking
+    ports:
+      - '27018:27017'
+    volumes:
+      - mongodb_data_dev:/data/db
+    networks:
+      - event-booking-network
+
+  # Backend API (Development mode with hot-reload)
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile.dev
+    container_name: event-booking-api-dev
+    restart: unless-stopped
+    ports:
+      - '3001:3001'
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      MONGODB_URI: mongodb://admin:admin123@mongodb:27017/event_booking?authSource=admin
+      JWT_SECRET: dev-secret-key-please-change-in-production-2026
+      JWT_EXPIRES_IN: 24h
+      CORS_ORIGIN: http://localhost:3000
+    volumes:
+      - ./apps/api:/app
+      - /app/node_modules
+      - ./apps/api/uploads:/app/uploads
+    depends_on:
+      - mongodb
+    networks:
+      - event-booking-network
+    command: npm run start:dev
+
+  # Frontend Web (Development mode with hot-reload)
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile.dev
+    container_name: event-booking-web-dev
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api
+      NEXT_PUBLIC_APP_NAME: Event Booking App
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      WATCHPACK_POLLING: 'true'
+    volumes:
+      - ./apps/web:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - api
+    networks:
+      - event-booking-network
+    command: npm run dev
+
+networks:
+  event-booking-network:
+    driver: bridge
+
+volumes:
+  mongodb_data_dev:
+    driver: local
