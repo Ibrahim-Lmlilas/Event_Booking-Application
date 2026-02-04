@@ -29,8 +29,8 @@ export default function Navbar() {
       id="navbar"
       className={`fixed z-20 transition-all duration-300 ${
         isScrolled
-          ? 'bg-gray-900/75 backdrop-blur-md mt-4 left-6 right-6 rounded-2xl shadow-lg'
-          : 'bg-gray-300 backdrop-blur-sm w-full'
+          ? 'bg-gray-900/75 backdrop-blur-md mt-4 left-6 right-6 rounded-2xl shadow-lg border-2 border-white'
+          : 'bg-gray-300 backdrop-blur-sm w-full border-b-4 border-black'
       }`}
     >
       <div className={`mx-auto px-6 py-5 transition-all duration-300 ${
@@ -41,10 +41,10 @@ export default function Navbar() {
           <div className="flex items-center h-full -my-5">
             <Link href="/" className="h-full flex items-center">
               <Image
-                src="/logoeventzi.png"
+                src="/logoeventzii.png"
                 alt="eventzi logo"
                 width={120}
-                height={60}
+                height={40}
                 className="h-full w-auto object-contain"
                 priority
               />
@@ -63,9 +63,7 @@ export default function Navbar() {
             >
               Home
               <span
-                className={`absolute left-0 bottom-0 h-0.5 w-0 transition-all duration-300 ease-in-out ${
-                  isScrolled ? 'bg-white' : 'bg-gray-900'
-                } group-hover:w-full`}
+                className="absolute left-0 bottom-0 h-0.5 w-0 bg-pink-500 transition-all duration-300 ease-in-out group-hover:w-full"
               />
             </Link>
             <Link
@@ -78,9 +76,7 @@ export default function Navbar() {
             >
               Event details
               <span
-                className={`absolute left-0 bottom-0 h-0.5 w-0 transition-all duration-300 ease-in-out ${
-                  isScrolled ? 'bg-white' : 'bg-gray-900'
-                } group-hover:w-full`}
+                className="absolute left-0 bottom-0 h-0.5 w-0 bg-pink-500 transition-all duration-300 ease-in-out group-hover:w-full"
               />
             </Link>
             <Link
@@ -93,9 +89,7 @@ export default function Navbar() {
             >
               Speakers
               <span
-                className={`absolute left-0 bottom-0 h-0.5 w-0 transition-all duration-300 ease-in-out ${
-                  isScrolled ? 'bg-white' : 'bg-gray-900'
-                } group-hover:w-full`}
+                className="absolute left-0 bottom-0 h-0.5 w-0 bg-pink-500 transition-all duration-300 ease-in-out group-hover:w-full"
               />
             </Link>
             <Link
@@ -108,9 +102,7 @@ export default function Navbar() {
             >
               Pricing
               <span
-                className={`absolute left-0 bottom-0 h-0.5 w-0 transition-all duration-300 ease-in-out ${
-                  isScrolled ? 'bg-white' : 'bg-gray-900'
-                } group-hover:w-full`}
+                className="absolute left-0 bottom-0 h-0.5 w-0 bg-pink-500 transition-all duration-300 ease-in-out group-hover:w-full"
               />
             </Link>
           </nav>
