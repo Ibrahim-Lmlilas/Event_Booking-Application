@@ -4,11 +4,20 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
-import { LogIn, UserPlus, X } from 'lucide-react';
+import { LogIn, UserPlus, X, LogOut, LayoutDashboard } from 'lucide-react';
+import { SignInDialog } from '@/components/auth/SignInDialog';
+import { SignUpDialog } from '@/components/auth/SignUpDialog';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 export default function Navbar() {
+  const router = useRouter();
+  const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [signInOpen, setSignInOpen] = useState(false);
+  const [signUpOpen, setSignUpOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,6 +32,20 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleLogout = () => {
+    logout();
+    toast.success('Logged out successfully!');
+  };
+
+  const handleDashboard = () => {
+    const role = String(user?.role || '').toLowerCase().trim();
+    if (role === 'admin') {
+      router.push('/dashboard/admin');
+    } else {
+      router.push('/dashboard/participant');
+    }
+  };
 
   return (
     <header
@@ -98,33 +121,59 @@ export default function Navbar() {
 
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center space-x-3">
-            <Button
-              asChild
-              variant="outline"
-              className={`rounded-lg transition-all font-bold ${
-                isScrolled
-                  ? 'border-gray-600 bg-gray-800 hover:bg-gray-700 text-white'
-                  : 'border-gray-300 bg-white hover:bg-gray-50 text-gray-900'
-              }`}
-            >
-              <Link href="/login" className="flex items-center">
-                <LogIn className="h-5 w-5 mr-2" />
-                Login
-              </Link>
-            </Button>
-            <Button
-              asChild
-              className={`rounded-lg transition-all font-bold ${
-                isScrolled
-                  ? 'bg-gray-800 hover:bg-gray-700 text-white'
-                  : 'bg-gray-900 hover:bg-gray-800 text-white'
-              }`}
-            >
-              <Link href="/register" className="flex items-center">
-                <UserPlus className="h-5 w-5 mr-2" />
-                Register
-              </Link>
-            </Button>
+            {user ? (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={handleDashboard}
+                  className={`rounded-lg transition-all font-bold ${
+                    isScrolled
+                      ? 'border-gray-600 bg-gray-800 hover:bg-gray-700 text-white'
+                      : 'border-gray-300 bg-white hover:bg-gray-50 text-gray-900'
+                  }`}
+                >
+                  <LayoutDashboard className="h-5 w-5 mr-2" />
+                  Dashboard
+                </Button>
+                <Button
+                  onClick={handleLogout}
+                  className={`rounded-lg transition-all font-bold ${
+                    isScrolled
+                      ? 'bg-gray-800 hover:bg-pink-500 text-white'
+                      : 'bg-gray-900 hover:bg-pink-500 text-white'
+                  }`}
+                >
+                  <LogOut className="h-5 w-5 mr-2" />
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={() => setSignInOpen(true)}
+                  className={`rounded-lg transition-all font-bold ${
+                    isScrolled
+                      ? 'border-gray-600 bg-gray-800 hover:bg-gray-700 text-white'
+                      : 'border-gray-300 bg-white hover:bg-gray-50 text-gray-900'
+                  }`}
+                >
+                  <LogIn className="h-5 w-5 mr-2" />
+                  Login
+                </Button>
+                <Button
+                  onClick={() => setSignUpOpen(true)}
+                  className={`rounded-lg transition-all font-bold ${
+                    isScrolled
+                      ? 'bg-gray-800 hover:bg-gray-700 text-white'
+                      : 'bg-gray-900 hover:bg-gray-800 text-white'
+                  }`}
+                >
+                  <UserPlus className="h-5 w-5 mr-2" />
+                  Register
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -205,33 +254,55 @@ export default function Navbar() {
 
                   <div className="pt-4 mt-2 border-t border-gray-700">
                     <div className="grid grid-cols-1 gap-3">
-                      <Button
-                        asChild
-                        variant="outline"
-                        className="w-full border border-gray-600 bg-gray-800 hover:bg-gray-700 text-white font-bold"
-                      >
-                        <Link
-                          href="/login"
-                          className="flex items-center justify-center"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          <LogIn className="h-5 w-5 mr-2" />
-                          Login
-                        </Link>
-                      </Button>
-                      <Button
-                        asChild
-                        className="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold"
-                      >
-                        <Link
-                          href="/register"
-                          className="flex items-center justify-center"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          <UserPlus className="h-5 w-5 mr-2" />
-                          Register
-                        </Link>
-                      </Button>
+                      {user ? (
+                        <>
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              handleDashboard();
+                              setMobileMenuOpen(false);
+                            }}
+                            className="w-full border border-gray-600 bg-gray-800 hover:bg-gray-700 text-white font-bold"
+                          >
+                            <LayoutDashboard className="h-5 w-5 mr-2" />
+                            Dashboard
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              handleLogout();
+                              setMobileMenuOpen(false);
+                            }}
+                            className="w-full bg-gray-800 hover:bg-pink-500 text-white font-bold"
+                          >
+                            <LogOut className="h-5 w-5 mr-2" />
+                            Logout
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              setSignInOpen(true);
+                              setMobileMenuOpen(false);
+                            }}
+                            className="w-full border border-gray-600 bg-gray-800 hover:bg-gray-700 text-white font-bold"
+                          >
+                            <LogIn className="h-5 w-5 mr-2" />
+                            Login
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              setSignUpOpen(true);
+                              setMobileMenuOpen(false);
+                            }}
+                            className="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold"
+                          >
+                            <UserPlus className="h-5 w-5 mr-2" />
+                            Register
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -241,6 +312,23 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* Auth Dialogs */}
+      <SignInDialog 
+        open={signInOpen} 
+        onOpenChange={setSignInOpen}
+        onSwitchToSignUp={() => {
+          setSignInOpen(false);
+          setSignUpOpen(true);
+        }}
+      />
+      <SignUpDialog 
+        open={signUpOpen} 
+        onOpenChange={setSignUpOpen}
+        onSwitchToSignIn={() => {
+          setSignUpOpen(false);
+          setSignInOpen(true);
+        }}
+      />
     </header>
   );
 }
