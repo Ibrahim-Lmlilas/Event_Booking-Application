@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { authApi } from '@/lib/api/auth';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 interface SignUpFormProps {
   onSuccess?: () => void;
@@ -18,6 +19,7 @@ interface SignUpFormProps {
 
 export default function SignUpForm({ onSuccess, onSwitchToSignIn }: SignUpFormProps) {
   const router = useRouter();
+  const { login } = useAuth();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{
     firstName?: string;
@@ -77,19 +79,25 @@ export default function SignUpForm({ onSuccess, onSwitchToSignIn }: SignUpFormPr
     setLoading(true);
     
     try {
-      await authApi.register({
+      const response = await authApi.register({
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
       });
       
+      console.log('Register response:', response);
+      console.log('User role:', response.user.role);
+      console.log('User role type:', typeof response.user.role);
+      console.log('Full user object:', JSON.stringify(response.user, null, 2));
+      
       toast.success('Account created successfully! 🎉');
+      
+      // Automatically log in the user and redirect based on role
+      login(response.access_token, response.user);
       
       if (onSuccess) {
         onSuccess();
-      } else {
-        router.push('/login');
       }
     } catch (error: any) {
       toast.error(error.message || 'Registration failed. Please try again.');
@@ -113,7 +121,6 @@ export default function SignUpForm({ onSuccess, onSwitchToSignIn }: SignUpFormPr
           />
         </div>
         <h1 className="text-3xl font-bold text-gray-900">Create Account</h1>
-        <p className="text-gray-600 mt-2">Join Eventzi today</p>
       </div>
 
       {/* Sign Up Form */}

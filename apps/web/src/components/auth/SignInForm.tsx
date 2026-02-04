@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { authApi } from '@/lib/api/auth';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 interface SignInFormProps {
   onSuccess?: () => void;
@@ -18,6 +19,7 @@ interface SignInFormProps {
 
 export default function SignInForm({ onSuccess, onSwitchToSignUp }: SignInFormProps) {
   const router = useRouter();
+  const { login } = useAuth();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [formData, setFormData] = useState({
@@ -56,15 +58,18 @@ export default function SignInForm({ onSuccess, onSwitchToSignUp }: SignInFormPr
     try {
       const response = await authApi.login(formData);
       
-      // Store token
-      localStorage.setItem('token', response.access_token);
+      console.log('Login response:', response);
+      console.log('User role:', response.user.role);
+      console.log('User role type:', typeof response.user.role);
+      console.log('Full user object:', JSON.stringify(response.user, null, 2));
       
       toast.success('Login successful! 🎉');
       
+      // Use AuthContext login (handles redirect based on role)
+      login(response.access_token, response.user);
+      
       if (onSuccess) {
         onSuccess();
-      } else {
-        router.push('/');
       }
     } catch (error: any) {
       toast.error(error.message || 'Login failed. Please try again.');
