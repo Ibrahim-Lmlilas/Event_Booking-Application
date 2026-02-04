@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+import ParticipantHeader from '@/components/layout/participant/ParticipantHeader';
 import ParticipantSidebar from '@/components/layout/participant/ParticipantSidebar';
 
 export default function ParticipantDashboardLayout({
@@ -7,12 +9,24 @@ export default function ParticipantDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <ParticipantSidebar />
-      <div className="flex-1 ml-64">
-        {children}
+    <div className="flex h-screen overflow-hidden bg-gray-50">
+      <ParticipantSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex flex-1 flex-col overflow-hidden lg:ml-20">
+        <ParticipantHeader onMenuClick={() => setSidebarOpen(true)} />
+        <main className="flex-1 overflow-y-auto p-2 sm:p-4 lg:p-6">
+          {children}
+        </main>
       </div>
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 }
