@@ -28,7 +28,7 @@ export default function Hero() {
             &ldquo;World&apos;s fastest-growing event platform&rdquo; — Eventzi
           </p>
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white tracking-tight mb-2 whitespace-nowrap">
-            <span style={{ color: '#ffd931' }}>B</span>OOK <span style={{ color: '#22d3ee' }}>Y</span>OUR <span style={{ color: '#ec4899' }}>E</span>VENT
+            BOOK YOUR EVENT
           </h1>
           <p className="text-white/80 text-base sm:text-lg md:text-xl mb-2 whitespace-nowrap">
             Discover and reserve tickets for the best events

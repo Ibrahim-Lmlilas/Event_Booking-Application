@@ -1,4 +1,5 @@
 import Hero from '@/components/home/Hero';
+import Events from '@/components/home/Events';
 import About from '@/components/home/About';
 import { Metadata } from 'next';
 
@@ -11,6 +12,7 @@ export default function Home() {
   return (
     <main>
       <Hero />
+      <Events />
       <About />
     </main>
   );
