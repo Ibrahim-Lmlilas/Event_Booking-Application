@@ -4,6 +4,15 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { eventsApi, type Event, type CreateEventPayload, type EventStatus } from '@/lib/api/events';
 import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -30,6 +39,7 @@ export function AdminEventsClient() {
     capacity: 50,
   });
   const [errors, setErrors] = useState<FormErrors>({});
+  const [eventToDelete, setEventToDelete] = useState<Event | null>(null);
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -125,12 +135,13 @@ export function AdminEventsClient() {
     }
   };
 
-  const handleDelete = async (event: Event) => {
-    if (!confirm(`Delete "${event.title}"?`)) return;
+  const handleDeleteConfirm = async () => {
+    if (!eventToDelete) return;
     try {
-      await eventsApi.delete(event._id);
+      await eventsApi.delete(eventToDelete._id);
       toast.success('Event deleted');
       fetchEvents();
+      setEventToDelete(null);
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : 'Failed to delete');
     }
@@ -168,7 +179,7 @@ export function AdminEventsClient() {
         <AdminEventsTable
           events={events}
           onEdit={openEdit}
-          onDelete={handleDelete}
+          onDelete={(event) => setEventToDelete(event)}
           onStatusChange={handleStatusChange}
         />
       )}
@@ -184,6 +195,29 @@ export function AdminEventsClient() {
         saving={saving}
         editEvent={editEvent}
       />
+
+      <AlertDialog open={eventToDelete !== null} onOpenChange={(open) => !open && setEventToDelete(null)}>
+        <AlertDialogContent className="bg-white text-gray-900">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-gray-900">Delete event</AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-600">
+              {eventToDelete
+                ? `Are you sure you want to delete "${eventToDelete.title}"? This cannot be undone.`
+                : ''}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <Button
+              type="button"
+              onClick={handleDeleteConfirm}
+              className="bg-red-600 hover:bg-red-700 text-white focus:ring-red-600"
+            >
+              Delete
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
