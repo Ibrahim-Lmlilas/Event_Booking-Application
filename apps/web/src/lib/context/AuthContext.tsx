@@ -103,12 +103,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Role values from API are lowercase: 'admin' or 'participant'
     const role = String(userData.role || '').toLowerCase().trim();
     
-    // Use window.location.href for reliable immediate redirect after login
+    // Use router.push for client-side navigation without refresh
     if (role === 'admin') {
-      window.location.href = '/dashboard/admin';
+      router.push('/dashboard/admin');
     } else {
       // Default to participant dashboard for 'participant' or any other role
-      window.location.href = '/dashboard/participant';
+      router.push('/dashboard/participant');
     }
   };
 
@@ -117,7 +117,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
-    window.location.href = '/';
+    router.push('/');
   };
 
   return (

@@ -56,7 +56,16 @@ export default function AdminHeader({ onMenuClick, sidebarOpen = false }: Props)
               </svg>
             </button>
             <h1 className={`text-lg sm:text-xl lg:text-xl font-bold text-white transition-all duration-300 ${sidebarOpen ? 'hidden lg:block' : ''}`}>
-              <span className="text-pink-500">A</span>dmin Dashboard
+              {user?.firstName ? (
+                <>
+                  <span className="text-pink-500">{user.firstName.charAt(0)}</span>
+                  {user.firstName.slice(1)}
+                </>
+              ) : (
+                <>
+                  <span className="text-pink-500">A</span>dmin Dashboard
+                </>
+              )}
             </h1>
           </div>
 

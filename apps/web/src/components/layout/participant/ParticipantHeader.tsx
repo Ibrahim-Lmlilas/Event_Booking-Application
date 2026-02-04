@@ -56,7 +56,16 @@ export default function ParticipantHeader({ onMenuClick, sidebarOpen = false }: 
               </svg>
             </button>
             <h1 className={`text-lg sm:text-xl lg:text-xl font-bold text-white transition-all duration-300 ${sidebarOpen ? 'hidden lg:block' : ''}`}>
-              <span className="text-blue-500">M</span>y Dashboard
+              {user?.firstName ? (
+                <>
+                  <span className="text-blue-500">{user.firstName.charAt(0)}</span>
+                  {user.firstName.slice(1)}
+                </>
+              ) : (
+                <>
+                  <span className="text-blue-500">M</span>y Dashboard
+                </>
+              )}
             </h1>
           </div>
 

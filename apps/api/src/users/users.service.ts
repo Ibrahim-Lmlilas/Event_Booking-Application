@@ -13,23 +13,24 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const createdUser = new this.userModel(createUserDto);
-    return createdUser.save();
+    const savedUser = await createdUser.save();
+    return this.userModel.findById(savedUser._id).select('-password').exec() as Promise<User>;
   }
 
   async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
+    return this.userModel.find().select('-password').exec();
   }
 
   async findOne(id: string): Promise<User | null> {
-    return this.userModel.findById(id).exec();
+    return this.userModel.findById(id).select('-password').exec();
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.userModel.findOne({ email }).exec();
+    return this.userModel.findOne({ email }).select('-password').exec();
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User | null> {
-    return this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).exec();
+    return this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).select('-password').exec();
   }
 
   async remove(id: string): Promise<User | null> {
