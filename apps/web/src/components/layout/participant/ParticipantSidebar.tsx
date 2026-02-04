@@ -58,9 +58,7 @@ export default function ParticipantSidebar({ isOpen, onClose }: Props) {
                 className="h-20 w-20 object-contain"
                 priority
               />
-              {isOpen && (
-                <span className="sidebar-content text-sm font-bold text-gray-800">My Dashboard</span>
-              )}
+              
             </Link>
           </div>
           <button
@@ -118,7 +116,7 @@ export default function ParticipantSidebar({ isOpen, onClose }: Props) {
       <style>{`
         .sidebar-container {
           position: relative;
-          background-color: #cbcbcd;
+          background: linear-gradient(to bottom, #cbcbcd 0%, #cbcbcd 80%,rgb(13, 240, 221) 100%);
         }
         .sidebar-content {
           opacity: 0;
