@@ -47,19 +47,17 @@ export default function ParticipantDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="px-8 py-6">
-          <h1 className="text-3xl font-bold text-gray-900">My Dashboard</h1>
-          <p className="text-sm text-gray-600 mt-1">
-            Welcome back, {user.firstName} {user.lastName}
-          </p>
-        </div>
-      </header>
+    <div>
+      {/* Welcome Section */}
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-gray-900">My Dashboard</h1>
+        <p className="text-sm text-gray-600 mt-1">
+          Welcome back, {user.firstName} {user.lastName}
+        </p>
+      </div>
 
       {/* Main Content */}
-      <main className="px-8 py-8">
+      <div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Stats Cards */}
           <div className="bg-white rounded-lg shadow p-6">
@@ -106,7 +104,7 @@ export default function ParticipantDashboard() {
             </button>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

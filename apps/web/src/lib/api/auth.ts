@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
 interface RegisterData {
   email: string;
@@ -45,5 +45,45 @@ export const authApi = {
     }
 
     return response.json();
+  },
+
+  async getProfile(token: string) {
+    try {
+      const response = await fetch(`${API_URL}/auth/profile`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Token expired or invalid - 401');
+        }
+        let errorMessage = 'Failed to fetch profile';
+        try {
+          const error = await response.json();
+          errorMessage = error.message || errorMessage;
+        } catch {
+          // If response is not JSON, use status text
+          errorMessage = response.statusText || `Server error ${response.status}`;
+        }
+        // Include status code in error message for better handling
+        throw new Error(`${errorMessage} - ${response.status}`);
+      }
+
+      return response.json();
+    } catch (error: any) {
+      // Re-throw with better error message
+      if (error.message && error.message.includes('-')) {
+        throw error;
+      }
+      // Network errors (no response)
+      if (error.message) {
+        throw new Error(`Network error: ${error.message}`);
+      }
+      throw new Error('Network error: Failed to connect to server');
+    }
   },
 };
