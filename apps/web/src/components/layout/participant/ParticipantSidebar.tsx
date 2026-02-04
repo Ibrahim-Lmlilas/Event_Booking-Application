@@ -46,24 +46,21 @@ export default function ParticipantSidebar({ isOpen, onClose }: Props) {
           ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
-        {/* Header */}
-        <div className={`flex items-center justify-center h-14 sm:h-16 relative ${isOpen ? 'border-b border-[#b0b0b2]' : 'lg:border-b lg:border-[#b0b0b2]'}`} style={{ borderWidth: '1px' }}>
-          <div className="flex items-center justify-center overflow-hidden">
-            <Link href="/dashboard/participant" className="flex items-center gap-2">
-              <Image
-                src="/logo.svg"
-                alt="eventzi logo"
-                width={80}
-                height={80}
-                className="h-20 w-20 object-contain"
-                priority
-              />
-              
-            </Link>
-          </div>
+        {/* Header: logo + close X */}
+        <div className={`flex items-center justify-between px-3 h-14 sm:h-16 ${isOpen ? 'border-b border-[#b0b0b2]' : 'lg:border-b lg:border-[#b0b0b2]'}`} style={{ borderWidth: '1px' }}>
+          <Link href="/dashboard/participant" className="flex items-center justify-center overflow-hidden flex-1 min-w-0">
+            <Image
+              src="/logo.svg"
+              alt="eventzi logo"
+              width={80}
+              height={80}
+              className="h-20 w-20 object-contain"
+              priority
+            />
+          </Link>
           <button
             onClick={onClose}
-            className="absolute right-2 top-2 text-gray-600 hover:text-gray-900 lg:hidden"
+            className="flex-shrink-0 p-2 text-gray-600 hover:text-purple-500 transition-colors lg:hidden"
             aria-label="Close menu"
           >
             <svg
