@@ -1,13 +1,21 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { Loader2 } from 'lucide-react';
+import { eventsApi } from '@/lib/api/events';
 
 export default function AdminDashboard() {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const [eventsCount, setEventsCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    eventsApi.list().then((list) => setEventsCount(list.length)).catch(() => setEventsCount(0));
+  }, [user]);
 
   useEffect(() => {
     if (!loading) {
@@ -61,11 +69,11 @@ export default function AdminDashboard() {
       <div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Stats Cards */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <Link href="/dashboard/admin/events" className="bg-white rounded-lg shadow p-6 block hover:shadow-md transition-shadow">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Total Events</h3>
-            <p className="text-3xl font-bold text-gray-900">0</p>
+            <p className="text-3xl font-bold text-gray-900">{eventsCount ?? '–'}</p>
             <p className="text-sm text-gray-600 mt-2">Manage all events</p>
-          </div>
+          </Link>
 
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Total Reservations</h3>
@@ -84,14 +92,14 @@ export default function AdminDashboard() {
         <div className="mt-8 bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-pink-500 transition-colors text-left">
+            <Link href="/dashboard/admin/events" className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-pink-500 transition-colors text-left block">
               <h3 className="font-semibold">Create New Event</h3>
               <p className="text-sm text-gray-300 mt-1">Add a new event to the platform</p>
-            </button>
-            <button className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-pink-500 transition-colors text-left">
+            </Link>
+            <Link href="/dashboard/admin/events" className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-pink-500 transition-colors text-left block">
               <h3 className="font-semibold">Manage Events</h3>
               <p className="text-sm text-gray-300 mt-1">View and edit existing events</p>
-            </button>
+            </Link>
             <button className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-pink-500 transition-colors text-left">
               <h3 className="font-semibold">View Reservations</h3>
               <p className="text-sm text-gray-300 mt-1">See all event reservations</p>
