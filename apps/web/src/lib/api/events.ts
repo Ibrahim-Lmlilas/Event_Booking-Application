@@ -55,6 +55,37 @@ export const eventsApi = {
     return res.json();
   },
 
+  async listPublished(
+    page: number = 1,
+    limit: number = 10,
+    filters?: {
+      search?: string;
+      minPrice?: number;
+      maxPrice?: number;
+      date?: string;
+      time?: string;
+    },
+  ): Promise<PaginatedEventsResponse> {
+    const params = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      status: 'PUBLISHED',
+    });
+    
+    if (filters?.search) params.append('search', filters.search);
+    if (filters?.minPrice !== undefined) params.append('minPrice', filters.minPrice.toString());
+    if (filters?.maxPrice !== undefined) params.append('maxPrice', filters.maxPrice.toString());
+    if (filters?.date) params.append('date', filters.date);
+    if (filters?.time) params.append('time', filters.time);
+    
+    const res = await fetch(`${API_URL}/events?${params.toString()}`);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || 'Failed to fetch published events');
+    }
+    return res.json();
+  },
+
   async get(id: string): Promise<Event> {
     const res = await fetch(`${API_URL}/events/${id}`);
     if (!res.ok) {
