@@ -55,6 +55,13 @@ export class ReservationsController {
     return this.reservationsService.updateStatus(id, updateStatusDto);
   }
 
+  /** EBA-113: Participant cancels own reservation (with 24h-before-event rule). */
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/cancel')
+  cancel(@Param('id') id: string, @Request() req: any) {
+    return this.reservationsService.cancelByParticipant(id, req.user._id.toString());
+  }
+
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {

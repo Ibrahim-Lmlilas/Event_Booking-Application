@@ -3,6 +3,7 @@ import {
   BadRequestException,
   NotFoundException,
   ConflictException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
@@ -13,6 +14,7 @@ import { UpdateReservationStatusDto } from './dto/update-reservation-status.dto'
 import { EventsService } from '../events/events.service';
 import { EventStatus } from '../common/enums/event-status.enum';
 import { ReservationStatus } from '../common/enums/reservation-status.enum';
+import { CANCEL_MIN_HOURS_BEFORE_EVENT } from './constants/cancellation-rules';
 
 @Injectable()
 export class ReservationsService {
@@ -180,6 +182,58 @@ export class ReservationsService {
       }
       throw new BadRequestException('Failed to fetch reservations');
     }
+  }
+
+  /**
+   * EBA-113 / EBA-115 / EBA-116: Participant cancels own reservation.
+   * Rules (EBA-112): only owner, only PENDING/CONFIRMED, event must be at least 24h in future.
+   * Updates status to CANCELED and frees capacity via updateStatus.
+   */
+  async cancelByParticipant(id: string, userId: string) {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException('Invalid reservation ID');
+    }
+
+    const reservation = await this.reservationModel.findById(id).exec();
+    if (!reservation) {
+      throw new NotFoundException(`Reservation #${id} not found`);
+    }
+
+    if (reservation.userId.toString() !== userId) {
+      throw new ForbiddenException('You can only cancel your own reservation');
+    }
+
+    if (
+      reservation.status !== ReservationStatus.PENDING &&
+      reservation.status !== ReservationStatus.CONFIRMED
+    ) {
+      throw new BadRequestException(
+        'Only PENDING or CONFIRMED reservations can be canceled',
+      );
+    }
+
+    const eventId = reservation.eventId.toString();
+    const event = await this.eventsService.findOne(eventId);
+    const eventStart = this.getEventStartDate(event);
+    const now = new Date();
+    const minCancelTime = new Date(
+      now.getTime() + CANCEL_MIN_HOURS_BEFORE_EVENT * 60 * 60 * 1000,
+    );
+    if (eventStart < minCancelTime) {
+      throw new BadRequestException(
+        `Cancellation is only allowed at least ${CANCEL_MIN_HOURS_BEFORE_EVENT} hours before the event starts`,
+      );
+    }
+
+    return this.updateStatus(id, { status: ReservationStatus.CANCELED });
+  }
+
+  private getEventStartDate(event: { date: Date; time?: string }): Date {
+    const d = new Date(event.date);
+    const time = event.time || '00:00';
+    const [hours, minutes] = time.split(':').map((s) => parseInt(s, 10) || 0);
+    d.setHours(hours, minutes, 0, 0);
+    return d;
   }
 
   async updateStatus(id: string, updateStatusDto: UpdateReservationStatusDto) {

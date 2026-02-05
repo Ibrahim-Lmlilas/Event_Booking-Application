@@ -1,12 +1,57 @@
-import { Calendar, MapPin, Users, CalendarCheck, Download } from 'lucide-react';
+import { Calendar, MapPin, Users, CalendarCheck, Download, XCircle } from 'lucide-react';
 import type { ReservationWithEvent } from '@/lib/api/reservations';
 import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { useState } from 'react';
+
+const CANCEL_HOURS_BEFORE = 24;
+
+function getEventStart(ev: { date: string | Date; time?: string }): Date {
+  const d = new Date(ev.date);
+  const time = ev.time || '00:00';
+  const [hours, minutes] = time.split(':').map((s) => parseInt(s, 10) || 0);
+  d.setHours(hours, minutes, 0, 0);
+  return d;
+}
+
+function canCancelReservation(reservation: ReservationWithEvent): boolean {
+  if (reservation.status !== 'PENDING' && reservation.status !== 'CONFIRMED') return false;
+  const ev = reservation.eventId;
+  if (!ev || typeof ev !== 'object' || !('date' in ev)) return false;
+  const eventStart = getEventStart(ev as { date: string; time?: string });
+  const minCancelTime = Date.now() + CANCEL_HOURS_BEFORE * 60 * 60 * 1000;
+  return eventStart.getTime() >= minCancelTime;
+}
 
 type Props = {
   reservations: ReservationWithEvent[];
+  onCancel?: (reservationId: string) => Promise<void>;
 };
 
-export function ReservedEventsGrid({ reservations }: Props) {
+export function ReservedEventsGrid({ reservations, onCancel }: Props) {
+  const [cancelId, setCancelId] = useState<string | null>(null);
+  const [canceling, setCanceling] = useState(false);
+
+  const handleConfirmCancel = async () => {
+    if (!cancelId || !onCancel) return;
+    setCanceling(true);
+    try {
+      await onCancel(cancelId);
+      setCancelId(null);
+    } finally {
+      setCanceling(false);
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {reservations
@@ -79,22 +124,60 @@ export function ReservedEventsGrid({ reservations }: Props) {
                   ) : (
                     <span />
                   )}
-                  {reservation.status === 'CONFIRMED' && (
-                    <Button
-                      type="button"
-                      size="sm"
-                      className="bg-white hover:bg-gray-100 text-gray-900 font-semibold shrink-0"
-                    >
-                      <Download className="h-4 w-4 mr-1.5" />
-                      Download
-                    </Button>
-                  )}
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {reservation.status === 'CONFIRMED' && (
+                      <Button
+                        type="button"
+                        size="sm"
+                        className="bg-white hover:bg-gray-100 text-gray-900 font-semibold"
+                      >
+                        <Download className="h-4 w-4 mr-1.5" />
+                        Download
+                      </Button>
+                    )}
+                    {canCancelReservation(reservation) && (
+                      <Button
+                        type="button"
+                        size="sm"
+                        className="bg-red-600 hover:bg-red-700 text-white"
+                        onClick={() => setCancelId(reservation._id)}
+                      >
+                        <XCircle className="h-4 w-4 mr-1.5" />
+                        Cancel
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         );
       })}
+      <AlertDialog open={!!cancelId} onOpenChange={(open) => !open && setCancelId(null)}>
+        <AlertDialogContent className="bg-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-gray-900">Cancel reservation?</AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-600">
+              This will free your spot. You can only cancel at least 24 hours before the event.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={canceling} className="bg-white border-gray-300 text-gray-900 hover:bg-gray-100">
+              Keep
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                handleConfirmCancel();
+              }}
+              disabled={canceling}
+              className="bg-red-600 text-white hover:bg-red-700"
+            >
+              {canceling ? 'Canceling…' : 'Yes, cancel'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

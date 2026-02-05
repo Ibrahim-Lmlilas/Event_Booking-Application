@@ -127,4 +127,33 @@ export const reservationsApi = {
 
     return res.json();
   },
+
+  /** Cancel own reservation (allowed only ≥24h before event). */
+  async cancel(id: string): Promise<ReservationWithEvent> {
+    const token = getToken();
+    if (!token) {
+      throw new Error('Authentication required');
+    }
+
+    const res = await fetch(`${API_URL}/reservations/${id}/cancel`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      let errorMessage = 'Failed to cancel reservation';
+      try {
+        const error = await res.json();
+        errorMessage = error.message || errorMessage;
+      } catch {
+        errorMessage = res.statusText || `Server error ${res.status}`;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return res.json();
+  },
 };
