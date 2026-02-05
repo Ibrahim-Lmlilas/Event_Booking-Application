@@ -113,7 +113,7 @@ export default function ParticipantSidebar({ isOpen, onClose }: Props) {
       <style>{`
         .sidebar-container {
           position: relative;
-          background: linear-gradient(to bottom, #cbcbcd 0%, #cbcbcd 80%,rgb(13, 240, 221) 100%);
+          background: linear-gradient(to bottom, #cbcbcd 0%, #cbcbcd 80%,rgb(0, 107, 121) 100%);
         }
         .sidebar-content {
           opacity: 0;

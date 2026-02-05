@@ -36,10 +36,27 @@ export class EventsController {
   findAll(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
+    @Query('status') status?: EventStatus,
+    @Query('search') search?: string,
+    @Query('minPrice') minPrice?: string,
+    @Query('maxPrice') maxPrice?: string,
+    @Query('date') date?: string,
+    @Query('time') time?: string,
   ) {
     const pageNum = page ? parseInt(page, 10) : 1;
     const limitNum = limit ? parseInt(limit, 10) : 10;
-    return this.eventsService.findAll(pageNum, limitNum);
+    const minPriceNum = minPrice ? parseFloat(minPrice) : undefined;
+    const maxPriceNum = maxPrice ? parseFloat(maxPrice) : undefined;
+    return this.eventsService.findAll(
+      pageNum,
+      limitNum,
+      status,
+      search,
+      minPriceNum,
+      maxPriceNum,
+      date,
+      time,
+    );
   }
 
   @Public()
