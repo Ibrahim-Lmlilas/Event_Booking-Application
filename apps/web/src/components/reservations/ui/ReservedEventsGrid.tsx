@@ -1,22 +1,19 @@
-import { Calendar, MapPin, Users } from 'lucide-react';
-import type { Event } from '@/lib/api/events';
+import { Calendar, MapPin, Users, CalendarCheck } from 'lucide-react';
 import type { ReservationWithEvent } from '@/lib/api/reservations';
-import { ReserveButton } from '@/components/reservations/ReserveButton';
 
 type Props = {
-  events: Event[];
-  reservations?: ReservationWithEvent[];
-  onReservationSuccess?: () => void;
+  reservations: ReservationWithEvent[];
 };
 
-export function ParticipantEventsGrid({ events, reservations = [], onReservationSuccess }: Props) {
+export function ReservedEventsGrid({ reservations }: Props) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {events.map((ev) => {
+      {reservations.map((reservation) => {
+        const ev = reservation.eventId;
         const bgImage = ev.bg || 'event1.jpg';
         return (
           <div
-            key={ev._id}
+            key={reservation._id}
             className="group rounded-xl border shadow-lg border-gray-100 overflow-hidden hover:shadow-xl transition-shadow relative"
             style={{
               backgroundImage: `url(/${bgImage})`,
@@ -26,9 +23,20 @@ export function ParticipantEventsGrid({ events, reservations = [], onReservation
           >
             <div className="absolute inset-0 bg-black/60" />
             <div className="relative p-4 sm:p-5 z-10">
-              <h3 className="font-bold text-lg text-white truncate" title={ev.title}>
-                {ev.title}
-              </h3>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="font-bold text-lg text-white truncate" title={ev.title}>
+                  {ev.title}
+                </h3>
+                <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                  reservation.status === 'CONFIRMED' 
+                    ? 'bg-green-500 text-white' 
+                    : reservation.status === 'PENDING'
+                    ? 'bg-yellow-500 text-white'
+                    : 'bg-gray-500 text-white'
+                }`}>
+                  {reservation.status}
+                </span>
+              </div>
               {ev.description && (
                 <p className="text-sm font-bold text-gray-200 mt-1 line-clamp-2">{ev.description}</p>
               )}
@@ -49,16 +57,14 @@ export function ParticipantEventsGrid({ events, reservations = [], onReservation
                   <span className="text-gray-300">DH</span>
                   <span>{(ev.price ?? 0).toFixed(2)}</span>
                 </div>
-              </div>
-              <div className="mt-4 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <ReserveButton 
-                  event={ev} 
-                  hasReservation={reservations.some(r => {
-                    const eventId = typeof r.eventId === 'object' ? r.eventId._id : r.eventId;
-                    return eventId === ev._id;
-                  })}
-                  onReservationSuccess={onReservationSuccess} 
-                />
+                {reservation.createdAt && (
+                  <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-600">
+                    <CalendarCheck className="h-4 w-4 flex-shrink-0 text-gray-300" />
+                    <span className="text-xs text-gray-300">
+                      Reserved on {new Date(reservation.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>

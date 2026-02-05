@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { eventsApi, type Event, type PaginatedEventsResponse } from '@/lib/api/events';
+import { reservationsApi, type ReservationWithEvent } from '@/lib/api/reservations';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -31,6 +32,7 @@ export function ParticipantEventsClient({ initialData, initialPage }: Props) {
   const [data, setData] = useState(initialData);
   const [page, setPage] = useState(initialPage);
   const [loading, setLoading] = useState(false);
+  const [reservations, setReservations] = useState<ReservationWithEvent[]>([]);
   const [filters, setFilters] = useState<Filters>({
     search: '',
     minPrice: '',
@@ -38,6 +40,16 @@ export function ParticipantEventsClient({ initialData, initialPage }: Props) {
     date: '',
     time: 'all',
   });
+
+  const fetchReservations = async () => {
+    try {
+      const data = await reservationsApi.findAll();
+      setReservations(data || []);
+    } catch (error) {
+      // Silently fail - reservations are optional
+      setReservations([]);
+    }
+  };
 
   const fetchEvents = async (currentPage: number = page, currentFilters?: Filters) => {
     try {
@@ -60,6 +72,10 @@ export function ParticipantEventsClient({ initialData, initialPage }: Props) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchReservations();
+  }, []);
 
   useEffect(() => {
     if (page !== initialPage) {
@@ -141,7 +157,14 @@ export function ParticipantEventsClient({ initialData, initialPage }: Props) {
             </div>
           ) : (
             <>
-              <ParticipantEventsGrid events={data.events} />
+              <ParticipantEventsGrid 
+                events={data.events}
+                reservations={reservations}
+                onReservationSuccess={() => {
+                  fetchEvents(page, filters);
+                  fetchReservations();
+                }}
+              />
 
               {data.totalPages > 1 && (
                 <div className="mt-8 flex justify-center">
