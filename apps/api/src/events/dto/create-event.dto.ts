@@ -33,7 +33,15 @@ export class CreateEventDto {
   @Min(1, { message: 'Capacity must be at least 1' })
   capacity!: number;
 
+  @IsNumber()
+  @Min(0, { message: 'Price must be at least 0' })
+  price!: number;
+
   @IsOptional()
   @IsEnum(EventStatus)
   status?: EventStatus;
+
+  @IsString()
+  @MinLength(1, { message: 'Background image is required' })
+  bg!: string;
 }

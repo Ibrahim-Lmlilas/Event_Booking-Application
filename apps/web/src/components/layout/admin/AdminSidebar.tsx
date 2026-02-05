@@ -115,7 +115,7 @@ export default function AdminSidebar({ isOpen, onClose }: Props) {
       <style>{`
         .sidebar-container {
           position: relative;
-          background: linear-gradient(to bottom, #cbcbcd 0%, #cbcbcd 80%, #ec4899 100%);
+          background: linear-gradient(to bottom, #cbcbcd 0%, #cbcbcd 80%,rgb(202, 0, 94) 100%);
         }
         .sidebar-content {
           opacity: 0;

@@ -15,8 +15,10 @@ export interface Event {
   time: string;
   location: string;
   capacity: number;
+  price: number;
   seatsTaken: number;
   status: EventStatus;
+  bg: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -28,14 +30,24 @@ export interface CreateEventPayload {
   time: string;
   location: string;
   capacity: number;
+  price: number;
   status?: EventStatus;
+  bg: string;
 }
 
 export interface UpdateEventPayload extends Partial<CreateEventPayload> {}
 
+export interface PaginatedEventsResponse {
+  events: Event[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export const eventsApi = {
-  async list(): Promise<Event[]> {
-    const res = await fetch(`${API_URL}/events`);
+  async list(page: number = 1, limit: number = 10): Promise<PaginatedEventsResponse> {
+    const res = await fetch(`${API_URL}/events?page=${page}&limit=${limit}`);
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.message || 'Failed to fetch events');

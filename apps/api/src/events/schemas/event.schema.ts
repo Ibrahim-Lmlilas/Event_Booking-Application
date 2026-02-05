@@ -24,11 +24,17 @@ export class Event {
   @Prop({ required: true, min: 1 })
   capacity!: number;
 
+  @Prop({ required: true, min: 0 })
+  price!: number;
+
   @Prop({ default: 0, min: 0 })
   seatsTaken!: number;
 
   @Prop({ type: String, enum: EventStatus, default: EventStatus.DRAFT })
   status!: EventStatus;
+
+  @Prop({ required: true })
+  bg!: string;
 
   @Prop()
   createdAt?: Date;
