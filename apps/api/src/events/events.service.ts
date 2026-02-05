@@ -28,8 +28,19 @@ export class EventsService {
     return event;
   }
 
-  async findAll(): Promise<Event[]> {
-    return this.eventModel.find().sort({ date: 1 }).exec();
+  async findAll(page: number = 1, limit: number = 10): Promise<{ events: Event[]; total: number; page: number; limit: number; totalPages: number }> {
+    const skip = (page - 1) * limit;
+    const [events, total] = await Promise.all([
+      this.eventModel.find().sort({ date: 1 }).skip(skip).limit(limit).exec(),
+      this.eventModel.countDocuments().exec(),
+    ]);
+    return {
+      events,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async findOne(id: string) {
