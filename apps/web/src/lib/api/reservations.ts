@@ -156,4 +156,32 @@ export const reservationsApi = {
 
     return res.json();
   },
+
+  /** EBA-53: Download ticket PDF (CONFIRMED only). */
+  async downloadTicket(reservationId: string): Promise<Blob> {
+    const token = getToken();
+    if (!token) {
+      throw new Error('Authentication required');
+    }
+
+    const res = await fetch(`${API_URL}/reservations/${reservationId}/ticket`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      let errorMessage = 'Failed to download ticket';
+      try {
+        const error = await res.json();
+        errorMessage = error.message || errorMessage;
+      } catch {
+        errorMessage = res.statusText || `Server error ${res.status}`;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return res.blob();
+  },
 };

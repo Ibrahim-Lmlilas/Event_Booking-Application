@@ -41,6 +41,21 @@ export function ParticipantReservationsClient() {
     [fetchReservations],
   );
 
+  const handleDownloadTicket = useCallback(async (reservationId: string) => {
+    try {
+      const blob = await reservationsApi.downloadTicket(reservationId);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ticket-${reservationId}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success('Ticket downloaded');
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to download ticket');
+    }
+  }, []);
+
   useEffect(() => {
     if (!authLoading) {
       if (!user) {
@@ -85,7 +100,11 @@ export function ParticipantReservationsClient() {
       {!reservations || reservations.length === 0 ? (
         <ReservedEventsEmpty />
       ) : (
-        <ReservedEventsGrid reservations={reservations} onCancel={handleCancel} />
+        <ReservedEventsGrid
+          reservations={reservations}
+          onCancel={handleCancel}
+          onDownloadTicket={handleDownloadTicket}
+        />
       )}
     </div>
   );
