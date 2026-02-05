@@ -35,11 +35,13 @@ function canCancelReservation(reservation: ReservationWithEvent): boolean {
 type Props = {
   reservations: ReservationWithEvent[];
   onCancel?: (reservationId: string) => Promise<void>;
+  onDownloadTicket?: (reservationId: string) => Promise<void>;
 };
 
-export function ReservedEventsGrid({ reservations, onCancel }: Props) {
+export function ReservedEventsGrid({ reservations, onCancel, onDownloadTicket }: Props) {
   const [cancelId, setCancelId] = useState<string | null>(null);
   const [canceling, setCanceling] = useState(false);
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
   const handleConfirmCancel = async () => {
     if (!cancelId || !onCancel) return;
@@ -130,9 +132,19 @@ export function ReservedEventsGrid({ reservations, onCancel }: Props) {
                         type="button"
                         size="sm"
                         className="bg-white hover:bg-gray-100 text-gray-900 font-semibold"
+                        disabled={!!downloadingId}
+                        onClick={async () => {
+                          if (!onDownloadTicket) return;
+                          setDownloadingId(reservation._id);
+                          try {
+                            await onDownloadTicket(reservation._id);
+                          } finally {
+                            setDownloadingId(null);
+                          }
+                        }}
                       >
                         <Download className="h-4 w-4 mr-1.5" />
-                        Download
+                        {downloadingId === reservation._id ? 'Downloading…' : 'Download'}
                       </Button>
                     )}
                     {canCancelReservation(reservation) && (
