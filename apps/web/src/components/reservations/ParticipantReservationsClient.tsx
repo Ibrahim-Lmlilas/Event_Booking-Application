@@ -28,6 +28,19 @@ export function ParticipantReservationsClient() {
     }
   }, []);
 
+  const handleCancel = useCallback(
+    async (reservationId: string) => {
+      try {
+        await reservationsApi.cancel(reservationId);
+        toast.success('Reservation canceled');
+        await fetchReservations();
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : 'Failed to cancel reservation');
+      }
+    },
+    [fetchReservations],
+  );
+
   useEffect(() => {
     if (!authLoading) {
       if (!user) {
@@ -72,7 +85,7 @@ export function ParticipantReservationsClient() {
       {!reservations || reservations.length === 0 ? (
         <ReservedEventsEmpty />
       ) : (
-        <ReservedEventsGrid reservations={reservations} />
+        <ReservedEventsGrid reservations={reservations} onCancel={handleCancel} />
       )}
     </div>
   );
