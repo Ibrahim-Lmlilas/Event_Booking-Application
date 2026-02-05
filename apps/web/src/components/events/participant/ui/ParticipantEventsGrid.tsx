@@ -53,10 +53,12 @@ export function ParticipantEventsGrid({ events, reservations = [], onReservation
               <div className="mt-4 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                 <ReserveButton 
                   event={ev} 
-                  hasReservation={reservations.some(r => {
-                    const eventId = typeof r.eventId === 'object' ? r.eventId._id : r.eventId;
-                    return eventId === ev._id;
-                  })}
+                  hasReservation={reservations
+                    .filter(r => r.eventId && (typeof r.eventId === 'object' ? r.eventId._id : r.eventId))
+                    .some(r => {
+                      const eventId = typeof r.eventId === 'object' && r.eventId !== null ? r.eventId._id : r.eventId;
+                      return eventId === ev._id;
+                    })}
                   onReservationSuccess={onReservationSuccess} 
                 />
               </div>

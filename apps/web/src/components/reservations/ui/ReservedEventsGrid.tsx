@@ -8,10 +8,16 @@ type Props = {
 export function ReservedEventsGrid({ reservations }: Props) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {reservations.map((reservation) => {
-        const ev = reservation.eventId;
-        const bgImage = ev.bg || 'event1.jpg';
-        return (
+      {reservations
+        .filter((reservation) => {
+          const ev = reservation.eventId;
+          return ev && typeof ev === 'object' && '_id' in ev && ev.title;
+        })
+        .map((reservation) => {
+          const ev = reservation.eventId as any;
+          if (!ev || typeof ev !== 'object' || !ev.title) return null;
+          const bgImage = ev.bg || 'event1.jpg';
+          return (
           <div
             key={reservation._id}
             className="group rounded-xl border shadow-lg border-gray-100 overflow-hidden hover:shadow-xl transition-shadow relative"

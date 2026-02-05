@@ -9,8 +9,10 @@ import { Model, Types } from 'mongoose';
 import { Reservation, ReservationDocument } from './schemas/reservation.schema';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
+import { UpdateReservationStatusDto } from './dto/update-reservation-status.dto';
 import { EventsService } from '../events/events.service';
 import { EventStatus } from '../common/enums/event-status.enum';
+import { ReservationStatus } from '../common/enums/reservation-status.enum';
 
 @Injectable()
 export class ReservationsService {
@@ -70,7 +72,8 @@ export class ReservationsService {
 
     const savedReservation = await reservation.save();
 
-    // Update event seatsTaken
+    // Update event seatsTaken (reservation is created with PENDING status, so we increment)
+    // When confirmed, no change needed. When refused/canceled, we'll decrement in updateStatus
     await this.eventsService.update(eventId, {
       seatsTaken: event.seatsTaken + 1,
     });
@@ -130,5 +133,119 @@ export class ReservationsService {
       throw new NotFoundException(`Reservation #${id} not found`);
     }
     return reservation;
+  }
+
+  async findAll(filters?: { eventTitle?: string; userName?: string; status?: ReservationStatus }) {
+    try {
+      const query: any = {};
+
+      if (filters?.status) {
+        query.status = filters.status;
+      }
+
+      let reservations = await this.reservationModel
+        .find(query)
+        .populate('eventId')
+        .populate('userId')
+        .sort({ createdAt: -1 })
+        .lean()
+        .exec();
+
+      // Filter by event title if provided
+      if (filters?.eventTitle) {
+        const eventTitleLower = filters.eventTitle.toLowerCase();
+        reservations = reservations.filter((r: any) => {
+          const event = r.eventId;
+          if (!event || typeof event !== 'object') return false;
+          return event.title?.toLowerCase().includes(eventTitleLower);
+        });
+      }
+
+      // Filter by user name (firstName or lastName) if provided
+      if (filters?.userName) {
+        const userNameLower = filters.userName.toLowerCase();
+        reservations = reservations.filter((r: any) => {
+          const user = r.userId;
+          if (!user || typeof user !== 'object') return false;
+          const firstName = user.firstName?.toLowerCase() || '';
+          const lastName = user.lastName?.toLowerCase() || '';
+          return firstName.includes(userNameLower) || lastName.includes(userNameLower);
+        });
+      }
+
+      return reservations || [];
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+      throw new BadRequestException('Failed to fetch reservations');
+    }
+  }
+
+  async updateStatus(id: string, updateStatusDto: UpdateReservationStatusDto) {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException('Invalid reservation ID');
+    }
+
+    const reservation = await this.reservationModel.findById(id).exec();
+    if (!reservation) {
+      throw new NotFoundException(`Reservation #${id} not found`);
+    }
+
+    const oldStatus = reservation.status;
+    const newStatus = updateStatusDto.status;
+
+    // Update reservation status
+    reservation.status = newStatus;
+    await reservation.save();
+
+    const eventId = reservation.eventId.toString();
+    const event = await this.eventsService.findOne(eventId);
+
+    // Handle seatsTaken changes based on status transitions
+    // Note: When reservation is created, seatsTaken is already incremented
+    if (oldStatus === newStatus) {
+      // No change needed
+      await reservation.populate('eventId');
+      await reservation.populate('userId');
+      return reservation.toObject();
+    }
+
+    // CONFIRMED -> REFUSED/CANCELED: decrement seatsTaken
+    if (oldStatus === ReservationStatus.CONFIRMED && 
+        (newStatus === ReservationStatus.REFUSED || newStatus === ReservationStatus.CANCELED)) {
+      if (event && event.seatsTaken > 0) {
+        await this.eventsService.update(eventId, {
+          seatsTaken: event.seatsTaken - 1,
+        });
+      }
+    }
+
+    // PENDING -> REFUSED/CANCELED: decrement seatsTaken (was incremented on creation)
+    if (oldStatus === ReservationStatus.PENDING && 
+        (newStatus === ReservationStatus.REFUSED || newStatus === ReservationStatus.CANCELED)) {
+      if (event && event.seatsTaken > 0) {
+        await this.eventsService.update(eventId, {
+          seatsTaken: event.seatsTaken - 1,
+        });
+      }
+    }
+
+    // REFUSED/CANCELED -> CONFIRMED: increment seatsTaken
+    if ((oldStatus === ReservationStatus.REFUSED || oldStatus === ReservationStatus.CANCELED) && 
+        newStatus === ReservationStatus.CONFIRMED) {
+      if (event) {
+        await this.eventsService.update(eventId, {
+          seatsTaken: event.seatsTaken + 1,
+        });
+      }
+    }
+
+    // PENDING -> CONFIRMED: no change (already counted on creation)
+    // REFUSED/CANCELED -> REFUSED/CANCELED: no change
+
+    await reservation.populate('eventId');
+    await reservation.populate('userId');
+    return reservation.toObject();
   }
 }
