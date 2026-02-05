@@ -1,5 +1,6 @@
-import { Calendar, MapPin, Users, CalendarCheck } from 'lucide-react';
+import { Calendar, MapPin, Users, CalendarCheck, Download } from 'lucide-react';
 import type { ReservationWithEvent } from '@/lib/api/reservations';
+import { Button } from '@/components/ui/button';
 
 type Props = {
   reservations: ReservationWithEvent[];
@@ -34,11 +35,15 @@ export function ReservedEventsGrid({ reservations }: Props) {
                   {ev.title}
                 </h3>
                 <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                  reservation.status === 'CONFIRMED' 
-                    ? 'bg-green-500 text-white' 
+                  reservation.status === 'CONFIRMED'
+                    ? 'bg-green-500 text-white'
                     : reservation.status === 'PENDING'
                     ? 'bg-yellow-500 text-white'
-                    : 'bg-gray-500 text-white'
+                    : reservation.status === 'REFUSED'
+                    ? 'bg-red-500 text-white'
+                    : reservation.status === 'CANCELED'
+                    ? 'bg-gray-500 text-white'
+                    : 'bg-gray-400 text-white'
                 }`}>
                   {reservation.status}
                 </span>
@@ -63,14 +68,28 @@ export function ReservedEventsGrid({ reservations }: Props) {
                   <span className="text-gray-300">DH</span>
                   <span>{(ev.price ?? 0).toFixed(2)}</span>
                 </div>
-                {reservation.createdAt && (
-                  <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-600">
-                    <CalendarCheck className="h-4 w-4 flex-shrink-0 text-gray-300" />
-                    <span className="text-xs text-gray-300">
-                      Reserved on {new Date(reservation.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                )}
+                <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-gray-600">
+                  {reservation.createdAt ? (
+                    <div className="flex items-center gap-2">
+                      <CalendarCheck className="h-4 w-4 flex-shrink-0 text-gray-300" />
+                      <span className="text-xs text-gray-300">
+                        Reserved on {new Date(reservation.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                  ) : (
+                    <span />
+                  )}
+                  {reservation.status === 'CONFIRMED' && (
+                    <Button
+                      type="button"
+                      size="sm"
+                      className="bg-white hover:bg-gray-100 text-gray-900 font-semibold shrink-0"
+                    >
+                      <Download className="h-4 w-4 mr-1.5" />
+                      Download
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
