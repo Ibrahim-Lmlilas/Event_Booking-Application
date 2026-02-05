@@ -86,12 +86,15 @@ export function AdminEventsClient() {
     try {
       setLoading(true);
       const data = await eventsApi.list(currentPage, ITEMS_PER_PAGE);
-      setEvents(data.events);
-      setTotalPages(data.totalPages);
-      setTotal(data.total);
-      setPage(data.page);
+      setEvents(data.events || []);
+      setTotalPages(data.totalPages || 1);
+      setTotal(data.total || 0);
+      setPage(data.page || currentPage);
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : 'Failed to load events');
+      setEvents([]);
+      setTotalPages(1);
+      setTotal(0);
     } finally {
       setLoading(false);
     }
@@ -235,7 +238,7 @@ export function AdminEventsClient() {
         <div className="flex justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
         </div>
-      ) : events.length === 0 ? (
+      ) : !events || events.length === 0 ? (
         <AdminEventsEmpty onCreateClick={openCreate} />
       ) : (
         <>
