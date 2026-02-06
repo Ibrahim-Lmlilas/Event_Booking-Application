@@ -135,7 +135,12 @@ export function AdminEventFormDialog({
   const bgImage = form.bg || 'event1.jpg';
 
   return (
-    <Dialog open={open} onOpenChange={(o) => { if (!o) handleClose(); }}>
+    <Dialog
+      open={open}
+      onOpenChange={o => {
+        if (!o) handleClose();
+      }}
+    >
       <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden">
         <div
           className="relative bg-cover bg-center bg-no-repeat"
@@ -156,7 +161,7 @@ export function AdminEventFormDialog({
 
             {/* Step indicator */}
             <div className="flex items-center justify-center gap-2 mb-6">
-              {[1, 2, 3].map((s) => (
+              {[1, 2, 3].map(s => (
                 <div key={s} className="flex items-center">
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold transition-colors ${
@@ -186,13 +191,13 @@ export function AdminEventFormDialog({
                 <div className="space-y-2">
                   <Label className="text-white font-medium">Background Image</Label>
                   <div className="grid grid-cols-2 gap-3">
-                    {BACKGROUND_IMAGES.map((img) => (
+                    {BACKGROUND_IMAGES.map(img => (
                       <button
                         key={img}
                         type="button"
                         onClick={() => {
-                          setForm((f) => ({ ...f, bg: img }));
-                          if (errors.bg) setErrors((prev) => ({ ...prev, bg: undefined }));
+                          setForm(f => ({ ...f, bg: img }));
+                          if (errors.bg) setErrors(prev => ({ ...prev, bg: undefined }));
                         }}
                         className={`relative aspect-video rounded-lg overflow-hidden border-2 transition-all ${
                           form.bg === img
@@ -200,11 +205,7 @@ export function AdminEventFormDialog({
                             : 'border-white/30 hover:border-white/60'
                         }`}
                       >
-                        <img
-                          src={`/${img}`}
-                          alt={img}
-                          className="w-full h-full object-cover"
-                        />
+                        <img src={`/${img}`} alt={img} className="w-full h-full object-cover" />
                         {form.bg === img && (
                           <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
                             <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center">
@@ -215,9 +216,7 @@ export function AdminEventFormDialog({
                       </button>
                     ))}
                   </div>
-                  {errors.bg && (
-                    <p className="text-sm text-red-400 mt-1">{errors.bg}</p>
-                  )}
+                  {errors.bg && <p className="text-sm text-red-400 mt-1">{errors.bg}</p>}
                 </div>
               )}
 
@@ -231,9 +230,9 @@ export function AdminEventFormDialog({
                     <Input
                       id="title"
                       value={form.title}
-                      onChange={(e) => {
-                        setForm((f) => ({ ...f, title: e.target.value }));
-                        if (errors.title) setErrors((prev) => ({ ...prev, title: undefined }));
+                      onChange={e => {
+                        setForm(f => ({ ...f, title: e.target.value }));
+                        if (errors.title) setErrors(prev => ({ ...prev, title: undefined }));
                       }}
                       placeholder="Event title"
                       className={`h-12 px-4 bg-white/90 transition-colors ${
@@ -242,9 +241,7 @@ export function AdminEventFormDialog({
                           : 'border-gray-300 focus:border-gray-900 focus:ring-gray-900'
                       }`}
                     />
-                    {errors.title && (
-                      <p className="text-sm text-red-400 mt-1">{errors.title}</p>
-                    )}
+                    {errors.title && <p className="text-sm text-red-400 mt-1">{errors.title}</p>}
                   </div>
 
                   <div className="space-y-2">
@@ -257,10 +254,10 @@ export function AdminEventFormDialog({
                       min={0}
                       step="0.01"
                       value={form.price ?? 0}
-                      onChange={(e) => {
+                      onChange={e => {
                         const v = parseFloat(e.target.value);
-                        setForm((f) => ({ ...f, price: Number.isNaN(v) ? 0 : v }));
-                        if (errors.price) setErrors((prev) => ({ ...prev, price: undefined }));
+                        setForm(f => ({ ...f, price: Number.isNaN(v) ? 0 : v }));
+                        if (errors.price) setErrors(prev => ({ ...prev, price: undefined }));
                       }}
                       placeholder="0.00"
                       className={`h-12 px-4 bg-white/90 transition-colors ${
@@ -269,9 +266,7 @@ export function AdminEventFormDialog({
                           : 'border-gray-300 focus:border-gray-900 focus:ring-gray-900'
                       }`}
                     />
-                    {errors.price && (
-                      <p className="text-sm text-red-400 mt-1">{errors.price}</p>
-                    )}
+                    {errors.price && <p className="text-sm text-red-400 mt-1">{errors.price}</p>}
                   </div>
 
                   <div className="space-y-2">
@@ -281,9 +276,10 @@ export function AdminEventFormDialog({
                     <Input
                       id="description"
                       value={form.description}
-                      onChange={(e) => {
-                        setForm((f) => ({ ...f, description: e.target.value }));
-                        if (errors.description) setErrors((prev) => ({ ...prev, description: undefined }));
+                      onChange={e => {
+                        setForm(f => ({ ...f, description: e.target.value }));
+                        if (errors.description)
+                          setErrors(prev => ({ ...prev, description: undefined }));
                       }}
                       placeholder="Event description (2–60 characters)"
                       maxLength={60}
@@ -312,9 +308,9 @@ export function AdminEventFormDialog({
                         id="date"
                         type="date"
                         value={form.date}
-                        onChange={(e) => {
-                          setForm((f) => ({ ...f, date: e.target.value }));
-                          if (errors.date) setErrors((prev) => ({ ...prev, date: undefined }));
+                        onChange={e => {
+                          setForm(f => ({ ...f, date: e.target.value }));
+                          if (errors.date) setErrors(prev => ({ ...prev, date: undefined }));
                         }}
                         className={`h-12 px-4 bg-white/90 transition-colors ${
                           errors.date
@@ -322,9 +318,7 @@ export function AdminEventFormDialog({
                             : 'border-gray-300 focus:border-gray-900 focus:ring-gray-900'
                         }`}
                       />
-                      {errors.date && (
-                        <p className="text-sm text-red-400 mt-1">{errors.date}</p>
-                      )}
+                      {errors.date && <p className="text-sm text-red-400 mt-1">{errors.date}</p>}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="time" className="text-white font-medium">
@@ -334,9 +328,9 @@ export function AdminEventFormDialog({
                         id="time"
                         type="time"
                         value={form.time}
-                        onChange={(e) => {
-                          setForm((f) => ({ ...f, time: e.target.value }));
-                          if (errors.time) setErrors((prev) => ({ ...prev, time: undefined }));
+                        onChange={e => {
+                          setForm(f => ({ ...f, time: e.target.value }));
+                          if (errors.time) setErrors(prev => ({ ...prev, time: undefined }));
                         }}
                         className={`h-12 px-4 bg-white/90 transition-colors ${
                           errors.time
@@ -344,9 +338,7 @@ export function AdminEventFormDialog({
                             : 'border-gray-300 focus:border-gray-900 focus:ring-gray-900'
                         }`}
                       />
-                      {errors.time && (
-                        <p className="text-sm text-red-400 mt-1">{errors.time}</p>
-                      )}
+                      {errors.time && <p className="text-sm text-red-400 mt-1">{errors.time}</p>}
                     </div>
                   </div>
 
@@ -357,9 +349,9 @@ export function AdminEventFormDialog({
                     <Input
                       id="location"
                       value={form.location}
-                      onChange={(e) => {
-                        setForm((f) => ({ ...f, location: e.target.value }));
-                        if (errors.location) setErrors((prev) => ({ ...prev, location: undefined }));
+                      onChange={e => {
+                        setForm(f => ({ ...f, location: e.target.value }));
+                        if (errors.location) setErrors(prev => ({ ...prev, location: undefined }));
                       }}
                       placeholder="Venue or address"
                       className={`h-12 px-4 bg-white/90 transition-colors ${
@@ -382,10 +374,10 @@ export function AdminEventFormDialog({
                       type="number"
                       min={1}
                       value={form.capacity}
-                      onChange={(e) => {
+                      onChange={e => {
                         const v = parseInt(e.target.value, 10);
-                        setForm((f) => ({ ...f, capacity: Number.isNaN(v) ? 0 : v }));
-                        if (errors.capacity) setErrors((prev) => ({ ...prev, capacity: undefined }));
+                        setForm(f => ({ ...f, capacity: Number.isNaN(v) ? 0 : v }));
+                        if (errors.capacity) setErrors(prev => ({ ...prev, capacity: undefined }));
                       }}
                       placeholder="1"
                       className={`h-12 px-4 bg-white/90 transition-colors ${

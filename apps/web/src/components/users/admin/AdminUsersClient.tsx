@@ -55,7 +55,7 @@ export function AdminUsersClient() {
     fetchUsers();
   }, []);
 
-  const filtered = allUsers.filter((u) => {
+  const filtered = allUsers.filter(u => {
     const q = search.toLowerCase().trim();
     return (
       !q ||
@@ -130,7 +130,7 @@ export function AdminUsersClient() {
 
       <AdminUsersFilters
         search={search}
-        onSearchChange={(v) => {
+        onSearchChange={v => {
           setSearch(v);
           setPage(1);
         }}
@@ -150,7 +150,7 @@ export function AdminUsersClient() {
             onDeleteClick={handleDeleteClick}
           />
 
-          <AlertDialog open={!!deleteUserId} onOpenChange={(open) => !open && setDeleteUserId(null)}>
+          <AlertDialog open={!!deleteUserId} onOpenChange={open => !open && setDeleteUserId(null)}>
             <AlertDialogContent className="bg-white">
               <AlertDialogHeader>
                 <AlertDialogTitle className="text-gray-900">Delete user?</AlertDialogTitle>
@@ -159,11 +159,14 @@ export function AdminUsersClient() {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel disabled={deleting} className="bg-white border-gray-300 text-gray-900 hover:bg-gray-100">
+                <AlertDialogCancel
+                  disabled={deleting}
+                  className="bg-white border-gray-300 text-gray-900 hover:bg-gray-100"
+                >
                   Cancel
                 </AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={(e) => {
+                  onClick={e => {
                     e.preventDefault();
                     handleDeleteConfirm();
                   }}

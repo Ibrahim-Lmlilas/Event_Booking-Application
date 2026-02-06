@@ -96,7 +96,7 @@ describe('ReserveButton', () => {
   it('displays loading state during reservation', async () => {
     const user = userEvent.setup();
     let resolveCreate: (value: any) => void;
-    const createPromise = new Promise((resolve) => {
+    const createPromise = new Promise(resolve => {
       resolveCreate = resolve;
     });
 

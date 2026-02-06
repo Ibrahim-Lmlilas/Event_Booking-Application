@@ -71,13 +71,13 @@ export const eventsApi = {
       limit: limit.toString(),
       status: 'PUBLISHED',
     });
-    
+
     if (filters?.search) params.append('search', filters.search);
     if (filters?.minPrice !== undefined) params.append('minPrice', filters.minPrice.toString());
     if (filters?.maxPrice !== undefined) params.append('maxPrice', filters.maxPrice.toString());
     if (filters?.date) params.append('date', filters.date);
     if (filters?.time) params.append('time', filters.time);
-    
+
     const res = await fetch(`${API_URL}/events?${params.toString()}`);
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));

@@ -120,18 +120,21 @@ describe('Reservation Flow', () => {
     // Step 5: User views their reservations using ReservedEventsGrid directly
     // This avoids the complexity of ParticipantReservationsClient's useEffect and loading states
     render(
-      <ReservedEventsGrid 
-        reservations={[mockReservation]} 
+      <ReservedEventsGrid
+        reservations={[mockReservation]}
         onCancel={jest.fn()}
         onDownloadTicket={jest.fn()}
-      />
+      />,
     );
 
     // Verify reservation is displayed
-    await waitFor(() => {
-      expect(screen.getByText('Test Event')).toBeInTheDocument();
-      expect(screen.getByText('PENDING')).toBeInTheDocument();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(screen.getByText('Test Event')).toBeInTheDocument();
+        expect(screen.getByText('PENDING')).toBeInTheDocument();
+      },
+      { timeout: 3000 },
+    );
   });
 
   it('handles complete cancellation flow: view reservation → cancel → confirm → verify cancellation', async () => {
@@ -154,20 +157,23 @@ describe('Reservation Flow', () => {
     // Step 1: User views their reservations using ReservedEventsGrid directly
     // This avoids the complexity of ParticipantReservationsClient's useEffect and loading states
     const handleCancel = jest.fn().mockResolvedValue(undefined);
-    
+
     render(
-      <ReservedEventsGrid 
-        reservations={[cancelableReservation]} 
+      <ReservedEventsGrid
+        reservations={[cancelableReservation]}
         onCancel={handleCancel}
         onDownloadTicket={jest.fn()}
-      />
+      />,
     );
 
     // Verify reservation is displayed
-    await waitFor(() => {
-      expect(screen.getByText('Test Event')).toBeInTheDocument();
-      expect(screen.getByText('CONFIRMED')).toBeInTheDocument();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(screen.getByText('Test Event')).toBeInTheDocument();
+        expect(screen.getByText('CONFIRMED')).toBeInTheDocument();
+      },
+      { timeout: 3000 },
+    );
 
     // Step 2: User clicks Cancel button
     const cancelButton = screen.getByRole('button', { name: /cancel/i });

@@ -25,7 +25,7 @@ export const authApi = {
 
       if (!response.ok) {
         let errorMessage = 'Registration failed';
-        
+
         // Try to parse error response
         try {
           const error = await response.json();
@@ -35,7 +35,7 @@ export const authApi = {
           // If response is not JSON, use status text
           errorMessage = response.statusText || `Server error ${response.status}`;
         }
-        
+
         throw new Error(errorMessage);
       }
 
@@ -62,7 +62,7 @@ export const authApi = {
 
       if (!response.ok) {
         let errorMessage = 'Login failed';
-        
+
         // Try to parse error response
         try {
           const error = await response.json();
@@ -76,7 +76,7 @@ export const authApi = {
             errorMessage = response.statusText || `Server error ${response.status}`;
           }
         }
-        
+
         throw new Error(errorMessage);
       }
 
@@ -97,7 +97,7 @@ export const authApi = {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 

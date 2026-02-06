@@ -9,7 +9,7 @@ export default async function ParticipantEventsPage({
   searchParams: { page?: string };
 }) {
   const page = parseInt(searchParams.page || '1', 10);
-  
+
   try {
     const data = await eventsApi.listPublished(page, ITEMS_PER_PAGE);
     return <ParticipantEventsClient initialData={data} initialPage={page} />;

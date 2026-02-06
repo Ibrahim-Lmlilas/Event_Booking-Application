@@ -48,7 +48,10 @@ const COLORS = {
 };
 
 function createGreenPurpleGradient(
-  chart: { ctx: CanvasRenderingContext2D; chartArea?: { top: number; bottom: number; left: number; right: number } },
+  chart: {
+    ctx: CanvasRenderingContext2D;
+    chartArea?: { top: number; bottom: number; left: number; right: number };
+  },
   vertical = true,
 ) {
   const ctx = chart.ctx;
@@ -90,11 +93,16 @@ export default function ParticipantDashboard() {
     if (!user) return;
     reservationsApi
       .findAll()
-      .then((list) => {
+      .then(list => {
         const arr = (list ?? []) as ReservationWithEvent[];
         setReservations(arr);
         setReservationsCount(arr.length);
-        const status: Record<string, number> = { PENDING: 0, CONFIRMED: 0, REFUSED: 0, CANCELED: 0 };
+        const status: Record<string, number> = {
+          PENDING: 0,
+          CONFIRMED: 0,
+          REFUSED: 0,
+          CANCELED: 0,
+        };
         const dayCounts = [0, 0, 0, 0, 0, 0, 0];
         const monthCounts = [0, 0, 0, 0, 0, 0];
         const now = new Date();
@@ -106,11 +114,17 @@ export default function ParticipantDashboard() {
           if (r.createdAt) {
             const d = new Date(r.createdAt);
             dayCounts[d.getDay()] = (dayCounts[d.getDay()] ?? 0) + 1;
-            const monthsAgo = (now.getFullYear() - d.getFullYear()) * 12 + (now.getMonth() - d.getMonth());
+            const monthsAgo =
+              (now.getFullYear() - d.getFullYear()) * 12 + (now.getMonth() - d.getMonth());
             if (monthsAgo >= 0 && monthsAgo < 6) monthCounts[5 - monthsAgo]++;
           }
           const ev = r.eventId as { date?: string } | undefined;
-          if (ev?.date && new Date(ev.date) >= now && (r.status === 'CONFIRMED' || r.status === 'PENDING')) upcoming++;
+          if (
+            ev?.date &&
+            new Date(ev.date) >= now &&
+            (r.status === 'CONFIRMED' || r.status === 'PENDING')
+          )
+            upcoming++;
         });
 
         setByStatus(status);
@@ -122,7 +136,7 @@ export default function ParticipantDashboard() {
 
     eventsApi
       .listPublished(1, 1)
-      .then((res) => setTotalEvents(res.total ?? 0))
+      .then(res => setTotalEvents(res.total ?? 0))
       .catch(() => setTotalEvents(0));
   }, [user]);
 
@@ -132,7 +146,9 @@ export default function ParticipantDashboard() {
         router.push('/');
         return;
       }
-      const role = String(user.role || '').toLowerCase().trim();
+      const role = String(user.role || '')
+        .toLowerCase()
+        .trim();
       if (role === 'admin') router.push('/dashboard/admin');
       else if (role !== 'participant') router.push('/');
     }
@@ -147,7 +163,9 @@ export default function ParticipantDashboard() {
   }
 
   if (!user) return null;
-  const role = String(user.role || '').toLowerCase().trim();
+  const role = String(user.role || '')
+    .toLowerCase()
+    .trim();
   if (role === 'admin') return null;
 
   const barData = {
@@ -156,7 +174,12 @@ export default function ParticipantDashboard() {
       {
         label: 'Your bookings',
         data: perMonth.length === 6 ? perMonth : [0, 0, 0, 0, 0, 0],
-        backgroundColor: (context: { chart: { ctx: CanvasRenderingContext2D; chartArea?: { top: number; bottom: number; left: number; right: number } } }) => {
+        backgroundColor: (context: {
+          chart: {
+            ctx: CanvasRenderingContext2D;
+            chartArea?: { top: number; bottom: number; left: number; right: number };
+          };
+        }) => {
           if (!context.chart.chartArea) return 'rgba(34, 197, 94, 0.5)';
           return createGreenPurpleGradient(context.chart);
         },
@@ -206,7 +229,10 @@ export default function ParticipantDashboard() {
         data: perDay.length === 7 ? perDay : [0, 0, 0, 0, 0, 0, 0],
         borderColor: PURPLE,
         backgroundColor: (context: { chart: unknown }) => {
-          const ch = context.chart as { ctx: CanvasRenderingContext2D; chartArea?: { top: number; bottom: number; left: number; right: number } };
+          const ch = context.chart as {
+            ctx: CanvasRenderingContext2D;
+            chartArea?: { top: number; bottom: number; left: number; right: number };
+          };
           if (!ch.chartArea) return 'rgba(147, 51, 234, 0.4)';
           return createGreenPurpleGradient(ch);
         },
@@ -228,7 +254,6 @@ export default function ParticipantDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-white rounded-lg shadow p-4 border border-gray-100">
-           
             <div className="h-[230px] mt-2">
               <Line
                 data={confirmedLineData}
@@ -245,7 +270,6 @@ export default function ParticipantDashboard() {
             </div>
           </div>
           <div className="bg-white rounded-lg shadow p-4 border border-gray-100">
-            
             <div className="h-[230px] mt-2">
               <Line
                 data={totalEventsLineData}
@@ -265,7 +289,9 @@ export default function ParticipantDashboard() {
 
         {/* Chart 1 - Bar */}
         <div className="bg-white rounded-lg shadow p-4 border border-gray-100 h-[280px]">
-          <h3 className="text-sm font-semibold text-gray-900 mb-3">Your bookings (last 6 months)</h3>
+          <h3 className="text-sm font-semibold text-gray-900 mb-3">
+            Your bookings (last 6 months)
+          </h3>
           <div className="h-[220px]">
             <Bar
               data={barData}
@@ -294,17 +320,23 @@ export default function ParticipantDashboard() {
               </thead>
               <tbody>
                 {reservations
-                  .filter((r) => r.eventId && typeof r.eventId === 'object' && 'title' in r.eventId)
-                  .map((r) => {
+                  .filter(r => r.eventId && typeof r.eventId === 'object' && 'title' in r.eventId)
+                  .map(r => {
                     const ev = r.eventId as { title?: string; date?: string; time?: string };
                     const dateStr = ev?.date ? new Date(ev.date).toLocaleDateString() : '—';
                     const timeStr = ev?.time ?? '';
                     return (
                       <tr key={r._id} className="border-b border-gray-100 hover:bg-gray-50">
-                        <td className="py-2 pr-3 font-medium text-gray-900 truncate max-w-[140px]" title={ev?.title}>
+                        <td
+                          className="py-2 pr-3 font-medium text-gray-900 truncate max-w-[140px]"
+                          title={ev?.title}
+                        >
                           {ev?.title ?? '—'}
                         </td>
-                        <td className="py-2 pr-3">{dateStr}{timeStr ? ` · ${timeStr}` : ''}</td>
+                        <td className="py-2 pr-3">
+                          {dateStr}
+                          {timeStr ? ` · ${timeStr}` : ''}
+                        </td>
                         <td className="py-2">
                           <span
                             className={`inline-block px-2 py-0.5 rounded text-xs font-semibold ${
@@ -325,7 +357,9 @@ export default function ParticipantDashboard() {
                   })}
               </tbody>
             </table>
-            {reservations.filter((r) => r.eventId && typeof r.eventId === 'object' && 'title' in r.eventId).length === 0 && (
+            {reservations.filter(
+              r => r.eventId && typeof r.eventId === 'object' && 'title' in r.eventId,
+            ).length === 0 && (
               <p className="text-gray-500 py-4 text-center text-sm">No reservations yet</p>
             )}
           </div>
@@ -333,7 +367,9 @@ export default function ParticipantDashboard() {
 
         {/* Chart 3 - Line */}
         <div className="bg-white rounded-lg shadow p-4 border border-gray-100 h-[280px]">
-          <h3 className="text-sm font-semibold text-gray-900 mb-3">When you booked (by day of week)</h3>
+          <h3 className="text-sm font-semibold text-gray-900 mb-3">
+            When you booked (by day of week)
+          </h3>
           <div className="h-[220px]">
             <Line
               data={lineData}

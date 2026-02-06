@@ -7,14 +7,15 @@ import { User, UserDocument } from './schemas/user.schema';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
-  ) {}
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const createdUser = new this.userModel(createUserDto);
     const savedUser = await createdUser.save();
-    return this.userModel.findById(savedUser._id).select('-password').exec() as Promise<User>;
+    return this.userModel
+      .findById(savedUser._id)
+      .select('-password')
+      .exec() as Promise<User>;
   }
 
   async findAll(): Promise<User[]> {
@@ -30,7 +31,10 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User | null> {
-    return this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).select('-password').exec();
+    return this.userModel
+      .findByIdAndUpdate(id, updateUserDto, { new: true })
+      .select('-password')
+      .exec();
   }
 
   async remove(id: string): Promise<User | null> {

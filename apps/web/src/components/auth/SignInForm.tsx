@@ -29,52 +29,52 @@ export default function SignInForm({ onSuccess, onSwitchToSignUp }: SignInFormPr
 
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {};
-    
+
     if (!formData.email) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email';
     }
-    
+
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     setLoading(true);
-    
+
     try {
       const response = await authApi.login(formData);
-      
+
       console.log('Login response:', response);
       console.log('User role:', response.user.role);
       console.log('User role type:', typeof response.user.role);
       console.log('Full user object:', JSON.stringify(response.user, null, 2));
-      
+
       toast.success('Login successful! 🎉');
-      
+
       // Use AuthContext login (handles redirect based on role)
       login(response.access_token, response.user);
-      
+
       if (onSuccess) {
         onSuccess();
       }
     } catch (error: any) {
       // Display user-friendly error message
       const errorMessage = error.message || 'Login failed. Please try again.';
-      
+
       // Provide more specific messages for common errors
       if (errorMessage.includes('Invalid credentials')) {
         toast.error('Email ou mot de passe incorrect. Veuillez réessayer.');
@@ -116,19 +116,17 @@ export default function SignInForm({ onSuccess, onSwitchToSignUp }: SignInFormPr
             type="email"
             placeholder="your@email.com"
             value={formData.email}
-            onChange={(e) => {
+            onChange={e => {
               setFormData({ ...formData, email: e.target.value });
               if (errors.email) setErrors({ ...errors, email: undefined });
             }}
             className={`h-12 px-4 transition-colors ${
-              errors.email 
-                ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+              errors.email
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                 : 'border-gray-300 focus:border-gray-900 focus:ring-gray-900'
             }`}
           />
-          {errors.email && (
-            <p className="text-sm text-red-500 mt-1">{errors.email}</p>
-          )}
+          {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
         </div>
 
         <div className="space-y-2">
@@ -140,20 +138,18 @@ export default function SignInForm({ onSuccess, onSwitchToSignUp }: SignInFormPr
             type="password"
             placeholder="••••••••"
             value={formData.password}
-            onChange={(e) => {
+            onChange={e => {
               const newPassword = e.target.value;
-              setFormData((prev) => ({ ...prev, password: newPassword }));
-              if (errors.password) setErrors((prev) => ({ ...prev, password: undefined }));
+              setFormData(prev => ({ ...prev, password: newPassword }));
+              if (errors.password) setErrors(prev => ({ ...prev, password: undefined }));
             }}
             className={`h-12 px-4 transition-colors ${
-              errors.password 
-                ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+              errors.password
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                 : 'border-gray-300 focus:border-gray-900 focus:ring-gray-900'
             }`}
           />
-          {errors.password && (
-            <p className="text-sm text-red-500 mt-1">{errors.password}</p>
-          )}
+          {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
         </div>
 
         <Button
@@ -176,7 +172,7 @@ export default function SignInForm({ onSuccess, onSwitchToSignUp }: SignInFormPr
       <p className="text-center text-gray-600 mt-6">
         Don't have an account?{' '}
         {onSwitchToSignUp ? (
-          <button 
+          <button
             type="button"
             onClick={onSwitchToSignUp}
             className="text-gray-900 hover:text-pink-500 font-semibold transition-colors duration-200"
@@ -184,7 +180,10 @@ export default function SignInForm({ onSuccess, onSwitchToSignUp }: SignInFormPr
             Sign Up
           </button>
         ) : (
-          <Link href="/register" className="text-gray-900 hover:text-pink-500 font-semibold transition-colors duration-200">
+          <Link
+            href="/register"
+            className="text-gray-900 hover:text-pink-500 font-semibold transition-colors duration-200"
+          >
             Sign Up
           </Link>
         )}

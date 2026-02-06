@@ -8,22 +8,27 @@ import { User } from '../users/schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { UserRole } from '../common/enums/user-role.enum';
 
-export async function runSeedAdmin(app: INestApplicationContext): Promise<void> {
+export async function runSeedAdmin(
+  app: INestApplicationContext,
+): Promise<void> {
   try {
     // Use User model directly to check existence (including password field)
     const userModel = app.get<Model<User>>(getModelToken(User.name));
     const adminEmail = 'admin@eventzi.com';
     const adminPassword = 'Admin@123';
-    
+
     // Check if admin exists (without excluding password field)
     const existingAdmin = await userModel.findOne({ email: adminEmail }).exec();
-    
+
     if (existingAdmin) {
       console.log('✅ Admin already exists');
       console.log(`📧 Email: ${adminEmail}`);
       console.log('👤 Role: ADMIN');
       // Verify password is correct (in case it was changed manually)
-      const isPasswordValid = await bcrypt.compare(adminPassword, existingAdmin.password);
+      const isPasswordValid = await bcrypt.compare(
+        adminPassword,
+        existingAdmin.password,
+      );
       if (isPasswordValid) {
         console.log('🔑 Default password is still valid: Admin@123');
       } else {
@@ -31,7 +36,7 @@ export async function runSeedAdmin(app: INestApplicationContext): Promise<void> 
       }
       return;
     }
-    
+
     // Create admin user
     const hashedPassword = await bcrypt.hash(adminPassword, 10);
     const adminUser = await userModel.create({
@@ -41,7 +46,7 @@ export async function runSeedAdmin(app: INestApplicationContext): Promise<void> 
       lastName: 'HAKARI',
       role: UserRole.ADMIN,
     });
-    
+
     console.log('✅ Admin user created successfully!');
     console.log(`📧 Email: ${adminEmail}`);
     console.log(`🔑 Password: ${adminPassword}`);
@@ -49,7 +54,10 @@ export async function runSeedAdmin(app: INestApplicationContext): Promise<void> 
     console.log(`🆔 User ID: ${adminUser._id}`);
     console.log('⚠️  Please change the password after first login!');
   } catch (error: unknown) {
-    console.error('❌ Error seeding admin:', error instanceof Error ? error.message : String(error));
+    console.error(
+      '❌ Error seeding admin:',
+      error instanceof Error ? error.message : String(error),
+    );
     if (error instanceof Error && error.stack) {
       console.error('Stack trace:', error.stack);
     }

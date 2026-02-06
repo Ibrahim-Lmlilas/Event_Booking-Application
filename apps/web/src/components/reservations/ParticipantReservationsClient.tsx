@@ -62,8 +62,10 @@ export function ParticipantReservationsClient() {
         router.push('/');
         return;
       }
-      
-      const role = String(user.role || '').toLowerCase().trim();
+
+      const role = String(user.role || '')
+        .toLowerCase()
+        .trim();
       if (role === 'admin') {
         router.push('/dashboard/admin');
         return;
@@ -92,9 +94,7 @@ export function ParticipantReservationsClient() {
     <div>
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900">My Reservations</h1>
-        <p className="text-sm text-gray-600 mt-1">
-          Events you have reserved
-        </p>
+        <p className="text-sm text-gray-600 mt-1">Events you have reserved</p>
       </div>
 
       {!reservations || reservations.length === 0 ? (

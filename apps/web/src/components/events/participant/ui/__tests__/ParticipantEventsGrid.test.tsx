@@ -87,9 +87,7 @@ describe('ParticipantEventsGrid', () => {
   });
 
   it('displays Already Reserved when user has reservation', () => {
-    render(
-      <ParticipantEventsGrid events={[mockEvent1]} reservations={[mockReservation]} />,
-    );
+    render(<ParticipantEventsGrid events={[mockEvent1]} reservations={[mockReservation]} />);
 
     expect(screen.getByRole('button', { name: /already reserved/i })).toBeInTheDocument();
     expect(screen.getByRole('button')).toBeDisabled();
@@ -113,10 +111,7 @@ describe('ParticipantEventsGrid', () => {
     });
 
     render(
-      <ParticipantEventsGrid
-        events={[mockEvent1]}
-        onReservationSuccess={onReservationSuccess}
-      />,
+      <ParticipantEventsGrid events={[mockEvent1]} onReservationSuccess={onReservationSuccess} />,
     );
 
     const reserveButton = screen.getByRole('button', { name: /reserve now/i });

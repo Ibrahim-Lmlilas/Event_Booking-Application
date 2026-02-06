@@ -36,8 +36,14 @@ export class ReservationsController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createReservationDto: CreateReservationDto, @Request() req: any) {
-    return this.reservationsService.create(createReservationDto, req.user._id.toString());
+  create(
+    @Body() createReservationDto: CreateReservationDto,
+    @Request() req: any,
+  ) {
+    return this.reservationsService.create(
+      createReservationDto,
+      req.user._id.toString(),
+    );
   }
 
   @UseGuards(JwtAuthGuard)
@@ -60,7 +66,11 @@ export class ReservationsController {
   /** EBA-52 / EBA-54: Download ticket PDF (CONFIRMED reservations only, own only). */
   @UseGuards(JwtAuthGuard)
   @Get(':id/ticket')
-  async getTicket(@Param('id') id: string, @Request() req: any, @Res({ passthrough: true }) res: Response) {
+  async getTicket(
+    @Param('id') id: string,
+    @Request() req: any,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const userId = req.user._id.toString();
     const reservation = await this.reservationsService.findOne(id);
     const resAny = reservation as any;
@@ -106,14 +116,20 @@ export class ReservationsController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReservationDto: UpdateReservationDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateReservationDto: UpdateReservationDto,
+  ) {
     return this.reservationsService.update(id, updateReservationDto);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   @Patch(':id/status')
-  updateStatus(@Param('id') id: string, @Body() updateStatusDto: UpdateReservationStatusDto) {
+  updateStatus(
+    @Param('id') id: string,
+    @Body() updateStatusDto: UpdateReservationStatusDto,
+  ) {
     return this.reservationsService.updateStatus(id, updateStatusDto);
   }
 
@@ -121,7 +137,10 @@ export class ReservationsController {
   @UseGuards(JwtAuthGuard)
   @Patch(':id/cancel')
   cancel(@Param('id') id: string, @Request() req: any) {
-    return this.reservationsService.cancelByParticipant(id, req.user._id.toString());
+    return this.reservationsService.cancelByParticipant(
+      id,
+      req.user._id.toString(),
+    );
   }
 
   @UseGuards(JwtAuthGuard)

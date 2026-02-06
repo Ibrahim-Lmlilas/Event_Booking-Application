@@ -68,10 +68,7 @@ export class EventsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   @Patch(':id/status')
-  updateStatus(
-    @Param('id') id: string,
-    @Body() dto: UpdateEventStatusDto,
-  ) {
+  updateStatus(@Param('id') id: string, @Body() dto: UpdateEventStatusDto) {
     return this.eventsService.updateStatus(id, dto.status);
   }
 

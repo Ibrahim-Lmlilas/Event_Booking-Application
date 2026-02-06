@@ -9,7 +9,9 @@ import { TicketsModule } from '../tickets/tickets.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Reservation.name, schema: ReservationSchema }]),
+    MongooseModule.forFeature([
+      { name: Reservation.name, schema: ReservationSchema },
+    ]),
     UsersModule,
     EventsModule,
     TicketsModule,

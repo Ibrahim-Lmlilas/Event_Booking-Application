@@ -1,7 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { reservationsApi, type ReservationWithEvent, type ReservationFilters } from '@/lib/api/reservations';
+import {
+  reservationsApi,
+  type ReservationWithEvent,
+  type ReservationFilters,
+} from '@/lib/api/reservations';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -87,7 +91,10 @@ export function AdminReservationsClient() {
     return pages;
   };
 
-  const handleStatusUpdate = async (id: string, status: 'PENDING' | 'CONFIRMED' | 'REFUSED' | 'CANCELED') => {
+  const handleStatusUpdate = async (
+    id: string,
+    status: 'PENDING' | 'CONFIRMED' | 'REFUSED' | 'CANCELED',
+  ) => {
     try {
       await reservationsApi.updateStatus(id, status);
       toast.success('Reservation status updated successfully!');
@@ -101,7 +108,6 @@ export function AdminReservationsClient() {
     <div>
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Manage Reservations</h1>
-        
       </div>
 
       <AdminReservationsFilters filters={filters} onFiltersChange={handleFiltersChange} />
@@ -114,10 +120,7 @@ export function AdminReservationsClient() {
         <AdminReservationsEmpty />
       ) : (
         <>
-          <AdminReservationsTable 
-            reservations={reservations} 
-            onStatusUpdate={handleStatusUpdate}
-          />
+          <AdminReservationsTable reservations={reservations} onStatusUpdate={handleStatusUpdate} />
 
           {totalPages > 1 && (
             <div className="mt-8 flex justify-center">

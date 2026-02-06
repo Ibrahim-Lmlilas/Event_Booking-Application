@@ -39,7 +39,9 @@ export default function Navbar() {
   };
 
   const handleDashboard = () => {
-    const role = String(user?.role || '').toLowerCase().trim();
+    const role = String(user?.role || '')
+      .toLowerCase()
+      .trim();
     if (role === 'admin') {
       router.push('/dashboard/admin');
     } else {
@@ -56,9 +58,11 @@ export default function Navbar() {
           : 'bg-gray-300 backdrop-blur-sm w-full border-b-4 border-black'
       }`}
     >
-      <div className={`mx-auto px-6 py-5 transition-all duration-300 ${
-        isScrolled ? 'container' : 'container'
-      }`}>
+      <div
+        className={`mx-auto px-6 py-5 transition-all duration-300 ${
+          isScrolled ? 'container' : 'container'
+        }`}
+      >
         <div className="flex items-center justify-between h-full">
           {/* Logo */}
           <div className="flex items-center h-full -my-5">
@@ -81,41 +85,29 @@ export default function Navbar() {
             <Link
               href="/"
               className={`group relative transition-colors font-bold ${
-                isScrolled
-                  ? 'text-white hover:text-gray-300'
-                  : 'text-gray-700 hover:text-gray-900'
+                isScrolled ? 'text-white hover:text-gray-300' : 'text-gray-700 hover:text-gray-900'
               }`}
             >
               Home
-              <span
-                className="absolute left-0 bottom-0 h-0.5 w-0 bg-pink-500 transition-all duration-300 ease-in-out group-hover:w-full"
-              />
+              <span className="absolute left-0 bottom-0 h-0.5 w-0 bg-pink-500 transition-all duration-300 ease-in-out group-hover:w-full" />
             </Link>
             <Link
               href="/#events"
               className={`group relative transition-colors font-bold ${
-                isScrolled
-                  ? 'text-white hover:text-gray-300'
-                  : 'text-gray-700 hover:text-gray-900'
+                isScrolled ? 'text-white hover:text-gray-300' : 'text-gray-700 hover:text-gray-900'
               }`}
             >
               Events
-              <span
-                className="absolute left-0 bottom-0 h-0.5 w-0 bg-pink-500 transition-all duration-300 ease-in-out group-hover:w-full"
-              />
+              <span className="absolute left-0 bottom-0 h-0.5 w-0 bg-pink-500 transition-all duration-300 ease-in-out group-hover:w-full" />
             </Link>
             <Link
               href="/#about"
               className={`group relative transition-colors font-bold ${
-                isScrolled
-                  ? 'text-white hover:text-gray-300'
-                  : 'text-gray-700 hover:text-gray-900'
+                isScrolled ? 'text-white hover:text-gray-300' : 'text-gray-700 hover:text-gray-900'
               }`}
             >
               About
-              <span
-                className="absolute left-0 bottom-0 h-0.5 w-0 bg-pink-500 transition-all duration-300 ease-in-out group-hover:w-full"
-              />
+              <span className="absolute left-0 bottom-0 h-0.5 w-0 bg-pink-500 transition-all duration-300 ease-in-out group-hover:w-full" />
             </Link>
           </nav>
 
@@ -180,9 +172,7 @@ export default function Navbar() {
           <div className="md:hidden">
             <button
               className={`focus:outline-none transition-colors duration-300 ${
-                isScrolled
-                  ? 'text-white hover:text-gray-300'
-                  : 'text-gray-900 hover:text-gray-700'
+                isScrolled ? 'text-white hover:text-gray-300' : 'text-gray-900 hover:text-gray-700'
               }`}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
@@ -214,8 +204,8 @@ export default function Navbar() {
             {/* Mobile Menu */}
             <div
               className={`mobile-menu fixed top-0 left-0 right-0 bg-gray-800/95 backdrop-blur-md py-5 shadow-lg z-50 border-t border-gray-700 rounded-2xl transition-all duration-300 ease-in-out ${
-                mobileMenuOpen 
-                  ? 'opacity-100 visible translate-y-0' 
+                mobileMenuOpen
+                  ? 'opacity-100 visible translate-y-0'
                   : 'opacity-0 invisible -translate-y-4 pointer-events-none'
               }`}
               id="mobile-menu"
@@ -313,16 +303,16 @@ export default function Navbar() {
       </div>
 
       {/* Auth Dialogs */}
-      <SignInDialog 
-        open={signInOpen} 
+      <SignInDialog
+        open={signInOpen}
         onOpenChange={setSignInOpen}
         onSwitchToSignUp={() => {
           setSignInOpen(false);
           setSignUpOpen(true);
         }}
       />
-      <SignUpDialog 
-        open={signUpOpen} 
+      <SignUpDialog
+        open={signUpOpen}
         onOpenChange={setSignUpOpen}
         onSwitchToSignIn={() => {
           setSignUpOpen(false);

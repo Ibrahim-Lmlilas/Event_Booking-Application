@@ -147,7 +147,9 @@ describe('EventsService', () => {
 
       await service.findAll(1, 10, EventStatus.PUBLISHED);
 
-      expect(mockEventModel.find).toHaveBeenCalledWith({ status: EventStatus.PUBLISHED });
+      expect(mockEventModel.find).toHaveBeenCalledWith({
+        status: EventStatus.PUBLISHED,
+      });
     });
 
     it('should filter by search term', async () => {
@@ -187,11 +189,15 @@ describe('EventsService', () => {
       const result = await service.findOne('507f1f77bcf86cd799439011');
 
       expect(result).toEqual(mockEvent);
-      expect(mockEventModel.findById).toHaveBeenCalledWith('507f1f77bcf86cd799439011');
+      expect(mockEventModel.findById).toHaveBeenCalledWith(
+        '507f1f77bcf86cd799439011',
+      );
     });
 
     it('should throw BadRequestException for invalid id', async () => {
-      await expect(service.findOne('invalid-id')).rejects.toThrow(BadRequestException);
+      await expect(service.findOne('invalid-id')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw NotFoundException if event not found', async () => {
@@ -199,7 +205,9 @@ describe('EventsService', () => {
         exec: jest.fn().mockResolvedValue(null),
       });
 
-      await expect(service.findOne('507f1f77bcf86cd799439011')).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('507f1f77bcf86cd799439011')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -212,7 +220,10 @@ describe('EventsService', () => {
         exec: jest.fn().mockResolvedValue(updatedEvent),
       });
 
-      const result = await service.update('507f1f77bcf86cd799439011', updateDto);
+      const result = await service.update(
+        '507f1f77bcf86cd799439011',
+        updateDto,
+      );
 
       expect(result.title).toBe('Updated Title');
       expect(mockEventModel.findByIdAndUpdate).toHaveBeenCalledWith(
@@ -223,7 +234,9 @@ describe('EventsService', () => {
     });
 
     it('should throw BadRequestException for invalid id', async () => {
-      await expect(service.update('invalid-id', {})).rejects.toThrow(BadRequestException);
+      await expect(service.update('invalid-id', {})).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw NotFoundException if event not found', async () => {
@@ -231,7 +244,9 @@ describe('EventsService', () => {
         exec: jest.fn().mockResolvedValue(null),
       });
 
-      await expect(service.update('507f1f77bcf86cd799439011', {})).rejects.toThrow(NotFoundException);
+      await expect(
+        service.update('507f1f77bcf86cd799439011', {}),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -247,7 +262,9 @@ describe('EventsService', () => {
     });
 
     it('should throw BadRequestException for invalid id', async () => {
-      await expect(service.remove('invalid-id')).rejects.toThrow(BadRequestException);
+      await expect(service.remove('invalid-id')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw NotFoundException if event not found', async () => {
@@ -255,7 +272,9 @@ describe('EventsService', () => {
         exec: jest.fn().mockResolvedValue(null),
       });
 
-      await expect(service.remove('507f1f77bcf86cd799439011')).rejects.toThrow(NotFoundException);
+      await expect(service.remove('507f1f77bcf86cd799439011')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -266,7 +285,10 @@ describe('EventsService', () => {
         exec: jest.fn().mockResolvedValue(publishedEvent),
       });
 
-      const result = await service.updateStatus('507f1f77bcf86cd799439011', EventStatus.PUBLISHED);
+      const result = await service.updateStatus(
+        '507f1f77bcf86cd799439011',
+        EventStatus.PUBLISHED,
+      );
 
       expect(result.status).toBe(EventStatus.PUBLISHED);
       expect(mockEventModel.findByIdAndUpdate).toHaveBeenCalledWith(
@@ -277,9 +299,9 @@ describe('EventsService', () => {
     });
 
     it('should throw BadRequestException for invalid id', async () => {
-      await expect(service.updateStatus('invalid-id', EventStatus.PUBLISHED)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        service.updateStatus('invalid-id', EventStatus.PUBLISHED),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw NotFoundException if event not found', async () => {
@@ -287,9 +309,9 @@ describe('EventsService', () => {
         exec: jest.fn().mockResolvedValue(null),
       });
 
-      await expect(service.updateStatus('507f1f77bcf86cd799439011', EventStatus.PUBLISHED)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.updateStatus('507f1f77bcf86cd799439011', EventStatus.PUBLISHED),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });

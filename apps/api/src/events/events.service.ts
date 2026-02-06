@@ -37,12 +37,18 @@ export class EventsService {
     maxPrice?: number,
     date?: string,
     time?: string,
-  ): Promise<{ events: Event[]; total: number; page: number; limit: number; totalPages: number }> {
+  ): Promise<{
+    events: Event[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }> {
     const skip = (page - 1) * limit;
     const query: any = {};
-    
+
     if (status) query.status = status;
-    
+
     if (search) {
       query.$or = [
         { title: { $regex: search, $options: 'i' } },
@@ -50,26 +56,31 @@ export class EventsService {
         { location: { $regex: search, $options: 'i' } },
       ];
     }
-    
+
     if (minPrice !== undefined || maxPrice !== undefined) {
       query.price = {};
       if (minPrice !== undefined) query.price.$gte = minPrice;
       if (maxPrice !== undefined) query.price.$lte = maxPrice;
     }
-    
+
     if (date) {
       const dateObj = new Date(date);
       const startOfDay = new Date(dateObj.setHours(0, 0, 0, 0));
       const endOfDay = new Date(dateObj.setHours(23, 59, 59, 999));
       query.date = { $gte: startOfDay, $lte: endOfDay };
     }
-    
+
     if (time) {
       query.time = { $regex: `^${time}`, $options: 'i' };
     }
-    
+
     const [events, total] = await Promise.all([
-      this.eventModel.find(query).sort({ date: 1 }).skip(skip).limit(limit).exec(),
+      this.eventModel
+        .find(query)
+        .sort({ date: 1 })
+        .skip(skip)
+        .limit(limit)
+        .exec(),
       this.eventModel.countDocuments(query).exec(),
     ]);
     return {

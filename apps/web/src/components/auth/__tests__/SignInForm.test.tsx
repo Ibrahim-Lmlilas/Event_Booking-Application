@@ -72,17 +72,20 @@ describe('SignInForm', () => {
 
     const form = emailInput.closest('form');
     expect(form).toBeInTheDocument();
-    
+
     // Submit the form - validation should prevent API call
     if (form) {
       fireEvent.submit(form);
     }
 
     // Wait for the validation error to appear
-    await waitFor(() => {
-      expect(screen.getByText('Please enter a valid email')).toBeInTheDocument();
-    }, { timeout: 3000 });
-    
+    await waitFor(
+      () => {
+        expect(screen.getByText('Please enter a valid email')).toBeInTheDocument();
+      },
+      { timeout: 3000 },
+    );
+
     // Verify API was not called due to validation failure
     expect(authApi.login).not.toHaveBeenCalled();
   });
@@ -157,14 +160,16 @@ describe('SignInForm', () => {
 
     await waitFor(() => {
       // The component translates "Invalid credentials" to a French message
-      expect(toast.error).toHaveBeenCalledWith('Email ou mot de passe incorrect. Veuillez réessayer.');
+      expect(toast.error).toHaveBeenCalledWith(
+        'Email ou mot de passe incorrect. Veuillez réessayer.',
+      );
     });
   });
 
   it('shows loading state during submission', async () => {
     const user = userEvent.setup();
     let resolveLogin: (value: any) => void;
-    const loginPromise = new Promise((resolve) => {
+    const loginPromise = new Promise(resolve => {
       resolveLogin = resolve;
     });
 
@@ -186,7 +191,13 @@ describe('SignInForm', () => {
 
     resolveLogin!({
       access_token: 'token',
-      user: { id: '1', email: 'test@example.com', firstName: 'Test', lastName: 'User', role: 'participant' },
+      user: {
+        id: '1',
+        email: 'test@example.com',
+        firstName: 'Test',
+        lastName: 'User',
+        role: 'participant',
+      },
     });
 
     await waitFor(() => {
