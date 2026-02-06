@@ -3,12 +3,7 @@
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { 
-  LayoutDashboard, 
-  Calendar, 
-  Ticket, 
-  Settings
-} from 'lucide-react';
+import { LayoutDashboard, Calendar, Ticket } from 'lucide-react';
 
 type Props = {
   isOpen: boolean;
@@ -19,7 +14,6 @@ const menuItems = [
   { path: '/dashboard/participant', icon: LayoutDashboard, label: 'Dashboard' },
   { path: '/dashboard/participant/events', icon: Calendar, label: 'My Events' },
   { path: '/dashboard/participant/reservations', icon: Ticket, label: 'My Reservations' },
-  { path: '/dashboard/participant/settings', icon: Settings, label: 'Settings' },
 ];
 
 export default function ParticipantSidebar({ isOpen, onClose }: Props) {
