@@ -72,7 +72,17 @@ export default function SignInForm({ onSuccess, onSwitchToSignUp }: SignInFormPr
         onSuccess();
       }
     } catch (error: any) {
-      toast.error(error.message || 'Login failed. Please try again.');
+      // Display user-friendly error message
+      const errorMessage = error.message || 'Login failed. Please try again.';
+      
+      // Provide more specific messages for common errors
+      if (errorMessage.includes('Invalid credentials')) {
+        toast.error('Email ou mot de passe incorrect. Veuillez réessayer.');
+      } else if (errorMessage.includes('Network error')) {
+        toast.error('Impossible de se connecter au serveur. Vérifiez votre connexion.');
+      } else {
+        toast.error(errorMessage);
+      }
     } finally {
       setLoading(false);
     }
@@ -131,8 +141,9 @@ export default function SignInForm({ onSuccess, onSwitchToSignUp }: SignInFormPr
             placeholder="••••••••"
             value={formData.password}
             onChange={(e) => {
-              setFormData({ ...formData, password: e.target.value });
-              if (errors.password) setErrors({ ...errors, password: undefined });
+              const newPassword = e.target.value;
+              setFormData((prev) => ({ ...prev, password: newPassword }));
+              if (errors.password) setErrors((prev) => ({ ...prev, password: undefined }));
             }}
             className={`h-12 px-4 transition-colors ${
               errors.password 

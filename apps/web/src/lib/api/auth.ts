@@ -14,37 +14,81 @@ interface LoginData {
 
 export const authApi = {
   async register(data: RegisterData) {
-    const response = await fetch(`${API_URL}/auth/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+    try {
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Registration failed');
+      if (!response.ok) {
+        let errorMessage = 'Registration failed';
+        
+        // Try to parse error response
+        try {
+          const error = await response.json();
+          // NestJS returns errors in format: { statusCode, message, error }
+          errorMessage = error.message || errorMessage;
+        } catch {
+          // If response is not JSON, use status text
+          errorMessage = response.statusText || `Server error ${response.status}`;
+        }
+        
+        throw new Error(errorMessage);
+      }
+
+      return response.json();
+    } catch (error: any) {
+      // Re-throw with better error message if it's already an Error
+      if (error instanceof Error) {
+        throw error;
+      }
+      // Network errors (no response)
+      throw new Error('Network error: Failed to connect to server');
     }
-
-    return response.json();
   },
 
   async login(data: LoginData) {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+    try {
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Login failed');
+      if (!response.ok) {
+        let errorMessage = 'Login failed';
+        
+        // Try to parse error response
+        try {
+          const error = await response.json();
+          // NestJS returns errors in format: { statusCode, message, error }
+          errorMessage = error.message || errorMessage;
+        } catch {
+          // If response is not JSON, use status text
+          if (response.status === 401) {
+            errorMessage = 'Invalid credentials';
+          } else {
+            errorMessage = response.statusText || `Server error ${response.status}`;
+          }
+        }
+        
+        throw new Error(errorMessage);
+      }
+
+      return response.json();
+    } catch (error: any) {
+      // Re-throw with better error message if it's already an Error
+      if (error instanceof Error) {
+        throw error;
+      }
+      // Network errors (no response)
+      throw new Error('Network error: Failed to connect to server');
     }
-
-    return response.json();
   },
 
   async getProfile(token: string) {

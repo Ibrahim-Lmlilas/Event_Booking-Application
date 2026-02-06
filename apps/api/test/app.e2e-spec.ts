@@ -1,3 +1,12 @@
+// CRITICAL: Set test database URI BEFORE importing AppModule
+// This ensures MongooseModule.forRoot() uses the test database, not production
+const existingUri = process.env.MONGODB_URI || 'mongodb://localhost:27017';
+const uriMatch = existingUri.match(/^(mongodb:\/\/[^\/]+)/);
+const baseUri = uriMatch ? uriMatch[1] : 'mongodb://localhost:27017';
+const testDbName = `event-booking-test-e2e-${Date.now()}`;
+process.env.MONGODB_URI = `${baseUri}/${testDbName}`;
+console.log(`[E2E Test] Setting test database BEFORE module import: ${process.env.MONGODB_URI}`);
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
@@ -26,14 +35,15 @@ describe('App E2E - Complete Reservation Flow with Roles', () => {
   const testTimestamp = Date.now();
 
   beforeAll(async () => {
-    // Set test MongoDB URI if not set
-    // Try Docker MongoDB port first (27019), then local (27017)
-    if (!process.env.MONGODB_URI) {
-      // Check if Docker MongoDB is running on 27019
-      const dockerMongoUri = 'mongodb://localhost:27019/event-booking-test';
-      const localMongoUri = 'mongodb://localhost:27017/event-booking-test';
-      process.env.MONGODB_URI = dockerMongoUri; // Try Docker first
+    // MONGODB_URI is already set at module import time (see top of file)
+    // This ensures AppModule uses the test database, not production
+    console.log(`[E2E Test] Confirming test database: ${process.env.MONGODB_URI}`);
+    
+    // Verify we're NOT using production database
+    if (process.env.MONGODB_URI && !process.env.MONGODB_URI.includes('test')) {
+      throw new Error(`SECURITY ERROR: Test is trying to use non-test database: ${process.env.MONGODB_URI}`);
     }
+    
     if (!process.env.JWT_SECRET) {
       process.env.JWT_SECRET = 'test-secret-key-for-e2e-tests';
     }
@@ -61,10 +71,15 @@ describe('App E2E - Complete Reservation Flow with Roles', () => {
   }, 30000); // Increase timeout to 30 seconds for MongoDB connection
 
   afterAll(async () => {
-    // Clean database after tests
-    if (userModel) await userModel.deleteMany({}).exec();
-    if (eventModel) await eventModel.deleteMany({}).exec();
-    if (reservationModel) await reservationModel.deleteMany({}).exec();
+    // Clean test database after tests (only test data, not production)
+    try {
+      if (userModel) await userModel.deleteMany({}).exec();
+      if (eventModel) await eventModel.deleteMany({}).exec();
+      if (reservationModel) await reservationModel.deleteMany({}).exec();
+      console.log(`[E2E Test] Cleaned test database: ${process.env.MONGODB_URI}`);
+    } catch (error) {
+      console.error('[E2E Test] Error cleaning test database:', error);
+    }
     if (app) {
       await app.close();
     }
