@@ -19,6 +19,8 @@ const eslintConfig = [
       'react-hooks/exhaustive-deps': 'warn',
       'react-hooks/rules-of-hooks': 'warn',
       'react-hooks/error-boundaries': 'warn',
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/refs': 'warn',
       'react/no-unescaped-entities': 'warn',
     },
   },
