@@ -3,12 +3,11 @@
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { 
-  LayoutDashboard, 
-  Calendar, 
-  Users, 
-  Ticket, 
-  Settings
+import {
+  LayoutDashboard,
+  Calendar,
+  Users,
+  Ticket,
 } from 'lucide-react';
 
 type Props = {
@@ -21,7 +20,6 @@ const menuItems = [
   { path: '/dashboard/admin/events', icon: Calendar, label: 'Events' },
   { path: '/dashboard/admin/reservations', icon: Ticket, label: 'Reservations' },
   { path: '/dashboard/admin/users', icon: Users, label: 'Users' },
-  { path: '/dashboard/admin/settings', icon: Settings, label: 'Settings' },
 ];
 
 export default function AdminSidebar({ isOpen, onClose }: Props) {
