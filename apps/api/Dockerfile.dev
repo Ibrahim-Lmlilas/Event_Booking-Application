@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
 # Install nest CLI globally for hot reload
 RUN npm install -g @nestjs/cli
