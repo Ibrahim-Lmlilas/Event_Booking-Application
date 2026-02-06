@@ -25,7 +25,10 @@ export default function ParticipantDashboardLayout({
         {/* Mobile overlay */}
         {sidebarOpen && (
           <div
-            className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+            className="fixed inset-0 z-40"
+            style={{
+              background: 'linear-gradient(to bottom, #cbcbcd 0%, #cbcbcd 80%,rgb(0, 107, 121) 100%)',
+            }}
             onClick={() => setSidebarOpen(false)}
           />
         )}
