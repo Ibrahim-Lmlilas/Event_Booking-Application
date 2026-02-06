@@ -22,10 +22,13 @@ export default function AdminDashboardLayout({
             {children}
           </main>
         </div>
-        {/* Mobile overlay */}
+        {/* Mobile overlay - gradient b7al sidebar */}
         {sidebarOpen && (
           <div
-            className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+            className="fixed inset-0 z-40 lg:hidden"
+            style={{
+              background: 'linear-gradient(to bottom, #cbcbcd 0%, #cbcbcd 80%, rgb(202, 0, 94) 100%)',
+            }}
             onClick={() => setSidebarOpen(false)}
           />
         )}
