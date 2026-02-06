@@ -73,6 +73,18 @@ jobs:
     name: Backend - Tests
     runs-on: ubuntu-latest
     needs: backend-install
+    
+    services:
+      mongodb:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
     defaults:
       run:
         working-directory: ./apps/api
@@ -94,9 +106,13 @@ jobs:
 
       - name: Run unit tests
         run: npm test -- --coverage
+        env:
+          MONGODB_URI: mongodb://localhost:27017/event-booking-test
 
       - name: Run e2e tests
         run: npm run test:e2e
+        env:
+          MONGODB_URI: mongodb://localhost:27017/event-booking-test-e2e
 
   backend-build:
     name: Backend - Build
