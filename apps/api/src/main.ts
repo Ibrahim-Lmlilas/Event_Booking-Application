@@ -17,9 +17,21 @@ async function bootstrap() {
   // Set global prefix
   app.setGlobalPrefix('api');
   
-  // Enable CORS
+  // Enable CORS - support multiple origins for production and development
+  const allowedOrigins = process.env.CORS_ORIGIN 
+    ? process.env.CORS_ORIGIN.split(',')
+    : ['http://localhost:3000'];
+  
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   });
   
