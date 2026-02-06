@@ -37,12 +37,18 @@ export default function ParticipantSidebar({ isOpen, onClose }: Props) {
           ${isOpen ? 'w-64 sm:w-72' : 'w-0'}
           lg:w-20
           lg:hover:w-64
-          ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+          ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
         {/* Header: logo + close X */}
-        <div className={`flex items-center justify-between px-3 h-14 sm:h-16 ${isOpen ? 'border-b border-[#b0b0b2]' : 'lg:border-b lg:border-[#b0b0b2]'}`} style={{ borderWidth: '1px' }}>
-          <Link href="/dashboard/participant" className="flex items-center justify-center overflow-hidden flex-1 min-w-0">
+        <div
+          className={`flex items-center justify-between px-3 h-14 sm:h-16 ${isOpen ? 'border-b border-[#b0b0b2]' : 'lg:border-b lg:border-[#b0b0b2]'}`}
+          style={{ borderWidth: '1px' }}
+        >
+          <Link
+            href="/dashboard/participant"
+            className="flex items-center justify-center overflow-hidden flex-1 min-w-0"
+          >
             <Image
               src="/logo.svg"
               alt="eventzi logo"
@@ -75,7 +81,7 @@ export default function ParticipantSidebar({ isOpen, onClose }: Props) {
 
         {/* Navigation */}
         <nav className="flex flex-col py-4 sm:py-6 space-y-1">
-          {menuItems.map((item) => {
+          {menuItems.map(item => {
             const isActive = pathname === item.path;
             return (
               <button
@@ -90,11 +96,11 @@ export default function ParticipantSidebar({ isOpen, onClose }: Props) {
                   text-gray-700
                   transition-all duration-200
                   hover:bg-[#b8b8ba] hover:text-gray-900
-                  ${isActive ? "bg-[#b8b8ba] text-gray-900" : ""}
+                  ${isActive ? 'bg-[#b8b8ba] text-gray-900' : ''}
                 `}
               >
                 <span className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 flex items-center justify-center ml-3">
-                <item.icon className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <item.icon className="w-5 h-5 sm:w-6 sm:h-6" />
                 </span>
                 <span className="sidebar-content ml-2 sm:ml-3 whitespace-nowrap text-xs sm:text-sm font-bold">
                   {item.label}

@@ -16,11 +16,11 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        const expiresIn = configService.get<string>('JWT_EXPIRES_IN');
+        const expiresIn = configService.get<string>('JWT_EXPIRES_IN') || '1d';
         return {
-          secret: configService.get<string>('JWT_SECRET'),
-          signOptions: { 
-            expiresIn: expiresIn as any
+          secret: configService.get<string>('JWT_SECRET') || 'secret-key',
+          signOptions: {
+            expiresIn: expiresIn as any,
           },
         };
       },

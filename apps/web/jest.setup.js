@@ -22,9 +22,7 @@ jest.mock('next/navigation', () => ({
 // Mock next/image
 jest.mock('next/image', () => ({
   __esModule: true,
-  default: (props) => {
-    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
-    // eslint-disable-next-line react/jsx-props-no-spreading
+  default: props => {
     return require('react').createElement('img', props);
   },
 }));
@@ -40,7 +38,7 @@ global.localStorage = localStorageMock;
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation((query) => ({
+  value: jest.fn().mockImplementation(query => ({
     matches: false,
     media: query,
     onchange: null,

@@ -46,7 +46,7 @@ export function AdminUsersTable({ users, onRoleUpdate, onDeleteClick }: Props) {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {users.map((u) => (
+            {users.map(u => (
               <tr key={u._id} className="hover:bg-gray-50">
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
@@ -84,9 +84,7 @@ export function AdminUsersTable({ users, onRoleUpdate, onDeleteClick }: Props) {
                   </Select>
                 </td>
                 <td className="px-4 py-3 text-center text-sm text-gray-500">
-                  {u.createdAt
-                    ? new Date(u.createdAt).toLocaleDateString()
-                    : '–'}
+                  {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '–'}
                 </td>
                 <td className="px-4 py-3 text-center">
                   <button

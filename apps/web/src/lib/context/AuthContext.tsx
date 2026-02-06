@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const checkAuth = async () => {
     const token = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
-    
+
     // If no token, check if we have stored user data (fallback)
     if (!token) {
       if (storedUser) {
@@ -62,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       // Validate token and fetch user profile from API
       const response = await authApi.getProfile(token);
-      
+
       if (response.user) {
         // Update stored user data with fresh data from API
         const userData: User = {
@@ -72,14 +72,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           lastName: response.user.lastName,
           role: response.user.role,
         };
-        
+
         localStorage.setItem('user', JSON.stringify(userData));
         setUser(userData);
       }
     } catch (error: any) {
       // Only clear storage if token is definitely invalid (401)
       // For other errors (network, 500, etc.), keep using stored user data
-      if (error.message?.includes('Token expired') || error.message?.includes('invalid') || error.message?.includes('401')) {
+      if (
+        error.message?.includes('Token expired') ||
+        error.message?.includes('invalid') ||
+        error.message?.includes('401')
+      ) {
         console.error('Auth check failed - token invalid:', error.message);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -98,11 +102,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
-    
+
     // Redirect based on role
     // Role values from API are lowercase: 'admin' or 'participant'
-    const role = String(userData.role || '').toLowerCase().trim();
-    
+    const role = String(userData.role || '')
+      .toLowerCase()
+      .trim();
+
     // Use router.push for client-side navigation without refresh
     if (role === 'admin') {
       router.push('/dashboard/admin');

@@ -29,10 +29,10 @@ export default function ProtectedRoute({
 
     // If roles are specified, check if user has required role
     if (allowedRoles.length > 0) {
-      const userRole = String(user.role || '').toLowerCase().trim();
-      const hasAccess = allowedRoles.some(
-        (role) => role.toLowerCase().trim() === userRole
-      );
+      const userRole = String(user.role || '')
+        .toLowerCase()
+        .trim();
+      const hasAccess = allowedRoles.some(role => role.toLowerCase().trim() === userRole);
 
       if (!hasAccess) {
         // Redirect to appropriate dashboard based on user role
@@ -62,10 +62,10 @@ export default function ProtectedRoute({
 
   // If roles are specified, check access
   if (allowedRoles.length > 0) {
-    const userRole = String(user.role || '').toLowerCase().trim();
-    const hasAccess = allowedRoles.some(
-      (role) => role.toLowerCase().trim() === userRole
-    );
+    const userRole = String(user.role || '')
+      .toLowerCase()
+      .trim();
+    const hasAccess = allowedRoles.some(role => role.toLowerCase().trim() === userRole);
 
     if (!hasAccess) {
       return null; // Redirect will happen

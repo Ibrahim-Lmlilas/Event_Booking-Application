@@ -1,6 +1,6 @@
-import * as React from "react"
-import * as VisuallyHiddenPrimitive from "@radix-ui/react-visually-hidden"
+import * as React from 'react';
+import * as VisuallyHiddenPrimitive from '@radix-ui/react-visually-hidden';
 
-const VisuallyHidden = VisuallyHiddenPrimitive.Root
+const VisuallyHidden = VisuallyHiddenPrimitive.Root;
 
-export { VisuallyHidden }
+export { VisuallyHidden };

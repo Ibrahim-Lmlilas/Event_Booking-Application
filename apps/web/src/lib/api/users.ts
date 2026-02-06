@@ -41,7 +41,10 @@ export const usersApi = {
     return res.json();
   },
 
-  async update(id: string, data: Partial<Pick<User, 'firstName' | 'lastName' | 'role'>>): Promise<User> {
+  async update(
+    id: string,
+    data: Partial<Pick<User, 'firstName' | 'lastName' | 'role'>>,
+  ): Promise<User> {
     const token = getToken();
     if (!token) throw new Error('Authentication required');
 

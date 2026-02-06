@@ -46,7 +46,7 @@ export function ParticipantEventsFilters({ filters, onFiltersChange, onReset }: 
 
   const handleChange = (key: keyof Filters, value: string) => {
     const newFilters = { ...filters, [key]: value };
-    
+
     // Debounce search input (300ms delay - reduced for better responsiveness)
     if (key === 'search') {
       setSearchValue(value); // Update local state immediately for responsive typing
@@ -78,7 +78,7 @@ export function ParticipantEventsFilters({ filters, onFiltersChange, onReset }: 
     };
   }, []);
 
-  const hasActiveFilters = 
+  const hasActiveFilters =
     filters.search ||
     filters.minPrice ||
     filters.maxPrice ||
@@ -99,7 +99,7 @@ export function ParticipantEventsFilters({ filters, onFiltersChange, onReset }: 
               id="search"
               placeholder="Search events..."
               value={searchValue}
-              onChange={(e) => handleChange('search', e.target.value)}
+              onChange={e => handleChange('search', e.target.value)}
               className="pl-10 bg-white"
             />
           </div>
@@ -117,7 +117,7 @@ export function ParticipantEventsFilters({ filters, onFiltersChange, onReset }: 
             step="0.01"
             placeholder="0"
             value={filters.minPrice}
-            onChange={(e) => handleChange('minPrice', e.target.value)}
+            onChange={e => handleChange('minPrice', e.target.value)}
             className="bg-white"
           />
         </div>
@@ -134,7 +134,7 @@ export function ParticipantEventsFilters({ filters, onFiltersChange, onReset }: 
             step="0.01"
             placeholder="1000"
             value={filters.maxPrice}
-            onChange={(e) => handleChange('maxPrice', e.target.value)}
+            onChange={e => handleChange('maxPrice', e.target.value)}
             className="bg-white"
           />
         </div>
@@ -148,7 +148,7 @@ export function ParticipantEventsFilters({ filters, onFiltersChange, onReset }: 
             id="date"
             type="date"
             value={filters.date}
-            onChange={(e) => handleChange('date', e.target.value)}
+            onChange={e => handleChange('date', e.target.value)}
             className="bg-white"
           />
         </div>
@@ -158,13 +158,20 @@ export function ParticipantEventsFilters({ filters, onFiltersChange, onReset }: 
           <Label htmlFor="time" className="text-sm font-medium text-gray-700">
             Time
           </Label>
-          <Select value={filters.time || 'all'} onValueChange={(value) => handleChange('time', value === 'all' ? '' : value)}>
+          <Select
+            value={filters.time || 'all'}
+            onValueChange={value => handleChange('time', value === 'all' ? '' : value)}
+          >
             <SelectTrigger className="bg-white border-gray-300">
               <SelectValue placeholder="All Times" />
             </SelectTrigger>
             <SelectContent className="bg-white">
-              {TIME_OPTIONS.map((option) => (
-                <SelectItem key={option.value} value={option.value} className="bg-white hover:bg-gray-100">
+              {TIME_OPTIONS.map(option => (
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  className="bg-white hover:bg-gray-100"
+                >
                   {option.label}
                 </SelectItem>
               ))}

@@ -18,7 +18,7 @@ type Props = {
 export function AdminEventsTable({ events, onEdit, onDelete, onStatusChange }: Props) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {events.map((ev) => {
+      {events.map(ev => {
         const bgImage = ev.bg || 'event1.jpg';
         return (
           <div
@@ -36,12 +36,16 @@ export function AdminEventsTable({ events, onEdit, onDelete, onStatusChange }: P
                 {ev.title}
               </h3>
               {ev.description && (
-                <p className="text-sm font-bold text-gray-200 mt-1 line-clamp-2">{ev.description}</p>
+                <p className="text-sm font-bold text-gray-200 mt-1 line-clamp-2">
+                  {ev.description}
+                </p>
               )}
               <div className="mt-3 space-y-1.5 text-sm font-bold text-gray-100">
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4 flex-shrink-0 text-gray-300" />
-                  <span>{new Date(ev.date).toLocaleDateString()} · {ev.time}</span>
+                  <span>
+                    {new Date(ev.date).toLocaleDateString()} · {ev.time}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 flex-shrink-0 text-gray-300" />
@@ -49,7 +53,9 @@ export function AdminEventsTable({ events, onEdit, onDelete, onStatusChange }: P
                 </div>
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4 flex-shrink-0 text-gray-300" />
-                  <span>{ev.seatsTaken} / {ev.capacity}</span>
+                  <span>
+                    {ev.seatsTaken} / {ev.capacity}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-gray-300">DH</span>

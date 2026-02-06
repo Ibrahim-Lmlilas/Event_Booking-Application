@@ -67,7 +67,7 @@ jobs:
           key: ${{ runner.os }}-backend-${{ hashFiles('apps/api/package-lock.json') }}
 
       - name: Run ESLint
-        run: npm run lint
+        run: npm run lint -- --max-warnings 250
 
   backend-test:
     name: Backend - Tests
@@ -187,7 +187,7 @@ jobs:
           key: ${{ runner.os }}-frontend-${{ hashFiles('apps/web/package-lock.json') }}
 
       - name: Run ESLint
-        run: npm run lint
+        run: npm run lint -- --max-warnings 50
 
   frontend-test:
     name: Frontend - Tests

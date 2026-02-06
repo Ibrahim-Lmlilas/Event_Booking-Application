@@ -86,7 +86,9 @@ describe('ReservationsService', () => {
     }).compile();
 
     service = module.get<ReservationsService>(ReservationsService);
-    reservationModel = module.get<Model<ReservationDocument>>(getModelToken(Reservation.name));
+    reservationModel = module.get<Model<ReservationDocument>>(
+      getModelToken(Reservation.name),
+    );
     eventsService = module.get<EventsService>(EventsService);
   });
 
@@ -103,7 +105,10 @@ describe('ReservationsService', () => {
       mockReservationModel.findOne.mockReturnValue({
         exec: jest.fn().mockResolvedValue(null),
       });
-      mockEventsService.update.mockResolvedValue({ ...mockEvent, seatsTaken: 1 });
+      mockEventsService.update.mockResolvedValue({
+        ...mockEvent,
+        seatsTaken: 1,
+      });
 
       const result = await service.create(createDto, userId);
 
@@ -149,19 +154,25 @@ describe('ReservationsService', () => {
         exec: jest.fn().mockResolvedValue(mockReservation),
       });
 
-      await expect(service.create(createDto, userId)).rejects.toThrow(ConflictException);
-    });
-
-    it('should throw BadRequestException for invalid event ID', async () => {
-      await expect(service.create({ eventId: 'invalid' }, userId)).rejects.toThrow(
-        BadRequestException,
+      await expect(service.create(createDto, userId)).rejects.toThrow(
+        ConflictException,
       );
     });
 
-    it('should throw NotFoundException when event does not exist', async () => {
-      mockEventsService.findOne.mockRejectedValue(new NotFoundException('Event not found'));
+    it('should throw BadRequestException for invalid event ID', async () => {
+      await expect(
+        service.create({ eventId: 'invalid' }, userId),
+      ).rejects.toThrow(BadRequestException);
+    });
 
-      await expect(service.create(createDto, userId)).rejects.toThrow(NotFoundException);
+    it('should throw NotFoundException when event does not exist', async () => {
+      mockEventsService.findOne.mockRejectedValue(
+        new NotFoundException('Event not found'),
+      );
+
+      await expect(service.create(createDto, userId)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -221,7 +232,9 @@ describe('ReservationsService', () => {
     });
 
     it('should throw BadRequestException for invalid id', async () => {
-      await expect(service.findOne('invalid-id')).rejects.toThrow(BadRequestException);
+      await expect(service.findOne('invalid-id')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw NotFoundException if reservation not found', async () => {
@@ -233,7 +246,9 @@ describe('ReservationsService', () => {
         }),
       });
 
-      await expect(service.findOne('507f1f77bcf86cd799439012')).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('507f1f77bcf86cd799439012')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -263,12 +278,12 @@ describe('ReservationsService', () => {
         populate: jest.fn().mockResolvedValue(pendingReservation),
         toObject: jest.fn().mockReturnValue(pendingReservation),
       };
-      
+
       mockReservationModel.findById.mockReturnValue({
         exec: jest.fn().mockResolvedValue(reservationDoc),
       });
       mockEventsService.findOne.mockResolvedValue(futureEvent);
-      
+
       // Mock updateStatus method to return canceled reservation
       const canceledReservationDoc = {
         ...pendingReservation,
@@ -282,13 +297,15 @@ describe('ReservationsService', () => {
           status: ReservationStatus.CANCELED,
         }),
       };
-      
-      mockReservationModel.findById.mockReturnValueOnce({
-        exec: jest.fn().mockResolvedValue(reservationDoc),
-      }).mockReturnValueOnce({
-        exec: jest.fn().mockResolvedValue(canceledReservationDoc),
-      });
-      
+
+      mockReservationModel.findById
+        .mockReturnValueOnce({
+          exec: jest.fn().mockResolvedValue(reservationDoc),
+        })
+        .mockReturnValueOnce({
+          exec: jest.fn().mockResolvedValue(canceledReservationDoc),
+        });
+
       mockEventsService.update.mockResolvedValue(futureEvent);
 
       const result = await service.cancelByParticipant(reservationId, userId);
@@ -306,9 +323,9 @@ describe('ReservationsService', () => {
         exec: jest.fn().mockResolvedValue(otherUserReservation),
       });
 
-      await expect(service.cancelByParticipant(reservationId, userId)).rejects.toThrow(
-        ForbiddenException,
-      );
+      await expect(
+        service.cancelByParticipant(reservationId, userId),
+      ).rejects.toThrow(ForbiddenException);
     });
 
     it('should throw BadRequestException if reservation is not PENDING or CONFIRMED', async () => {
@@ -322,9 +339,9 @@ describe('ReservationsService', () => {
         exec: jest.fn().mockResolvedValue(refusedReservation),
       });
 
-      await expect(service.cancelByParticipant(reservationId, userId)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        service.cancelByParticipant(reservationId, userId),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -343,7 +360,9 @@ describe('ReservationsService', () => {
       });
       pendingReservation.save = jest.fn().mockResolvedValue(pendingReservation);
       mockEventsService.findOne.mockResolvedValue(mockEvent);
-      pendingReservation.populate = jest.fn().mockResolvedValue(pendingReservation);
+      pendingReservation.populate = jest
+        .fn()
+        .mockResolvedValue(pendingReservation);
 
       const result = await service.updateStatus(reservationId, {
         status: ReservationStatus.CONFIRMED,
@@ -363,12 +382,21 @@ describe('ReservationsService', () => {
       mockReservationModel.findById.mockReturnValue({
         exec: jest.fn().mockResolvedValue(confirmedReservation),
       });
-      confirmedReservation.save = jest.fn().mockResolvedValue(confirmedReservation);
+      confirmedReservation.save = jest
+        .fn()
+        .mockResolvedValue(confirmedReservation);
       mockEventsService.findOne.mockResolvedValue(eventWithSeats);
-      mockEventsService.update.mockResolvedValue({ ...eventWithSeats, seatsTaken: 4 });
-      confirmedReservation.populate = jest.fn().mockResolvedValue(confirmedReservation);
+      mockEventsService.update.mockResolvedValue({
+        ...eventWithSeats,
+        seatsTaken: 4,
+      });
+      confirmedReservation.populate = jest
+        .fn()
+        .mockResolvedValue(confirmedReservation);
 
-      await service.updateStatus(reservationId, { status: ReservationStatus.CANCELED });
+      await service.updateStatus(reservationId, {
+        status: ReservationStatus.CANCELED,
+      });
 
       expect(mockEventsService.update).toHaveBeenCalledWith(mockEvent._id, {
         seatsTaken: 4,
@@ -376,9 +404,11 @@ describe('ReservationsService', () => {
     });
 
     it('should throw BadRequestException for invalid id', async () => {
-      await expect(service.updateStatus('invalid-id', { status: ReservationStatus.CONFIRMED })).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        service.updateStatus('invalid-id', {
+          status: ReservationStatus.CONFIRMED,
+        }),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw NotFoundException if reservation not found', async () => {
@@ -386,9 +416,11 @@ describe('ReservationsService', () => {
         exec: jest.fn().mockResolvedValue(null),
       });
 
-      await expect(service.updateStatus(reservationId, { status: ReservationStatus.CONFIRMED })).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.updateStatus(reservationId, {
+          status: ReservationStatus.CONFIRMED,
+        }),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });

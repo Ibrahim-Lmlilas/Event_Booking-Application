@@ -17,10 +17,7 @@ export function SignInDialog({ open, onOpenChange, onSwitchToSignUp }: SignInDia
         <VisuallyHidden>
           <DialogTitle>Sign In</DialogTitle>
         </VisuallyHidden>
-        <SignInForm 
-          onSuccess={() => onOpenChange(false)} 
-          onSwitchToSignUp={onSwitchToSignUp}
-        />
+        <SignInForm onSuccess={() => onOpenChange(false)} onSwitchToSignUp={onSwitchToSignUp} />
       </DialogContent>
     </Dialog>
   );

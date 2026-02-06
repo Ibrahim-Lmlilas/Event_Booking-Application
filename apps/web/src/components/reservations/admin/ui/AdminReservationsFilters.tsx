@@ -40,7 +40,7 @@ export function AdminReservationsFilters({ filters, onFiltersChange }: Props) {
           type="text"
           placeholder="Search by event title"
           value={filters.eventTitle || ''}
-          onChange={(e) => handleChange('eventTitle', e.target.value)}
+          onChange={e => handleChange('eventTitle', e.target.value)}
           className="mt-1 bg-white"
         />
       </div>
@@ -53,7 +53,7 @@ export function AdminReservationsFilters({ filters, onFiltersChange }: Props) {
           type="text"
           placeholder="Search by first or last name"
           value={filters.userName || ''}
-          onChange={(e) => handleChange('userName', e.target.value)}
+          onChange={e => handleChange('userName', e.target.value)}
           className="mt-1 bg-white"
         />
       </div>
@@ -63,17 +63,27 @@ export function AdminReservationsFilters({ filters, onFiltersChange }: Props) {
         </Label>
         <Select
           value={filters.status || 'all'}
-          onValueChange={(value) => handleChange('status', value === 'all' ? '' : value)}
+          onValueChange={value => handleChange('status', value === 'all' ? '' : value)}
         >
           <SelectTrigger className="mt-1 bg-white">
             <SelectValue placeholder="All Statuses" />
           </SelectTrigger>
           <SelectContent className="bg-white">
-            <SelectItem value="all" className="hover:cursor-pointer">All Statuses</SelectItem>
-            <SelectItem value="PENDING" className="hover:cursor-pointer">PENDING</SelectItem>
-            <SelectItem value="CONFIRMED" className="hover:cursor-pointer">CONFIRMED</SelectItem>
-            <SelectItem value="REFUSED" className="hover:cursor-pointer">REFUSED</SelectItem>
-            <SelectItem value="CANCELED" className="hover:cursor-pointer">CANCELED</SelectItem>
+            <SelectItem value="all" className="hover:cursor-pointer">
+              All Statuses
+            </SelectItem>
+            <SelectItem value="PENDING" className="hover:cursor-pointer">
+              PENDING
+            </SelectItem>
+            <SelectItem value="CONFIRMED" className="hover:cursor-pointer">
+              CONFIRMED
+            </SelectItem>
+            <SelectItem value="REFUSED" className="hover:cursor-pointer">
+              REFUSED
+            </SelectItem>
+            <SelectItem value="CANCELED" className="hover:cursor-pointer">
+              CANCELED
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>

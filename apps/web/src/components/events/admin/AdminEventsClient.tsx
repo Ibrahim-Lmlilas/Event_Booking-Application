@@ -24,12 +24,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import {
-  AdminEventsHeader,
-  AdminEventsEmpty,
-  AdminEventsTable,
-  AdminEventFormDialog,
-} from './ui';
+import { AdminEventsHeader, AdminEventsEmpty, AdminEventsTable, AdminEventFormDialog } from './ui';
 import type { FormErrors } from './ui/AdminEventFormDialog';
 
 const ITEMS_PER_PAGE = 6;
@@ -183,7 +178,9 @@ export function AdminEventsClient() {
   const handleStatusChange = async (event: Event, status: EventStatus) => {
     try {
       await eventsApi.updateStatus(event._id, status);
-      toast.success(`Status set to ${status === 'PUBLISHED' ? 'Published' : status === 'CANCELED' ? 'Canceled' : status}`);
+      toast.success(
+        `Status set to ${status === 'PUBLISHED' ? 'Published' : status === 'CANCELED' ? 'Canceled' : status}`,
+      );
       fetchEvents(page);
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : 'Failed to update status');
@@ -245,7 +242,7 @@ export function AdminEventsClient() {
           <AdminEventsTable
             events={events}
             onEdit={openEdit}
-            onDelete={(event) => setEventToDelete(event)}
+            onDelete={event => setEventToDelete(event)}
             onStatusChange={handleStatusChange}
           />
           {totalPages > 1 && (
@@ -255,7 +252,7 @@ export function AdminEventsClient() {
                   <PaginationItem>
                     <PaginationPrevious
                       href="#"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.preventDefault();
                         handlePageChange(page - 1);
                       }}
@@ -284,7 +281,7 @@ export function AdminEventsClient() {
                   <PaginationItem>
                     <PaginationNext
                       href="#"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.preventDefault();
                         handlePageChange(page + 1);
                       }}
@@ -310,7 +307,10 @@ export function AdminEventsClient() {
         editEvent={editEvent}
       />
 
-      <AlertDialog open={eventToDelete !== null} onOpenChange={(open) => !open && setEventToDelete(null)}>
+      <AlertDialog
+        open={eventToDelete !== null}
+        onOpenChange={open => !open && setEventToDelete(null)}
+      >
         <AlertDialogContent className="bg-white text-gray-900">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-gray-900">Delete event</AlertDialogTitle>

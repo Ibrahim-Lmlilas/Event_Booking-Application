@@ -20,7 +20,7 @@ export function AdminUsersFilters({ search, onSearchChange }: Props) {
           type="text"
           placeholder="Name or email..."
           value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
+          onChange={e => onSearchChange(e.target.value)}
           className="mt-1 bg-white"
         />
       </div>
