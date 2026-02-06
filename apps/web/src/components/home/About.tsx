@@ -24,51 +24,71 @@ export default function About() {
               <Target className="w-12 h-12 text-blue-600 dark:text-blue-400" strokeWidth={1.5} />
             </div>
             <CardTitle>Easy to Use</CardTitle>
-            <p className="text-gray-600 dark:text-gray-300">Simple and intuitive booking process in just a few clicks</p>
+            <p className="text-gray-600 dark:text-gray-300">
+              Simple and intuitive booking process in just a few clicks
+            </p>
           </div>
           <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-lg">
             <div className="flex justify-center mb-4">
               <Zap className="w-12 h-12 text-amber-500 dark:text-amber-400" strokeWidth={1.5} />
             </div>
             <CardTitle>Instant Confirmation</CardTitle>
-            <p className="text-gray-600 dark:text-gray-300">Get your booking confirmation and PDF ticket immediately</p>
+            <p className="text-gray-600 dark:text-gray-300">
+              Get your booking confirmation and PDF ticket immediately
+            </p>
           </div>
           <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-lg">
             <div className="flex justify-center mb-4">
-              <Lock className="w-12 h-12 text-emerald-600 dark:text-emerald-400" strokeWidth={1.5} />
+              <Lock
+                className="w-12 h-12 text-emerald-600 dark:text-emerald-400"
+                strokeWidth={1.5}
+              />
             </div>
             <CardTitle>Secure & Reliable</CardTitle>
-            <p className="text-gray-600 dark:text-gray-300">Your data is protected with enterprise-grade security</p>
+            <p className="text-gray-600 dark:text-gray-300">
+              Your data is protected with enterprise-grade security
+            </p>
           </div>
           <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-lg">
             <div className="flex justify-center mb-4">
               <Globe className="w-12 h-12 text-cyan-600 dark:text-cyan-400" strokeWidth={1.5} />
             </div>
             <CardTitle>Wide Variety</CardTitle>
-            <p className="text-gray-600 dark:text-gray-300">Discover conferences, workshops, concerts and more in one place</p>
+            <p className="text-gray-600 dark:text-gray-300">
+              Discover conferences, workshops, concerts and more in one place
+            </p>
           </div>
           <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-lg">
             <div className="flex justify-center mb-4">
-              <Smartphone className="w-12 h-12 text-violet-600 dark:text-violet-400" strokeWidth={1.5} />
+              <Smartphone
+                className="w-12 h-12 text-violet-600 dark:text-violet-400"
+                strokeWidth={1.5}
+              />
             </div>
             <CardTitle>Any Device</CardTitle>
-            <p className="text-gray-600 dark:text-gray-300">Book from your phone, tablet or computer anytime</p>
+            <p className="text-gray-600 dark:text-gray-300">
+              Book from your phone, tablet or computer anytime
+            </p>
           </div>
           <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-lg">
             <div className="flex justify-center mb-4">
-              <MessageCircle className="w-12 h-12 text-pink-600 dark:text-pink-400" strokeWidth={1.5} />
+              <MessageCircle
+                className="w-12 h-12 text-pink-600 dark:text-pink-400"
+                strokeWidth={1.5}
+              />
             </div>
             <CardTitle>Support 24/7</CardTitle>
-            <p className="text-gray-600 dark:text-gray-300">Our team is here to help you with any question</p>
+            <p className="text-gray-600 dark:text-gray-300">
+              Our team is here to help you with any question
+            </p>
           </div>
         </div>
 
         <div className="mt-16 text-center">
-
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            We are your trusted platform for discovering and booking the best events.
-            Whether you&apos;re looking for professional workshops, exciting conferences,
-            or community gatherings, we make it easy to find and reserve your spot.
+            We are your trusted platform for discovering and booking the best events. Whether
+            you&apos;re looking for professional workshops, exciting conferences, or community
+            gatherings, we make it easy to find and reserve your spot.
           </p>
         </div>
       </div>

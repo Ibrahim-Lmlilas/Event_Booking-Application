@@ -99,7 +99,10 @@ export const reservationsApi = {
     return res.json();
   },
 
-  async updateStatus(id: string, status: 'PENDING' | 'CONFIRMED' | 'REFUSED' | 'CANCELED'): Promise<ReservationWithEvent> {
+  async updateStatus(
+    id: string,
+    status: 'PENDING' | 'CONFIRMED' | 'REFUSED' | 'CANCELED',
+  ): Promise<ReservationWithEvent> {
     const token = getToken();
     if (!token) {
       throw new Error('Authentication required');

@@ -5,7 +5,9 @@ const uriMatch = existingUri.match(/^(mongodb:\/\/[^\/]+)/);
 const baseUri = uriMatch ? uriMatch[1] : 'mongodb://localhost:27017';
 const testDbName = `event-booking-test-e2e-${Date.now()}`;
 process.env.MONGODB_URI = `${baseUri}/${testDbName}`;
-console.log(`[E2E Test] Setting test database BEFORE module import: ${process.env.MONGODB_URI}`);
+console.log(
+  `[E2E Test] Setting test database BEFORE module import: ${process.env.MONGODB_URI}`,
+);
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
@@ -37,13 +39,17 @@ describe('App E2E - Complete Reservation Flow with Roles', () => {
   beforeAll(async () => {
     // MONGODB_URI is already set at module import time (see top of file)
     // This ensures AppModule uses the test database, not production
-    console.log(`[E2E Test] Confirming test database: ${process.env.MONGODB_URI}`);
-    
+    console.log(
+      `[E2E Test] Confirming test database: ${process.env.MONGODB_URI}`,
+    );
+
     // Verify we're NOT using production database
     if (process.env.MONGODB_URI && !process.env.MONGODB_URI.includes('test')) {
-      throw new Error(`SECURITY ERROR: Test is trying to use non-test database: ${process.env.MONGODB_URI}`);
+      throw new Error(
+        `SECURITY ERROR: Test is trying to use non-test database: ${process.env.MONGODB_URI}`,
+      );
     }
-    
+
     if (!process.env.JWT_SECRET) {
       process.env.JWT_SECRET = 'test-secret-key-for-e2e-tests';
     }
@@ -62,7 +68,9 @@ describe('App E2E - Complete Reservation Flow with Roles', () => {
     // Get models for cleanup
     userModel = moduleFixture.get<Model<User>>(getModelToken(User.name));
     eventModel = moduleFixture.get<Model<Event>>(getModelToken(Event.name));
-    reservationModel = moduleFixture.get<Model<Reservation>>(getModelToken(Reservation.name));
+    reservationModel = moduleFixture.get<Model<Reservation>>(
+      getModelToken(Reservation.name),
+    );
 
     // Clean database before tests
     await userModel.deleteMany({}).exec();
@@ -76,7 +84,9 @@ describe('App E2E - Complete Reservation Flow with Roles', () => {
       if (userModel) await userModel.deleteMany({}).exec();
       if (eventModel) await eventModel.deleteMany({}).exec();
       if (reservationModel) await reservationModel.deleteMany({}).exec();
-      console.log(`[E2E Test] Cleaned test database: ${process.env.MONGODB_URI}`);
+      console.log(
+        `[E2E Test] Cleaned test database: ${process.env.MONGODB_URI}`,
+      );
     } catch (error) {
       console.error('[E2E Test] Error cleaning test database:', error);
     }
@@ -186,7 +196,9 @@ describe('App E2E - Complete Reservation Flow with Roles', () => {
         .get('/api/events?status=PUBLISHED')
         .expect(200);
 
-      const publishedEvent = response.body.events.find((e: any) => e._id === eventId);
+      const publishedEvent = response.body.events.find(
+        (e: any) => e._id === eventId,
+      );
       expect(publishedEvent).toBeDefined();
       expect(publishedEvent.status).toBe(EventStatus.PUBLISHED);
     });
@@ -260,7 +272,9 @@ describe('App E2E - Complete Reservation Flow with Roles', () => {
         .expect(200);
 
       expect(Array.isArray(response.body)).toBe(true);
-      const reservation = response.body.find((r: any) => r._id === reservationId);
+      const reservation = response.body.find(
+        (r: any) => r._id === reservationId,
+      );
       expect(reservation).toBeDefined();
       expect(reservation.status).toBe(ReservationStatus.PENDING);
     });
@@ -273,7 +287,9 @@ describe('App E2E - Complete Reservation Flow with Roles', () => {
         .expect(200);
 
       expect(Array.isArray(response.body)).toBe(true);
-      const reservation = response.body.find((r: any) => r._id === reservationId);
+      const reservation = response.body.find(
+        (r: any) => r._id === reservationId,
+      );
       expect(reservation).toBeDefined();
     });
 

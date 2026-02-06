@@ -16,17 +16,17 @@ async function bootstrap() {
 
   // Set global prefix
   app.setGlobalPrefix('api');
-  
+
   // Enable CORS
   app.enableCors({
     origin: 'http://localhost:3000',
     credentials: true,
   });
-  
+
   const port = process.env.PORT!;
-  
+
   await runSeedAdmin(app);
-  
+
   await app.listen(port);
   console.log(`🚀 Backend API running on : http://localhost:${port}/api`);
 }

@@ -97,9 +97,7 @@ describe('ReservedEventsGrid', () => {
     const user = userEvent.setup();
     const onCancel = jest.fn().mockResolvedValue(undefined);
 
-    render(
-      <ReservedEventsGrid reservations={[mockConfirmedReservation]} onCancel={onCancel} />,
-    );
+    render(<ReservedEventsGrid reservations={[mockConfirmedReservation]} onCancel={onCancel} />);
 
     const cancelButton = screen.getByRole('button', { name: /cancel/i });
     await user.click(cancelButton);
@@ -115,9 +113,7 @@ describe('ReservedEventsGrid', () => {
     const user = userEvent.setup();
     const onCancel = jest.fn().mockResolvedValue(undefined);
 
-    render(
-      <ReservedEventsGrid reservations={[mockConfirmedReservation]} onCancel={onCancel} />,
-    );
+    render(<ReservedEventsGrid reservations={[mockConfirmedReservation]} onCancel={onCancel} />);
 
     const cancelButton = screen.getByRole('button', { name: /cancel/i });
     await user.click(cancelButton);

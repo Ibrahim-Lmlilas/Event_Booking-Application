@@ -21,7 +21,7 @@ const CurvedLoop: FC<CurvedLoopProps> = ({
   direction = 'left',
   interactive = true,
   compact = false,
-  compactTextColor = 'rgb(31 41 55)'
+  compactTextColor = 'rgb(31 41 55)',
 }) => {
   const text = useMemo(() => {
     const hasTrailing = /\s|\u00A0$/.test(marqueeText);
@@ -126,15 +126,28 @@ const CurvedLoop: FC<CurvedLoopProps> = ({
         className={`select-none w-full overflow-visible block aspect-[100/12] font-bold uppercase leading-none ${compact ? 'max-h-32 text-[3.5rem]' : 'text-[6rem]'}`}
         viewBox="0 0 1500 120"
       >
-        <text ref={measureRef} xmlSpace="preserve" style={{ visibility: 'hidden', opacity: 0, pointerEvents: 'none' }}>
+        <text
+          ref={measureRef}
+          xmlSpace="preserve"
+          style={{ visibility: 'hidden', opacity: 0, pointerEvents: 'none' }}
+        >
           {text}
         </text>
         <defs>
           <path ref={pathRef} id={pathId} d={pathD} fill="none" stroke="transparent" />
         </defs>
         {ready && (
-          <text xmlSpace="preserve" className={compact ? `${className ?? ''}` : `fill-white ${className ?? ''}`} style={compact ? { fill: compactTextColor } : undefined}>
-            <textPath ref={textPathRef} href={`#${pathId}`} startOffset={offset + 'px'} xmlSpace="preserve">
+          <text
+            xmlSpace="preserve"
+            className={compact ? `${className ?? ''}` : `fill-white ${className ?? ''}`}
+            style={compact ? { fill: compactTextColor } : undefined}
+          >
+            <textPath
+              ref={textPathRef}
+              href={`#${pathId}`}
+              startOffset={offset + 'px'}
+              xmlSpace="preserve"
+            >
               {totalText}
             </textPath>
           </text>

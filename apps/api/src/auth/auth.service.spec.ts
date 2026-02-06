@@ -84,7 +84,9 @@ describe('AuthService', () => {
 
       const result = await service.register(registerDto);
 
-      expect(mockUserModel.findOne).toHaveBeenCalledWith({ email: registerDto.email });
+      expect(mockUserModel.findOne).toHaveBeenCalledWith({
+        email: registerDto.email,
+      });
       expect(bcrypt.hash).toHaveBeenCalledWith(registerDto.password, 10);
       expect(mockUserModel).toHaveBeenCalled();
       expect(mockJwtService.sign).toHaveBeenCalled();
@@ -114,8 +116,12 @@ describe('AuthService', () => {
         exec: jest.fn().mockResolvedValue(mockUser),
       });
 
-      await expect(service.register(registerDto)).rejects.toThrow(ConflictException);
-      expect(mockUserModel.findOne).toHaveBeenCalledWith({ email: registerDto.email });
+      await expect(service.register(registerDto)).rejects.toThrow(
+        ConflictException,
+      );
+      expect(mockUserModel.findOne).toHaveBeenCalledWith({
+        email: registerDto.email,
+      });
     });
 
     it('should hash password before saving', async () => {
@@ -147,8 +153,13 @@ describe('AuthService', () => {
 
       const result = await service.login(loginDto);
 
-      expect(mockUserModel.findOne).toHaveBeenCalledWith({ email: loginDto.email });
-      expect(bcrypt.compare).toHaveBeenCalledWith(loginDto.password, mockUser.password);
+      expect(mockUserModel.findOne).toHaveBeenCalledWith({
+        email: loginDto.email,
+      });
+      expect(bcrypt.compare).toHaveBeenCalledWith(
+        loginDto.password,
+        mockUser.password,
+      );
       expect(mockJwtService.sign).toHaveBeenCalled();
       expect(result.access_token).toBe('jwt-token');
       expect(result.user.email).toBe(loginDto.email);
@@ -159,8 +170,12 @@ describe('AuthService', () => {
         exec: jest.fn().mockResolvedValue(null),
       });
 
-      await expect(service.login(loginDto)).rejects.toThrow(UnauthorizedException);
-      expect(mockUserModel.findOne).toHaveBeenCalledWith({ email: loginDto.email });
+      await expect(service.login(loginDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
+      expect(mockUserModel.findOne).toHaveBeenCalledWith({
+        email: loginDto.email,
+      });
     });
 
     it('should throw UnauthorizedException if password is invalid', async () => {
@@ -169,8 +184,13 @@ describe('AuthService', () => {
       });
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      await expect(service.login(loginDto)).rejects.toThrow(UnauthorizedException);
-      expect(bcrypt.compare).toHaveBeenCalledWith(loginDto.password, mockUser.password);
+      await expect(service.login(loginDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
+      expect(bcrypt.compare).toHaveBeenCalledWith(
+        loginDto.password,
+        mockUser.password,
+      );
     });
 
     it('should generate JWT token with correct payload', async () => {
@@ -199,7 +219,9 @@ describe('AuthService', () => {
       const result = await service.validateUser('507f1f77bcf86cd799439011');
 
       expect(result).toEqual(mockUser);
-      expect(mockUserModel.findById).toHaveBeenCalledWith('507f1f77bcf86cd799439011');
+      expect(mockUserModel.findById).toHaveBeenCalledWith(
+        '507f1f77bcf86cd799439011',
+      );
     });
 
     it('should throw UnauthorizedException if user not found', async () => {
@@ -207,9 +229,9 @@ describe('AuthService', () => {
         exec: jest.fn().mockResolvedValue(null),
       });
 
-      await expect(service.validateUser('507f1f77bcf86cd799439011')).rejects.toThrow(
-        UnauthorizedException,
-      );
+      await expect(
+        service.validateUser('507f1f77bcf86cd799439011'),
+      ).rejects.toThrow(UnauthorizedException);
     });
   });
 });

@@ -33,8 +33,12 @@ export default function AdminHeader({ onMenuClick, sidebarOpen = false }: Props)
 
   return (
     <>
-      <header className={`header-container bg-gray-900/75 backdrop-blur-md mt-4 mx-2 rounded-2xl shadow-lg border-2 border-white transition-all duration-300 ${sidebarOpen ? 'lg:mx-2' : ''}`}>
-        <div className={`flex items-center justify-between px-3 sm:px-4 lg:px-6 py-4 sm:py-5 transition-all duration-300 ${sidebarOpen ? 'lg:px-6' : ''}`}>
+      <header
+        className={`header-container bg-gray-900/75 backdrop-blur-md mt-4 mx-2 rounded-2xl shadow-lg border-2 border-white transition-all duration-300 ${sidebarOpen ? 'lg:mx-2' : ''}`}
+      >
+        <div
+          className={`flex items-center justify-between px-3 sm:px-4 lg:px-6 py-4 sm:py-5 transition-all duration-300 ${sidebarOpen ? 'lg:px-6' : ''}`}
+        >
           <div className="flex items-center space-x-2 sm:space-x-3">
             <button
               onClick={onMenuClick}
@@ -55,7 +59,9 @@ export default function AdminHeader({ onMenuClick, sidebarOpen = false }: Props)
                 />
               </svg>
             </button>
-            <h1 className={`text-lg sm:text-xl lg:text-xl font-bold text-white transition-all duration-300 ${sidebarOpen ? 'hidden lg:block' : ''}`}>
+            <h1
+              className={`text-lg sm:text-xl lg:text-xl font-bold text-white transition-all duration-300 ${sidebarOpen ? 'hidden lg:block' : ''}`}
+            >
               {user?.firstName ? (
                 <>
                   <span className="text-pink-500">{user.firstName.charAt(0)}</span>
@@ -73,22 +79,24 @@ export default function AdminHeader({ onMenuClick, sidebarOpen = false }: Props)
             <span className="text-xs sm:text-sm text-white hidden md:block truncate max-w-[120px] lg:max-w-none">
               {user?.firstName} {user?.lastName}
             </span>
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               onClick={() => setIsUserModalOpen(true)}
               className="p-1.5 sm:p-2 border-gray-600 bg-gray-800 hover:bg-gray-700 text-white"
             >
               <User className="w-4 h-4 sm:w-5 sm:h-5" />
             </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleLogout} 
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
               className="group flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 border-gray-600 bg-gray-800 hover:bg-gray-800 text-white transition-colors"
             >
               <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:text-pink-500 transition-colors" />
-              <span className="hidden sm:inline text-sm group-hover:text-pink-500 transition-colors">Logout</span>
+              <span className="hidden sm:inline text-sm group-hover:text-pink-500 transition-colors">
+                Logout
+              </span>
             </Button>
           </div>
         </div>
@@ -110,8 +118,9 @@ export default function AdminHeader({ onMenuClick, sidebarOpen = false }: Props)
                 <User className="w-5 h-5 sm:w-6 sm:h-6 text-gray-800" />
               </div>
               <div>
-                <DialogTitle className="text-base sm:text-lg text-gray-900">My Information</DialogTitle>
-                
+                <DialogTitle className="text-base sm:text-lg text-gray-900">
+                  My Information
+                </DialogTitle>
               </div>
             </div>
           </DialogHeader>
@@ -119,23 +128,31 @@ export default function AdminHeader({ onMenuClick, sidebarOpen = false }: Props)
             <div className="space-y-2 sm:space-y-3 py-3 sm:py-4">
               <div className="grid grid-cols-[80px_1fr] sm:grid-cols-[1fr_2fr] gap-2 sm:gap-4 items-center border-b pb-2 sm:pb-3">
                 <Label className="text-xs sm:text-sm text-gray-700">First Name</Label>
-                <p className="text-xs sm:text-sm font-medium truncate text-gray-900">{user.firstName}</p>
+                <p className="text-xs sm:text-sm font-medium truncate text-gray-900">
+                  {user.firstName}
+                </p>
               </div>
               <div className="grid grid-cols-[80px_1fr] sm:grid-cols-[1fr_2fr] gap-2 sm:gap-4 items-center border-b pb-2 sm:pb-3">
                 <Label className="text-xs sm:text-sm text-gray-700">Last Name</Label>
-                <p className="text-xs sm:text-sm font-medium truncate text-gray-900">{user.lastName}</p>
+                <p className="text-xs sm:text-sm font-medium truncate text-gray-900">
+                  {user.lastName}
+                </p>
               </div>
               <div className="grid grid-cols-[80px_1fr] sm:grid-cols-[1fr_2fr] gap-2 sm:gap-4 items-center border-b pb-2 sm:pb-3">
                 <Label className="text-xs sm:text-sm text-gray-700">Email</Label>
-                <p className="text-xs sm:text-sm font-medium truncate text-gray-900">{user.email}</p>
+                <p className="text-xs sm:text-sm font-medium truncate text-gray-900">
+                  {user.email}
+                </p>
               </div>
               <div className="grid grid-cols-[80px_1fr] sm:grid-cols-[1fr_2fr] gap-2 sm:gap-4 items-center">
                 <Label className="text-xs sm:text-sm text-gray-700">Role</Label>
-                <span className={`px-2 py-0.5 sm:py-1 text-xs font-semibold rounded-full w-fit ${
-                  user.role === 'admin' 
-                    ? 'bg-pink-100 text-pink-800' 
-                    : 'bg-gray-100 text-gray-800'
-                }`}>
+                <span
+                  className={`px-2 py-0.5 sm:py-1 text-xs font-semibold rounded-full w-fit ${
+                    user.role === 'admin'
+                      ? 'bg-pink-100 text-pink-800'
+                      : 'bg-gray-100 text-gray-800'
+                  }`}
+                >
                   {user.role === 'admin' ? 'Administrator' : 'Participant'}
                 </span>
               </div>

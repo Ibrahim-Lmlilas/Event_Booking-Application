@@ -14,7 +14,8 @@ export interface TicketData {
   ticketNumber: string;
 }
 
-const PDF_TEMPLATE_FILENAME = 'Modern Typography Simple Art Exhibition Concert Ticket.pdf';
+const PDF_TEMPLATE_FILENAME =
+  'Modern Typography Simple Art Exhibition Concert Ticket.pdf';
 
 @Injectable()
 export class TicketsService {
@@ -93,7 +94,10 @@ export class TicketsService {
     y -= lineHeight + 14;
 
     // Price ta7t chwya, text 7ayad (bold)
-    const priceStr = data.eventPrice != null ? `${Number(data.eventPrice).toFixed(2)} DH` : '-';
+    const priceStr =
+      data.eventPrice != null
+        ? `${Number(data.eventPrice).toFixed(2)} DH`
+        : '-';
     page.drawText(priceStr, {
       x: leftMargin,
       y,

@@ -158,7 +158,7 @@ describe('SignUpForm', () => {
   it('shows loading state during submission', async () => {
     const user = userEvent.setup();
     let resolveRegister: (value: any) => void;
-    const registerPromise = new Promise((resolve) => {
+    const registerPromise = new Promise(resolve => {
       resolveRegister = resolve;
     });
 
@@ -180,7 +180,13 @@ describe('SignUpForm', () => {
 
     resolveRegister!({
       access_token: 'token',
-      user: { id: '1', email: 'test@example.com', firstName: 'John', lastName: 'Doe', role: 'participant' },
+      user: {
+        id: '1',
+        email: 'test@example.com',
+        firstName: 'John',
+        lastName: 'Doe',
+        role: 'participant',
+      },
     });
 
     await waitFor(() => {

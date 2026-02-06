@@ -157,7 +157,7 @@ export function ParticipantEventsClient({ initialData, initialPage }: Props) {
             </div>
           ) : (
             <>
-              <ParticipantEventsGrid 
+              <ParticipantEventsGrid
                 events={data.events}
                 reservations={reservations}
                 onReservationSuccess={() => {
@@ -206,7 +206,9 @@ export function ParticipantEventsClient({ initialData, initialPage }: Props) {
                             e.preventDefault();
                             handlePageChange(page + 1);
                           }}
-                          className={page === data.totalPages ? 'pointer-events-none opacity-50' : ''}
+                          className={
+                            page === data.totalPages ? 'pointer-events-none opacity-50' : ''
+                          }
                         />
                       </PaginationItem>
                     </PaginationContent>

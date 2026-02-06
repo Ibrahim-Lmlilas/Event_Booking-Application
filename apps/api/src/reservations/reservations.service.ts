@@ -19,13 +19,14 @@ import { CANCEL_MIN_HOURS_BEFORE_EVENT } from './constants/cancellation-rules';
 @Injectable()
 export class ReservationsService {
   constructor(
-    @InjectModel(Reservation.name) private reservationModel: Model<ReservationDocument>,
+    @InjectModel(Reservation.name)
+    private reservationModel: Model<ReservationDocument>,
     private eventsService: EventsService,
   ) {}
 
   async create(createReservationDto: CreateReservationDto, userId: string) {
     const eventId = createReservationDto.eventId;
-    
+
     // Validate event ID
     if (!Types.ObjectId.isValid(eventId)) {
       throw new BadRequestException('Invalid event ID');
@@ -63,7 +64,9 @@ export class ReservationsService {
       .exec();
 
     if (existingReservation) {
-      throw new ConflictException('You already have a reservation for this event');
+      throw new ConflictException(
+        'You already have a reservation for this event',
+      );
     }
 
     // Create reservation
@@ -104,7 +107,11 @@ export class ReservationsService {
     if (!Types.ObjectId.isValid(id)) {
       throw new BadRequestException('Invalid reservation ID');
     }
-    const reservation = await this.reservationModel.findById(id).populate('eventId').lean().exec();
+    const reservation = await this.reservationModel
+      .findById(id)
+      .populate('eventId')
+      .lean()
+      .exec();
     if (!reservation) {
       throw new NotFoundException(`Reservation #${id} not found`);
     }
@@ -130,14 +137,21 @@ export class ReservationsService {
     if (!Types.ObjectId.isValid(id)) {
       throw new BadRequestException('Invalid reservation ID');
     }
-    const reservation = await this.reservationModel.findByIdAndDelete(id).lean().exec();
+    const reservation = await this.reservationModel
+      .findByIdAndDelete(id)
+      .lean()
+      .exec();
     if (!reservation) {
       throw new NotFoundException(`Reservation #${id} not found`);
     }
     return reservation;
   }
 
-  async findAll(filters?: { eventTitle?: string; userName?: string; status?: ReservationStatus }) {
+  async findAll(filters?: {
+    eventTitle?: string;
+    userName?: string;
+    status?: ReservationStatus;
+  }) {
     try {
       const query: any = {};
 
@@ -171,7 +185,10 @@ export class ReservationsService {
           if (!user || typeof user !== 'object') return false;
           const firstName = user.firstName?.toLowerCase() || '';
           const lastName = user.lastName?.toLowerCase() || '';
-          return firstName.includes(userNameLower) || lastName.includes(userNameLower);
+          return (
+            firstName.includes(userNameLower) ||
+            lastName.includes(userNameLower)
+          );
         });
       }
 
@@ -266,8 +283,11 @@ export class ReservationsService {
     }
 
     // CONFIRMED -> REFUSED/CANCELED: decrement seatsTaken
-    if (oldStatus === ReservationStatus.CONFIRMED && 
-        (newStatus === ReservationStatus.REFUSED || newStatus === ReservationStatus.CANCELED)) {
+    if (
+      oldStatus === ReservationStatus.CONFIRMED &&
+      (newStatus === ReservationStatus.REFUSED ||
+        newStatus === ReservationStatus.CANCELED)
+    ) {
       if (event && event.seatsTaken > 0) {
         await this.eventsService.update(eventId, {
           seatsTaken: event.seatsTaken - 1,
@@ -276,8 +296,11 @@ export class ReservationsService {
     }
 
     // PENDING -> REFUSED/CANCELED: decrement seatsTaken (was incremented on creation)
-    if (oldStatus === ReservationStatus.PENDING && 
-        (newStatus === ReservationStatus.REFUSED || newStatus === ReservationStatus.CANCELED)) {
+    if (
+      oldStatus === ReservationStatus.PENDING &&
+      (newStatus === ReservationStatus.REFUSED ||
+        newStatus === ReservationStatus.CANCELED)
+    ) {
       if (event && event.seatsTaken > 0) {
         await this.eventsService.update(eventId, {
           seatsTaken: event.seatsTaken - 1,
@@ -286,8 +309,11 @@ export class ReservationsService {
     }
 
     // REFUSED/CANCELED -> CONFIRMED: increment seatsTaken
-    if ((oldStatus === ReservationStatus.REFUSED || oldStatus === ReservationStatus.CANCELED) && 
-        newStatus === ReservationStatus.CONFIRMED) {
+    if (
+      (oldStatus === ReservationStatus.REFUSED ||
+        oldStatus === ReservationStatus.CANCELED) &&
+      newStatus === ReservationStatus.CONFIRMED
+    ) {
       if (event) {
         await this.eventsService.update(eventId, {
           seatsTaken: event.seatsTaken + 1,
