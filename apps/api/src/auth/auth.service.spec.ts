@@ -7,6 +7,7 @@ import { User } from '../users/schemas/user.schema';
 import { UserRole } from '../common/enums/user-role.enum';
 import { UnauthorizedException, ConflictException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { describe, it } from 'node:test';
 
 jest.mock('bcrypt');
 
