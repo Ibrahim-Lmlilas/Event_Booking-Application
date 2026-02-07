@@ -27,7 +27,7 @@ const transformStyles = [
 
 export default function About() {
   return (
-    <section id="about" className="py-20 bg-gray-50 dark:bg-gray-900">
+    <section id="events" className="py-20 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4 w-full">
 
         {/* BounceCards Animation */}
@@ -35,8 +35,8 @@ export default function About() {
           <BounceCards
             className="custom-bounceCards"
             images={eventImages}
-            containerWidth={1300}
-            containerHeight={300}
+            containerWidth={1600}
+            containerHeight={500}
             animationDelay={0.6}
             animationStagger={0.08}
             easeType="elastic.out(1, 0.5)"
