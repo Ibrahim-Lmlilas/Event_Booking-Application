@@ -15,8 +15,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Eventzi - Connect. Inspire. Transform.',
+  title: 'Eventzi',
   description: 'Join visionaries, creators, and innovators for unforgettable events',
+  icons: {
+    icon: '/logo.svg',
+  },
 };
 
 export default function RootLayout({
