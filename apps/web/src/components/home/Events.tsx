@@ -1,41 +1,48 @@
-import Image from 'next/image';
+import BounceCards from '../ui/BounceCards';
 
-export default function Events() {
+const eventImages = [
+  '/about2.png',
+  '/about3.png',
+  '/event1.jpg',
+  '/event2.jpg',
+  '/event3.jpg',
+  '/event4.jpg',
+  '/about4.png',
+  '/about5.png',
+  '/about1.png',
+];
+
+const transformStyles = [
+  'rotate(8deg) translate(-280px)',
+  'rotate(-3deg) translate(-210px)',
+  'rotate(5deg) translate(-140px)',
+  'rotate(-6deg) translate(-70px)',
+  'rotate(2deg) translate(-20px)',
+  'rotate(-4deg) translate(20px)',
+  'rotate(7deg) translate(70px)',
+  'rotate(-2deg) translate(140px)',
+  'rotate(4deg) translate(210px)',
+  'rotate(-7deg) translate(280px)'
+];
+
+export default function About() {
   return (
-    <section id="events" className="min-h-screen py-20 flex items-center bg-[#f9fafb]">
-      <div className="w-full px-4 md:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left: title + text - bigger typography */}
-          <div>
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 text-gray-900 dark:text-white leading-tight">
-              Unforgettable Events, One Click Away
-            </h2>
-            <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-              From live concerts and conferences to workshops and private celebrations — find and
-              book the best events in one place. Secure your spot, get instant confirmation, and get
-              ready for experiences that matter.
-            </p>
-            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-              Browse by date, category, or location. Filter by price and availability. Your next
-              great moment is just a few clicks away.
-            </p>
-            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
-              Whether you&apos;re planning a night out with friends, a professional conference, or a
-              special celebration, Eventzi brings you the best venues and experiences. Check
-              upcoming events, compare options, and book in seconds.
-            </p>
-          </div>
-          {/* Right: image - taller to fill viewport */}
-          <div className="relative aspect-[4/3] lg:aspect-auto lg:min-h-[500px] rounded-xl overflow-hidden">
-            <Image
-              src="/Events.png"
-              alt="Live event with stage, crowd and dining"
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              priority={false}
-            />
-          </div>
+    <section id="about" className="py-20 bg-gray-50 dark:bg-gray-900">
+      <div className="container mx-auto px-4 w-full">
+
+        {/* BounceCards Animation */}
+        <div className="flex justify-center w-full overflow-hidden mt-20">
+          <BounceCards
+            className="custom-bounceCards"
+            images={eventImages}
+            containerWidth={1300}
+            containerHeight={300}
+            animationDelay={0.6}
+            animationStagger={0.08}
+            easeType="elastic.out(1, 0.5)"
+            transformStyles={transformStyles}
+            enableHover
+          />
         </div>
       </div>
     </section>
