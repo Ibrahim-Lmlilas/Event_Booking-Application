@@ -7,10 +7,7 @@ export const usersApi = {
     return response.data;
   },
 
-  async update(
-    id: string,
-    data: IUserUpdate,
-  ): Promise<IUser> {
+  async update(id: string, data: IUserUpdate): Promise<IUser> {
     const response = await apiClient.patch(`/users/${id}`, data);
     return response.data;
   },

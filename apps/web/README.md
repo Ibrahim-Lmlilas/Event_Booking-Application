@@ -40,14 +40,14 @@ NEXT_PUBLIC_API_URL=http://localhost:3001/api
 
 ## Scripts
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Dev with webpack |
-| `npm run dev:turbo` | Dev with Turbopack |
-| `npm run build` | Production build |
-| `npm run start` | Run production build |
-| `npm test` | Jest |
-| `npm run lint` | ESLint |
+| Script              | Description          |
+| ------------------- | -------------------- |
+| `npm run dev`       | Dev with webpack     |
+| `npm run dev:turbo` | Dev with Turbopack   |
+| `npm run build`     | Production build     |
+| `npm run start`     | Run production build |
+| `npm test`          | Jest                 |
+| `npm run lint`      | ESLint               |
 
 ## Structure
 
@@ -78,7 +78,7 @@ src/
 
 ## Roles and Routes
 
-| Role | Dashboard | Access |
-|------|-----------|--------|
-| Admin | `/dashboard/admin` | Events, Reservations, Users |
-| Participant | `/dashboard/participant` | Events, My reservations |
+| Role        | Dashboard                | Access                      |
+| ----------- | ------------------------ | --------------------------- |
+| Admin       | `/dashboard/admin`       | Events, Reservations, Users |
+| Participant | `/dashboard/participant` | Events, My reservations     |

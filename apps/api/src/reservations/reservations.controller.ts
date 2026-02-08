@@ -61,7 +61,9 @@ export class ReservationsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'List reservations (Admin: all with filters, Participant: own)' })
+  @ApiOperation({
+    summary: 'List reservations (Admin: all with filters, Participant: own)',
+  })
   @ApiQuery({ name: 'eventTitle', required: false })
   @ApiQuery({ name: 'userName', required: false })
   @ApiQuery({ name: 'status', required: false, enum: ReservationStatus })

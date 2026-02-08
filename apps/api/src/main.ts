@@ -21,7 +21,9 @@ async function bootstrap() {
   // Swagger
   const config = new DocumentBuilder()
     .setTitle('Event Booking API')
-    .setDescription('API for event management, reservations, and user management')
+    .setDescription(
+      'API for event management, reservations, and user management',
+    )
     .setVersion('1.0')
     .addBearerAuth()
     .build();

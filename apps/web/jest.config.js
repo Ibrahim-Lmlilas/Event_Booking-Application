@@ -20,7 +20,8 @@ const customJestConfig = {
     '^\\.\\./enums/index\\.js$': '<rootDir>/../../shared/enums/index.ts',
     '^\\./user-role\\.enum\\.js$': '<rootDir>/../../shared/enums/user-role.enum.ts',
     '^\\./event-status\\.enum\\.js$': '<rootDir>/../../shared/enums/event-status.enum.ts',
-    '^\\./reservation-status\\.enum\\.js$': '<rootDir>/../../shared/enums/reservation-status.enum.ts',
+    '^\\./reservation-status\\.enum\\.js$':
+      '<rootDir>/../../shared/enums/reservation-status.enum.ts',
   },
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
   collectCoverageFrom: [

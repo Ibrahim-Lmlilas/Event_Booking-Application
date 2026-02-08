@@ -8,7 +8,6 @@ import userEvent from '@testing-library/user-event';
 import { ReserveButton } from '@/components/reservations/ReserveButton';
 import { ReservedEventsGrid } from '@/components/reservations/ui/ReservedEventsGrid';
 import { reservationsApi } from '@/lib/api/reservations';
-import { eventsApi } from '@/lib/api/events';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { toast } from 'sonner';
 import type { Event } from '@/lib/api/events';

@@ -11,7 +11,7 @@ const apiClient = axios.create({
 
 // Add token to requests automatically
 apiClient.interceptors.request.use(
-  (config) => {
+  config => {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
       if (token) {
@@ -20,18 +20,18 @@ apiClient.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
+  error => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Handle responses and errors
 apiClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
+  response => response,
+  error => {
     const message = error.response?.data?.message || error.message || 'An error occurred';
     return Promise.reject(new Error(message));
-  }
+  },
 );
 
 export default apiClient;

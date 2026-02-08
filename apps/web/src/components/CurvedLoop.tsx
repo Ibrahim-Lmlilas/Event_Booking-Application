@@ -28,6 +28,7 @@ const CurvedLoop: FC<CurvedLoopProps> = ({
   const pathD = `M-100,40 Q500,${40 + curveAmount} 1540,40`;
 
   const dragRef = useRef(false);
+  const [isDragging, setIsDragging] = useState(false);
   const lastXRef = useRef(0);
   const dirRef = useRef<'left' | 'right'>(direction);
   const velRef = useRef(0);
@@ -98,10 +99,11 @@ const CurvedLoop: FC<CurvedLoopProps> = ({
   const endDrag = () => {
     if (!interactive) return;
     dragRef.current = false;
+    setIsDragging(false);
     dirRef.current = velRef.current > 0 ? 'right' : 'left';
   };
 
-  const cursorStyle = interactive ? (dragRef.current ? 'grabbing' : 'grab') : 'auto';
+  const cursorStyle = interactive ? (isDragging ? 'grabbing' : 'grab') : 'auto';
 
   return (
     <div

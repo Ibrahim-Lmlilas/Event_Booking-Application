@@ -3,8 +3,7 @@ import { resolve } from 'path';
 
 config({ path: resolve(__dirname, '../.env') });
 
-// Use MONGODB_URI_TEST from .env, or fallback to hardcoded value
-const testDbUri = process.env.MONGODB_URI_TEST ;
+const testDbUri = process.env.MONGODB_URI_TEST;
 process.env.MONGODB_URI = testDbUri;
 console.log(
   `[E2E Test] Setting test database BEFORE module import: ${process.env.MONGODB_URI}`,

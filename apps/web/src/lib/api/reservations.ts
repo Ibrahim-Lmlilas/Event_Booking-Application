@@ -1,5 +1,10 @@
 import apiClient from './client';
-import type { IReservation, IReservationWithDetails , ReservationFilters ,CreateReservationPayload} from '@/types';
+import type {
+  IReservation,
+  IReservationWithDetails,
+  ReservationFilters,
+  CreateReservationPayload,
+} from '@/types';
 import { ReservationStatus } from '@/types';
 
 export type { ReservationFilters };
@@ -15,10 +20,7 @@ export const reservationsApi = {
     return response.data;
   },
 
-  async updateStatus(
-    id: string,
-    status: ReservationStatus,
-  ): Promise<IReservationWithDetails> {
+  async updateStatus(id: string, status: ReservationStatus): Promise<IReservationWithDetails> {
     const response = await apiClient.patch(`/reservations/${id}/status`, { status });
     return response.data;
   },

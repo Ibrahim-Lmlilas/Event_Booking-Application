@@ -46,14 +46,14 @@ CORS_ORIGIN=http://localhost:3000
 
 ## Scripts
 
-| Script | Description |
-|--------|-------------|
-| `npm run start:dev` | Dev with hot-reload |
-| `npm run build` | Production build |
+| Script               | Description          |
+| -------------------- | -------------------- |
+| `npm run start:dev`  | Dev with hot-reload  |
+| `npm run build`      | Production build     |
 | `npm run start:prod` | Run production build |
-| `npm test` | Unit tests |
-| `npm run test:e2e` | E2E tests |
-| `npm run lint` | ESLint |
+| `npm test`           | Unit tests           |
+| `npm run test:e2e`   | E2E tests            |
+| `npm run lint`       | ESLint               |
 | `npm run seed:admin` | Create default admin |
 
 ## Structure

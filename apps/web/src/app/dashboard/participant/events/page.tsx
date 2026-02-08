@@ -11,17 +11,17 @@ export default async function ParticipantEventsPage({
   const params = await searchParams;
   const page = parseInt(params.page || '1', 10);
 
+  let data;
   try {
-    const data = await eventsApi.listPublished(page, ITEMS_PER_PAGE);
-    return <ParticipantEventsClient initialData={data} initialPage={page} />;
-  } catch (error) {
-    const emptyData = {
+    data = await eventsApi.listPublished(page, ITEMS_PER_PAGE);
+  } catch {
+    data = {
       events: [],
       total: 0,
       page: 1,
       limit: ITEMS_PER_PAGE,
       totalPages: 0,
     };
-    return <ParticipantEventsClient initialData={emptyData} initialPage={1} />;
   }
+  return <ParticipantEventsClient initialData={data} initialPage={page} />;
 }

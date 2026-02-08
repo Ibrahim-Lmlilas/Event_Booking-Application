@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { Loader2, Calendar, TicketCheck } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { reservationsApi } from '@/lib/api/reservations';
 import type { IReservationWithDetails } from '@/types';
 import { eventsApi } from '@/lib/api/events';
@@ -82,9 +82,9 @@ const chartOptions = {
 export default function ParticipantDashboard() {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const [reservationsCount, setReservationsCount] = useState(0);
+  const [, setReservationsCount] = useState(0);
   const [byStatus, setByStatus] = useState<Record<string, number>>({});
-  const [upcomingCount, setUpcomingCount] = useState(0);
+  const [, setUpcomingCount] = useState(0);
   const [totalEvents, setTotalEvents] = useState(0);
   const [perMonth, setPerMonth] = useState<number[]>([]);
   const [perDay, setPerDay] = useState<number[]>([]);

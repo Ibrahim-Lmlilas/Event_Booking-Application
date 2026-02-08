@@ -2,9 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import {BounceCardsProps} from '@/types';
-
-
+import { BounceCardsProps } from '@/types';
 
 export default function BounceCards({
   className = '',
@@ -24,12 +22,12 @@ export default function BounceCards({
     'rotate(0deg) translate(50px)',
     'rotate(-3deg) translate(100px)',
     'rotate(-5deg) translate(150px)',
-    'rotate(-10deg) translate(200px)'
+    'rotate(-10deg) translate(200px)',
   ],
-  enableHover = false
+  enableHover = false,
 }: BounceCardsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
@@ -39,8 +37,8 @@ export default function BounceCards({
           scale: 1,
           stagger: animationStagger,
           ease: easeType,
-          delay: animationDelay
-        }
+          delay: animationDelay,
+        },
       );
     }, containerRef);
     return () => ctx.revert();
@@ -65,7 +63,9 @@ export default function BounceCards({
       const newX = currentX + offsetX;
       return baseTransform.replace(translateRegex, `translate(${newX}px)`);
     } else {
-      return baseTransform === 'none' ? `translate(${offsetX}px)` : `${baseTransform} translate(${offsetX}px)`;
+      return baseTransform === 'none'
+        ? `translate(${offsetX}px)`
+        : `${baseTransform} translate(${offsetX}px)`;
     }
   };
 
@@ -85,7 +85,7 @@ export default function BounceCards({
           transform: noRotation,
           duration: 0.4,
           ease: 'back.out(1.4)',
-          overwrite: 'auto'
+          overwrite: 'auto',
         });
       } else {
         const offsetX = i < hoveredIdx ? -160 : 160;
@@ -99,7 +99,7 @@ export default function BounceCards({
           duration: 0.4,
           ease: 'back.out(1.4)',
           delay,
-          overwrite: 'auto'
+          overwrite: 'auto',
         });
       }
     });
@@ -118,7 +118,7 @@ export default function BounceCards({
         transform: baseTransform,
         duration: 0.4,
         ease: 'back.out(1.4)',
-        overwrite: 'auto'
+        overwrite: 'auto',
       });
     });
   };
@@ -129,7 +129,7 @@ export default function BounceCards({
       ref={containerRef}
       style={{
         width: containerWidth,
-        height: containerHeight
+        height: containerHeight,
       }}
     >
       {images.map((src, idx) => (
@@ -138,7 +138,7 @@ export default function BounceCards({
           className={`card card-${idx} absolute w-[280px] aspect-square border-8 border-white rounded-[30px] overflow-hidden`}
           style={{
             boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
-            transform: transformStyles[idx] || 'none'
+            transform: transformStyles[idx] || 'none',
           }}
           onMouseEnter={() => pushSiblings(idx)}
           onMouseLeave={resetSiblings}

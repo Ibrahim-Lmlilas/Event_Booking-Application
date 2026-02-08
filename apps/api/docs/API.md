@@ -5,6 +5,7 @@ Base URL: `http://localhost:{PORT}/api`
 **Swagger UI:** `http://localhost:{PORT}/api/docs` – Interactive API documentation
 
 All authenticated requests must include the JWT token in the `Authorization` header:
+
 ```
 Authorization: Bearer <access_token>
 ```
@@ -14,9 +15,11 @@ Authorization: Bearer <access_token>
 ## Authentication
 
 ### POST `/auth/register`
+
 Register a new user. **Public** (no auth required).
 
 **Request body:**
+
 ```json
 {
   "email": "string (valid email)",
@@ -32,9 +35,11 @@ Register a new user. **Public** (no auth required).
 ---
 
 ### POST `/auth/login`
+
 Login and get JWT token. **Public** (no auth required).
 
 **Request body:**
+
 ```json
 {
   "email": "string (valid email)",
@@ -47,6 +52,7 @@ Login and get JWT token. **Public** (no auth required).
 ---
 
 ### GET `/auth/profile`
+
 Get current user profile. **Requires JWT.**
 
 **Response:** `{ user: { id, email, firstName, lastName, role } }`
@@ -56,9 +62,11 @@ Get current user profile. **Requires JWT.**
 ## Events
 
 ### POST `/events`
+
 Create a new event. **Admin only.**
 
 **Request body:**
+
 ```json
 {
   "title": "string (required)",
@@ -76,33 +84,37 @@ Create a new event. **Admin only.**
 ---
 
 ### GET `/events`
+
 List events with pagination and filters. **Public.**
 
 **Query params:**
-| Param      | Type   | Description                                  |
+| Param | Type | Description |
 |------------|--------|----------------------------------------------|
-| page       | number | Page number (default: 1)                     |
-| limit      | number | Items per page (default: 10)                 |
-| status     | string | Filter: DRAFT, PUBLISHED, CANCELED           |
-| search     | string | Search in title/description                  |
-| minPrice   | number | Minimum price                                |
-| maxPrice   | number | Maximum price                                |
-| date       | string | Filter by date                               |
-| time       | string | Filter by time                               |
+| page | number | Page number (default: 1) |
+| limit | number | Items per page (default: 10) |
+| status | string | Filter: DRAFT, PUBLISHED, CANCELED |
+| search | string | Search in title/description |
+| minPrice | number | Minimum price |
+| maxPrice | number | Maximum price |
+| date | string | Filter by date |
+| time | string | Filter by time |
 
 **Response:** `{ events, total, page, limit, totalPages }`
 
 ---
 
 ### GET `/events/:id`
+
 Get a single event by ID. **Public.**
 
 ---
 
 ### PATCH `/events/:id/status`
+
 Update event status. **Admin only.**
 
 **Request body:**
+
 ```json
 {
   "status": "DRAFT | PUBLISHED | CANCELED"
@@ -112,6 +124,7 @@ Update event status. **Admin only.**
 ---
 
 ### PATCH `/events/:id`
+
 Update an event. **Admin only.** (Partial update: send only fields to change)
 
 **Request body:** Same fields as CreateEventDto (all optional for PATCH)
@@ -119,6 +132,7 @@ Update an event. **Admin only.** (Partial update: send only fields to change)
 ---
 
 ### DELETE `/events/:id`
+
 Delete an event. **Admin only.**
 
 ---
@@ -126,9 +140,11 @@ Delete an event. **Admin only.**
 ## Reservations
 
 ### POST `/reservations`
+
 Create a reservation. **Requires JWT** (authenticated user).
 
 **Request body:**
+
 ```json
 {
   "eventId": "string (MongoDB ObjectId)"
@@ -138,26 +154,29 @@ Create a reservation. **Requires JWT** (authenticated user).
 ---
 
 ### GET `/reservations`
+
 List reservations. **Requires JWT.**
 
 - **Admin:** Returns all reservations with optional filters
 - **Participant:** Returns only own reservations
 
 **Query params (Admin only):**
-| Param      | Type   | Description                               |
+| Param | Type | Description |
 |------------|--------|-------------------------------------------|
-| eventTitle | string | Filter by event title                     |
-| userName   | string | Filter by user name                       |
-| status     | string | PENDING, CONFIRMED, REFUSED, CANCELED     |
+| eventTitle | string | Filter by event title |
+| userName | string | Filter by user name |
+| status | string | PENDING, CONFIRMED, REFUSED, CANCELED |
 
 ---
 
 ### GET `/reservations/:id`
+
 Get a single reservation. **Requires JWT.**
 
 ---
 
 ### GET `/reservations/:id/ticket`
+
 Download ticket PDF. **Requires JWT.**  
 Only for CONFIRMED reservations. User can only download their own ticket.
 
@@ -166,6 +185,7 @@ Only for CONFIRMED reservations. User can only download their own ticket.
 ---
 
 ### PATCH `/reservations/:id`
+
 Update a reservation (general fields). **Requires JWT.**
 
 **Request body:** Partial CreateReservationDto
@@ -173,9 +193,11 @@ Update a reservation (general fields). **Requires JWT.**
 ---
 
 ### PATCH `/reservations/:id/status`
+
 Update reservation status. **Admin only.**
 
 **Request body:**
+
 ```json
 {
   "status": "PENDING | CONFIRMED | REFUSED | CANCELED"
@@ -185,12 +207,14 @@ Update reservation status. **Admin only.**
 ---
 
 ### PATCH `/reservations/:id/cancel`
+
 Participant cancels own reservation. **Requires JWT.**  
 Cancellation allowed only if event starts in at least 24 hours.
 
 ---
 
 ### DELETE `/reservations/:id`
+
 Delete a reservation. **Requires JWT.**
 
 ---
@@ -200,9 +224,11 @@ Delete a reservation. **Requires JWT.**
 All user endpoints require **Admin** role.
 
 ### POST `/users`
+
 Create a new user.
 
 **Request body:**
+
 ```json
 {
   "email": "string (valid email)",
@@ -216,16 +242,19 @@ Create a new user.
 ---
 
 ### GET `/users`
+
 List all users. **Admin only.**
 
 ---
 
 ### GET `/users/:id`
+
 Get a single user by ID. **Admin only.**
 
 ---
 
 ### PATCH `/users/:id`
+
 Update a user. **Admin only.** (Partial update)
 
 **Request body:** Same fields as CreateUserDto (all optional)
@@ -233,6 +262,7 @@ Update a user. **Admin only.** (Partial update)
 ---
 
 ### DELETE `/users/:id`
+
 Delete a user. **Admin only.**
 
 ---
@@ -240,25 +270,28 @@ Delete a user. **Admin only.**
 ## Enums Reference
 
 ### EventStatus
-| Value     | Description |
-|-----------|-------------|
+
+| Value     | Description                 |
+| --------- | --------------------------- |
 | DRAFT     | Not visible to participants |
-| PUBLISHED | Visible and bookable       |
-| CANCELED  | Event canceled             |
+| PUBLISHED | Visible and bookable        |
+| CANCELED  | Event canceled              |
 
 ### ReservationStatus
-| Value    | Description              |
-|----------|--------------------------|
-| PENDING  | Awaiting admin approval  |
-| CONFIRMED| Approved, ticket ready   |
-| REFUSED  | Rejected by admin        |
-| CANCELED | Canceled by participant  |
+
+| Value     | Description             |
+| --------- | ----------------------- |
+| PENDING   | Awaiting admin approval |
+| CONFIRMED | Approved, ticket ready  |
+| REFUSED   | Rejected by admin       |
+| CANCELED  | Canceled by participant |
 
 ### UserRole
-| Value      | Description        |
-|------------|--------------------|
-| ADMIN      | Full access        |
-| PARTICIPANT| Events & own reservations |
+
+| Value       | Description               |
+| ----------- | ------------------------- |
+| ADMIN       | Full access               |
+| PARTICIPANT | Events & own reservations |
 
 ---
 

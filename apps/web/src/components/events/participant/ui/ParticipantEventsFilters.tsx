@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Search, X } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 export type Filters = {
   search: string;
@@ -87,7 +87,7 @@ export function ParticipantEventsFilters({ filters, onFiltersChange, onReset }: 
 
   return (
     <div className="mb-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 items-end">
         {/* Search */}
         <div className="space-y-2">
           <Label htmlFor="search" className="text-sm font-medium text-gray-700">
@@ -178,6 +178,14 @@ export function ParticipantEventsFilters({ filters, onFiltersChange, onReset }: 
             </SelectContent>
           </Select>
         </div>
+
+        {hasActiveFilters && (
+          <div>
+            <Button variant="outline" onClick={handleReset} type="button">
+              Clear filters
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

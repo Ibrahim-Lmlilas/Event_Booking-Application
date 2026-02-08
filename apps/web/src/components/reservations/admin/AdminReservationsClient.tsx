@@ -15,11 +15,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import {
-  AdminReservationsTable,
-  AdminReservationsFilters,
-  AdminReservationsEmpty,
-} from './ui';
+import { AdminReservationsTable, AdminReservationsFilters, AdminReservationsEmpty } from './ui';
 
 const ITEMS_PER_PAGE = 8;
 
@@ -91,10 +87,7 @@ export function AdminReservationsClient() {
     return pages;
   };
 
-  const handleStatusUpdate = async (
-    id: string,
-    status: ReservationStatus,
-  ) => {
+  const handleStatusUpdate = async (id: string, status: ReservationStatus) => {
     try {
       await reservationsApi.updateStatus(id, status);
       toast.success('Reservation status updated successfully!');

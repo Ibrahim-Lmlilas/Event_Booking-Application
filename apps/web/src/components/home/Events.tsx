@@ -22,14 +22,13 @@ const transformStyles = [
   'rotate(7deg) translate(70px)',
   'rotate(-2deg) translate(140px)',
   'rotate(4deg) translate(210px)',
-  'rotate(-7deg) translate(280px)'
+  'rotate(-7deg) translate(280px)',
 ];
 
 export default function About() {
   return (
     <section id="events" className="py-20 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4 w-full">
-
         {/* BounceCards Animation */}
         <div className="flex justify-center w-full overflow-hidden mt-20">
           <BounceCards
