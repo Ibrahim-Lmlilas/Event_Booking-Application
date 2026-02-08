@@ -109,7 +109,7 @@ export default function ParticipantDashboard() {
         const now = new Date();
         let upcoming = 0;
 
-        arr.forEach((r: { status?: string; createdAt?: string; eventId?: { date?: string } }) => {
+        arr.forEach((r: IReservationWithDetails) => {
           const s = (r.status || 'PENDING') as keyof typeof status;
           status[s] = (status[s] ?? 0) + 1;
           if (r.createdAt) {
