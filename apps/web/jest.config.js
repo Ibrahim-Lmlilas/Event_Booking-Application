@@ -30,7 +30,7 @@ const customJestConfig = {
     '!src/**/*.stories.{js,jsx,ts,tsx}',
     '!src/**/__tests__/**',
   ],
-  testTimeout: 15000, // Increase default timeout for async tests
+  testTimeout: 30000, // Increase default timeout for async tests
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

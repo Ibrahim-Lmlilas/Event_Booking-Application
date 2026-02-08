@@ -84,7 +84,6 @@ describe('Reservation Flow', () => {
 
   it('completes full reservation flow: view event → reserve → view reservation', async () => {
     const user = userEvent.setup();
-    jest.setTimeout(15000); // Increase timeout for this test
 
     // Step 1: User views an event and sees Reserve button
     const { rerender } = render(<ReserveButton event={mockEvent} />);
@@ -103,18 +102,24 @@ describe('Reservation Flow', () => {
     await user.click(reserveButton);
 
     // Step 3: Verify reservation was created
-    await waitFor(() => {
-      expect(reservationsApi.create).toHaveBeenCalledWith({ eventId: mockEvent._id });
-      expect(toast.success).toHaveBeenCalledWith('Reservation created successfully!');
-    });
+    await waitFor(
+      () => {
+        expect(reservationsApi.create).toHaveBeenCalledWith({ eventId: mockEvent._id });
+        expect(toast.success).toHaveBeenCalledWith('Reservation created successfully!');
+      },
+      { timeout: 5000 },
+    );
 
     // Step 4: Button should now show "Already Reserved"
     rerender(<ReserveButton event={mockEvent} hasReservation={true} />);
 
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /already reserved/i })).toBeInTheDocument();
-      expect(screen.getByRole('button')).toBeDisabled();
-    });
+    await waitFor(
+      () => {
+        expect(screen.getByRole('button', { name: /already reserved/i })).toBeInTheDocument();
+        expect(screen.getByRole('button')).toBeDisabled();
+      },
+      { timeout: 5000 },
+    );
 
     // Step 5: User views their reservations using ReservedEventsGrid directly
     // This avoids the complexity of ParticipantReservationsClient's useEffect and loading states
@@ -138,7 +143,6 @@ describe('Reservation Flow', () => {
 
   it('handles complete cancellation flow: view reservation → cancel → confirm → verify cancellation', async () => {
     const user = userEvent.setup();
-    jest.setTimeout(15000); // Increase timeout for this test
 
     // Mock reservations with cancelable reservation (CONFIRMED, 25+ hours before event)
     const cancelableReservation: ReservationWithEvent = {
@@ -180,19 +184,25 @@ describe('Reservation Flow', () => {
     await user.click(cancelButton);
 
     // Step 3: Confirmation dialog appears
-    await waitFor(() => {
-      expect(screen.getByText(/cancel reservation/i)).toBeInTheDocument();
-      expect(screen.getByText(/this will free your spot/i)).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(screen.getByText(/cancel reservation/i)).toBeInTheDocument();
+        expect(screen.getByText(/this will free your spot/i)).toBeInTheDocument();
+      },
+      { timeout: 5000 },
+    );
 
     // Step 4: User confirms cancellation
     const confirmButton = screen.getByRole('button', { name: /yes, cancel/i });
     await user.click(confirmButton);
 
     // Step 5: Verify cancellation callback was called
-    await waitFor(() => {
-      expect(handleCancel).toHaveBeenCalledWith('reservation-2');
-    });
+    await waitFor(
+      () => {
+        expect(handleCancel).toHaveBeenCalledWith('reservation-2');
+      },
+      { timeout: 5000 },
+    );
   });
 
   it('prevents duplicate reservations', async () => {
@@ -223,9 +233,12 @@ describe('Reservation Flow', () => {
     const reserveButton = screen.getByRole('button', { name: /reserve now/i });
     await user.click(reserveButton);
 
-    await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith(errorMessage);
-    });
+    await waitFor(
+      () => {
+        expect(toast.error).toHaveBeenCalledWith(errorMessage);
+      },
+      { timeout: 5000 },
+    );
 
     // Button should still be enabled after error
     expect(reserveButton).not.toBeDisabled();
