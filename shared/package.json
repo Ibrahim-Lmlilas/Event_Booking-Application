@@ -1,0 +1,29 @@
+{
+  "name": "@event-booking/shared",
+  "version": "1.0.0",
+  "description": "Shared types and enums for Event Booking Application",
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "require": "./index.js"
+    },
+    "./types": {
+      "types": "./types/index.d.ts",
+      "import": "./types/index.js",
+      "require": "./types/index.js"
+    },
+    "./enums": {
+      "types": "./enums/index.d.ts",
+      "import": "./enums/index.js",
+      "require": "./enums/index.js"
+    }
+  },
+  "scripts": {},
+  "keywords": ["types", "shared", "typescript"],
+  "author": "",
+  "license": "MIT"
+}

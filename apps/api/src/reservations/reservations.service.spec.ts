@@ -4,8 +4,8 @@ import { Model } from 'mongoose';
 import { ReservationsService } from './reservations.service';
 import { EventsService } from '../events/events.service';
 import { Reservation, ReservationDocument } from './schemas/reservation.schema';
-import { EventStatus } from '../common/enums/event-status.enum';
-import { ReservationStatus } from '../common/enums/reservation-status.enum';
+import { EventStatus } from '../common/enums/event-status.enum.js';
+import { ReservationStatus } from '../common/enums/reservation-status.enum.js';
 import {
   BadRequestException,
   NotFoundException,
@@ -258,7 +258,7 @@ describe('ReservationsService', () => {
 
     it('should cancel a PENDING reservation', async () => {
       const futureDate = new Date();
-      futureDate.setHours(futureDate.getHours() + 25);
+      futureDate.setDate(futureDate.getDate() + 2); // 2 days in future
       const futureEvent = {
         ...mockEvent,
         date: futureDate,
@@ -316,6 +316,7 @@ describe('ReservationsService', () => {
     it('should throw ForbiddenException if user is not owner', async () => {
       const otherUserReservation = {
         ...mockReservation,
+        status: ReservationStatus.PENDING,
         userId: { toString: () => 'other-user-id' },
       };
 

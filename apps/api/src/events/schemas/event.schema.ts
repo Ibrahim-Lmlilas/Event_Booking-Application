@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { EventStatus } from '../../common/enums/event-status.enum';
+import { EventStatus } from '../../common/enums/event-status.enum.js';
 
 export type EventDocument = Event & Document;
 

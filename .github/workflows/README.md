@@ -1,211 +1,64 @@
-# CI/CD Pipeline Documentation
+# CI/CD Pipeline
 
-## 📋 Overview
+GitHub Actions pipeline for build, tests, and Docker deployment of the Event Booking application.
 
-Cette pipeline GitHub Actions automatise le processus de build, test et déploiement pour l'application Event Booking.
-
-## 🚀 Pipeline Flow
+## Overview
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    CI/CD PIPELINE                            │
-├─────────────────────────────────────────────────────────────┤
-│                                                               │
-│  ┌──────────────┐         ┌──────────────┐                  │
-│  │   BACKEND    │         │   FRONTEND   │                  │
-│  └──────────────┘         └──────────────┘                  │
-│         │                        │                           │
-│         ├─ Install & Cache       ├─ Install & Cache         │
-│         │                        │                           │
-│         ├─ Lint ─────────────────┼─ Lint                    │
-│         │                        │                           │
-│         ├─ Tests ────────────────┼─ Tests                   │
-│         │                        │                           │
-│         ├─ Build ────────────────┼─ Build                   │
-│         │                        │                           │
-│         └────────┬───────────────┘                           │
-│                  │                                            │
-│         ┌────────▼────────┐                                  │
-│         │  Docker Build   │                                  │
-│         │  & Push to Hub  │                                  │
-│         └─────────────────┘                                  │
-│                                                               │
-└─────────────────────────────────────────────────────────────┘
+Backend (NestJS)     Frontend (Next.js)
+       │                      │
+       ├─ Install & Cache     ├─ Install & Cache
+       ├─ Lint                ├─ Lint
+       ├─ Tests               ├─ Tests
+       ├─ Build               ├─ Build
+       └──────────┬───────────┘
+                  │
+           Docker Build & Push
 ```
 
-## 🎯 Triggers
+## Triggers
 
-La pipeline se déclenche automatiquement sur :
+| Event | Branches |
+|-------|----------|
+| Push | main, develop, EBA-* |
+| Pull Request | main, develop |
 
-- **Push** vers les branches :
-  - `main`
-  - `develop`
-  - `EBA-*` (feature branches)
+## Jobs
 
-- **Pull Request** vers :
-  - `main`
-  - `develop`
+| Job | Description |
+|-----|-------------|
+| backend-install | Install + cache node_modules |
+| backend-lint | ESLint |
+| backend-test | Jest unit + e2e |
+| backend-build | NestJS build |
+| frontend-install | Install + cache |
+| frontend-lint | ESLint |
+| frontend-test | Jest + React Testing Library |
+| frontend-build | Next.js build |
+| docker-build-push | Build & push images (main/develop only) |
 
-## 📦 Jobs
+## Required Secrets
 
-### Backend Jobs
+In **Settings → Secrets and variables → Actions**:
 
-1. **backend-install**
-   - Installation des dépendances
-   - Mise en cache de `node_modules`
-   - Cache key basé sur `package-lock.json`
+| Secret | Description |
+|--------|-------------|
+| DOCKER_USERNAME | Docker Hub username |
+| DOCKER_PASSWORD | Password or Access Token |
 
-2. **backend-lint**
-   - Vérification du code avec ESLint
-   - ❌ Échec si erreurs de lint
+## Quick Setup
 
-3. **backend-test**
-   - Tests unitaires avec Jest
-   - Tests e2e
-   - Génération du coverage
-   - ❌ Échec si tests échouent
+1. Create DOCKER_USERNAME and DOCKER_PASSWORD secrets
+2. Push to an EBA-* or main/develop branch
+3. Monitor execution in the Actions tab
 
-4. **backend-build**
-   - Build de l'application NestJS
-   - Upload des artifacts (dist/)
-   - ❌ Échec si build échoue
+## Troubleshooting
 
-### Frontend Jobs
+- **Tests fail**: Check Node 20.x, env variables
+- **Docker push fails**: Verify secrets
+- **Cache issues**: Settings → Actions → Caches → Delete
 
-1. **frontend-install**
-   - Installation des dépendances
-   - Mise en cache de `node_modules`
-   - Cache key basé sur `package-lock.json`
+## Resources
 
-2. **frontend-lint**
-   - Vérification du code avec ESLint
-   - ❌ Échec si erreurs de lint
-
-3. **frontend-test**
-   - Tests avec Jest & React Testing Library
-   - Génération du coverage
-   - ❌ Échec si tests échouent
-
-4. **frontend-build**
-   - Build de l'application Next.js
-   - Upload des artifacts (.next/)
-   - ❌ Échec si build échoue
-
-### Docker Jobs
-
-**docker-build-push** (uniquement sur `main` et `develop`)
-- Build des images Docker
-- Push vers Docker Hub
-- Tags :
-  - `latest`
-  - `{branch-name}`
-- Images :
-  - `eventzi-backend:latest`
-  - `eventzi-frontend:latest`
-
-## 🔐 Secrets Required
-
-Configurer dans GitHub Repository Settings → Secrets and variables → Actions :
-
-```
-DOCKER_USERNAME=your_dockerhub_username
-DOCKER_PASSWORD=your_dockerhub_password
-```
-
-## ⚙️ Configuration
-
-### Node.js Version
-```yaml
-NODE_VERSION: '20.x'
-```
-
-### Cache Strategy
-- Les `node_modules` sont mis en cache pour accélérer les builds
-- Cache invalidé automatiquement si `package-lock.json` change
-
-## 📊 Success Criteria
-
-La pipeline réussit si :
-- ✅ Tous les lints passent (backend + frontend)
-- ✅ Tous les tests passent (backend + frontend)
-- ✅ Les builds réussissent (backend + frontend)
-- ✅ Les images Docker sont créées (uniquement main/develop)
-
-La pipeline échoue si :
-- ❌ ESLint détecte des erreurs
-- ❌ Un test échoue
-- ❌ Le build échoue
-- ❌ La création d'image Docker échoue
-
-## 🔍 Monitoring
-
-### Voir les logs
-1. Aller sur GitHub → Actions
-2. Sélectionner le workflow run
-3. Cliquer sur un job pour voir les logs
-
-### Artifacts
-Les builds sont disponibles pendant 1 jour :
-- `backend-build` → dist/
-- `frontend-build` → .next/
-
-## 🚦 Status Badge
-
-Ajouter dans README.md :
-
-```markdown
-![CI/CD Pipeline](https://github.com/Ibrahim-Lmlilas/Event_Booking-Application/actions/workflows/ci-cd.yml/badge.svg)
-```
-
-## 📝 Commit Message Convention
-
-Pour lier les commits aux tickets Jira :
-
-```bash
-git commit -m "EBA-75: Add linting configuration"
-git commit -m "EBA-76: Implement unit tests for events service"
-git commit -m "EBA-77: Configure production build"
-```
-
-## 🐛 Troubleshooting
-
-### Cache issues
-```bash
-# Supprimer le cache GitHub Actions
-# Settings → Actions → Caches → Delete
-```
-
-### Tests échouent localement mais passent en CI
-```bash
-# Vérifier les variables d'environnement
-# Vérifier la version de Node.js
-node --version  # Should be 20.x
-```
-
-### Docker push échoue
-```bash
-# Vérifier les secrets
-# Settings → Secrets → DOCKER_USERNAME
-# Settings → Secrets → DOCKER_PASSWORD
-```
-
-## 📚 Resources
-
-- [GitHub Actions Documentation](https://docs.github.com/en/actions)
+- [GitHub Actions](https://docs.github.com/en/actions)
 - [Docker Build Action](https://github.com/docker/build-push-action)
-- [NestJS Testing](https://docs.nestjs.com/fundamentals/testing)
-- [Next.js Testing](https://nextjs.org/docs/testing)
-
-## 🎓 Learning Points
-
-1. **Parallel Execution**: Frontend et Backend s'exécutent en parallèle
-2. **Fail Fast**: Si lint échoue, les tests ne s'exécutent pas
-3. **Caching**: Réduit le temps d'exécution de ~50%
-4. **Artifacts**: Permet de télécharger les builds pour inspection
-5. **Docker Multi-stage**: Images optimisées pour production
-
----
-
-**Dernière mise à jour**: 06/02/2026
-**Auteur**: Ibrahim Lmlilas
-**Projet**: Event Booking Application

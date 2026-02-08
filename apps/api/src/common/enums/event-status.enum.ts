@@ -1,5 +1,1 @@
-export enum EventStatus {
-  DRAFT = 'DRAFT',
-  PUBLISHED = 'PUBLISHED',
-  CANCELED = 'CANCELED',
-}
+export { EventStatus } from '../../../../../shared/enums/index.js';

@@ -12,8 +12,8 @@ import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { UpdateReservationStatusDto } from './dto/update-reservation-status.dto';
 import { EventsService } from '../events/events.service';
-import { EventStatus } from '../common/enums/event-status.enum';
-import { ReservationStatus } from '../common/enums/reservation-status.enum';
+import { EventStatus } from '../common/enums/event-status.enum.js';
+import { ReservationStatus } from '../common/enums/reservation-status.enum.js';
 import { CANCEL_MIN_HOURS_BEFORE_EVENT } from './constants/cancellation-rules';
 
 @Injectable()

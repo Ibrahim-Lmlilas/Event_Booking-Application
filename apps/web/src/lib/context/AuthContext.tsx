@@ -3,19 +3,12 @@
 import { createContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { authApi } from '@/lib/api/auth';
-
-interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-}
+import type { IUser } from '@/types';
 
 interface AuthContextType {
-  user: User | null;
+  user: IUser | null;
   loading: boolean;
-  login: (token: string, userData: User) => void;
+  login: (token: string, userData: IUser) => void;
   logout: () => void;
   checkAuth: () => Promise<void>;
 }
@@ -23,7 +16,7 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<IUser | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -65,8 +58,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (response.user) {
         // Update stored user data with fresh data from API
-        const userData: User = {
-          id: response.user.id,
+        const userData: IUser = {
+          _id: response.user.id,
           email: response.user.email,
           firstName: response.user.firstName,
           lastName: response.user.lastName,
@@ -98,7 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const login = (token: string, userData: User) => {
+  const login = (token: string, userData: IUser) => {
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);

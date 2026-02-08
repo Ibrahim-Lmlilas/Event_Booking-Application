@@ -1,58 +1,12 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-
-function getToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem('token');
-}
-
-export type EventStatus = 'DRAFT' | 'PUBLISHED' | 'CANCELED';
-
-export interface Event {
-  _id: string;
-  title: string;
-  description?: string;
-  date: string;
-  time: string;
-  location: string;
-  capacity: number;
-  price: number;
-  seatsTaken: number;
-  status: EventStatus;
-  bg: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface CreateEventPayload {
-  title: string;
-  description?: string;
-  date: string;
-  time: string;
-  location: string;
-  capacity: number;
-  price: number;
-  status?: EventStatus;
-  bg: string;
-}
-
-export interface UpdateEventPayload extends Partial<CreateEventPayload> {}
-
-export interface PaginatedEventsResponse {
-  events: Event[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
+import apiClient from './client';
+import type { EventStatus, IEvent, IEventCreate, IEventUpdate, IPaginatedEvents } from '@/types';
 
 export const eventsApi = {
-  async list(page: number = 1, limit: number = 10): Promise<PaginatedEventsResponse> {
-    const res = await fetch(`${API_URL}/events?page=${page}&limit=${limit}`);
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || 'Failed to fetch events');
-    }
-    return res.json();
+  async list(page: number = 1, limit: number = 10): Promise<IPaginatedEvents> {
+    const response = await apiClient.get('/events', {
+      params: { page, limit },
+    });
+    return response.data;
   },
 
   async listPublished(
@@ -65,100 +19,44 @@ export const eventsApi = {
       date?: string;
       time?: string;
     },
-  ): Promise<PaginatedEventsResponse> {
-    const params = new URLSearchParams({
-      page: page.toString(),
-      limit: limit.toString(),
+  ): Promise<IPaginatedEvents> {
+    const params: any = {
+      page,
+      limit,
       status: 'PUBLISHED',
-    });
+    };
 
-    if (filters?.search) params.append('search', filters.search);
-    if (filters?.minPrice !== undefined) params.append('minPrice', filters.minPrice.toString());
-    if (filters?.maxPrice !== undefined) params.append('maxPrice', filters.maxPrice.toString());
-    if (filters?.date) params.append('date', filters.date);
-    if (filters?.time) params.append('time', filters.time);
+    if (filters?.search) params.search = filters.search;
+    if (filters?.minPrice !== undefined) params.minPrice = filters.minPrice;
+    if (filters?.maxPrice !== undefined) params.maxPrice = filters.maxPrice;
+    if (filters?.date) params.date = filters.date;
+    if (filters?.time) params.time = filters.time;
 
-    const res = await fetch(`${API_URL}/events?${params.toString()}`);
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || 'Failed to fetch published events');
-    }
-    return res.json();
+    const response = await apiClient.get('/events', { params });
+    return response.data;
   },
 
-  async get(id: string): Promise<Event> {
-    const res = await fetch(`${API_URL}/events/${id}`);
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || 'Failed to fetch event');
-    }
-    return res.json();
+  async get(id: string): Promise<IEvent> {
+    const response = await apiClient.get(`/events/${id}`);
+    return response.data;
   },
 
-  async create(payload: CreateEventPayload): Promise<Event> {
-    const token = getToken();
-    if (!token) throw new Error('Not authenticated');
-    const res = await fetch(`${API_URL}/events`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || 'Failed to create event');
-    }
-    return res.json();
+  async create(payload: IEventCreate): Promise<IEvent> {
+    const response = await apiClient.post('/events', payload);
+    return response.data;
   },
 
-  async update(id: string, payload: UpdateEventPayload): Promise<Event> {
-    const token = getToken();
-    if (!token) throw new Error('Not authenticated');
-    const res = await fetch(`${API_URL}/events/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || 'Failed to update event');
-    }
-    return res.json();
+  async update(id: string, payload: IEventUpdate): Promise<IEvent> {
+    const response = await apiClient.patch(`/events/${id}`, payload);
+    return response.data;
   },
 
-  async updateStatus(id: string, status: EventStatus): Promise<Event> {
-    const token = getToken();
-    if (!token) throw new Error('Not authenticated');
-    const res = await fetch(`${API_URL}/events/${id}/status`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ status }),
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || 'Failed to update status');
-    }
-    return res.json();
+  async updateStatus(id: string, status: EventStatus): Promise<IEvent> {
+    const response = await apiClient.patch(`/events/${id}/status`, { status });
+    return response.data;
   },
 
   async delete(id: string): Promise<void> {
-    const token = getToken();
-    if (!token) throw new Error('Not authenticated');
-    const res = await fetch(`${API_URL}/events/${id}`, {
-      method: 'DELETE',
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || 'Failed to delete event');
-    }
+    await apiClient.delete(`/events/${id}`);
   },
 };

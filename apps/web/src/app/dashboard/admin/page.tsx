@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { Loader2, Calendar, BookmarkCheck, Users, TicketCheck } from 'lucide-react';
+import type { IEvent, IReservationWithDetails } from '@/types';
 import { eventsApi } from '@/lib/api/events';
 import { reservationsApi } from '@/lib/api/reservations';
 import { usersApi } from '@/lib/api/users';
@@ -109,7 +110,7 @@ export default function AdminDashboard() {
         setEventsCount(events.length);
         const now = new Date();
         const counts = [0, 0, 0, 0, 0, 0];
-        events.forEach((ev: { date?: string; createdAt?: string }) => {
+        events.forEach((ev: IEvent) => {
           const d = ev.date ? new Date(ev.date) : ev.createdAt ? new Date(ev.createdAt) : now;
           const monthsAgo =
             (now.getFullYear() - d.getFullYear()) * 12 + (now.getMonth() - d.getMonth());
@@ -134,7 +135,7 @@ export default function AdminDashboard() {
           CANCELED: 0,
         };
         const dayCounts = [0, 0, 0, 0, 0, 0, 0];
-        arr.forEach((r: { status?: string; createdAt?: string }) => {
+        arr.forEach((r: IReservationWithDetails) => {
           const s = r.status || 'PENDING';
           byStatus[s] = (byStatus[s] ?? 0) + 1;
           if (r.createdAt) {

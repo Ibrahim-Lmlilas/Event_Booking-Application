@@ -1,133 +1,58 @@
+import axios from 'axios';
+import type { IUserCreate, LoginData } from '@/types';
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
-interface RegisterData {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-}
-
-interface LoginData {
-  email: string;
-  password: string;
-}
+// Create separate axios instance for auth (without interceptor)
+const authClient = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
 export const authApi = {
-  async register(data: RegisterData) {
+  async register(data: IUserCreate) {
     try {
-      const response = await fetch(`${API_URL}/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        let errorMessage = 'Registration failed';
-
-        // Try to parse error response
-        try {
-          const error = await response.json();
-          // NestJS returns errors in format: { statusCode, message, error }
-          errorMessage = error.message || errorMessage;
-        } catch {
-          // If response is not JSON, use status text
-          errorMessage = response.statusText || `Server error ${response.status}`;
-        }
-
-        throw new Error(errorMessage);
-      }
-
-      return response.json();
+      const response = await authClient.post('/auth/register', data);
+      return response.data;
     } catch (error: any) {
-      // Re-throw with better error message if it's already an Error
-      if (error instanceof Error) {
-        throw error;
-      }
-      // Network errors (no response)
-      throw new Error('Network error: Failed to connect to server');
+      const message = error.response?.data?.message || error.message || 'Registration failed';
+      throw new Error(message);
     }
   },
 
   async login(data: LoginData) {
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        let errorMessage = 'Login failed';
-
-        // Try to parse error response
-        try {
-          const error = await response.json();
-          // NestJS returns errors in format: { statusCode, message, error }
-          errorMessage = error.message || errorMessage;
-        } catch {
-          // If response is not JSON, use status text
-          if (response.status === 401) {
-            errorMessage = 'Invalid credentials';
-          } else {
-            errorMessage = response.statusText || `Server error ${response.status}`;
-          }
-        }
-
-        throw new Error(errorMessage);
-      }
-
-      return response.json();
+      const response = await authClient.post('/auth/login', data);
+      return response.data;
     } catch (error: any) {
-      // Re-throw with better error message if it's already an Error
-      if (error instanceof Error) {
-        throw error;
+      let message = 'Login failed';
+      if (error.response?.status === 401) {
+        message = 'Invalid credentials';
+      } else if (error.response?.data?.message) {
+        message = error.response.data.message;
+      } else if (error.message) {
+        message = error.message;
       }
-      // Network errors (no response)
-      throw new Error('Network error: Failed to connect to server');
+      throw new Error(message);
     }
   },
 
   async getProfile(token: string) {
     try {
-      const response = await fetch(`${API_URL}/auth/profile`, {
-        method: 'GET',
+      const response = await authClient.get('/auth/profile', {
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       });
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error('Token expired or invalid - 401');
-        }
-        let errorMessage = 'Failed to fetch profile';
-        try {
-          const error = await response.json();
-          errorMessage = error.message || errorMessage;
-        } catch {
-          // If response is not JSON, use status text
-          errorMessage = response.statusText || `Server error ${response.status}`;
-        }
-        // Include status code in error message for better handling
-        throw new Error(`${errorMessage} - ${response.status}`);
-      }
-
-      return response.json();
+      return response.data;
     } catch (error: any) {
-      // Re-throw with better error message
-      if (error.message && error.message.includes('-')) {
-        throw error;
+      if (error.response?.status === 401) {
+        throw new Error('Token expired or invalid - 401');
       }
-      // Network errors (no response)
-      if (error.message) {
-        throw new Error(`Network error: ${error.message}`);
-      }
-      throw new Error('Network error: Failed to connect to server');
+      const message = error.response?.data?.message || error.message || 'Failed to fetch profile';
+      throw new Error(`${message} - ${error.response?.status || 'Network error'}`);
     }
   },
 };

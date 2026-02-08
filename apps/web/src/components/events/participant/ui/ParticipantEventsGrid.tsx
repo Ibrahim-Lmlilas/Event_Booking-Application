@@ -1,11 +1,10 @@
 import { Calendar, MapPin, Users } from 'lucide-react';
-import type { Event } from '@/lib/api/events';
-import type { ReservationWithEvent } from '@/lib/api/reservations';
+import type { IEvent, IReservationWithDetails } from '@/types';
 import { ReserveButton } from '@/components/reservations/ReserveButton';
 
 type Props = {
-  events: Event[];
-  reservations?: ReservationWithEvent[];
+  events: IEvent[];
+  reservations?: IReservationWithDetails[];
   onReservationSuccess?: () => void;
 };
 

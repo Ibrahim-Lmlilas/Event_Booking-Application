@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { eventsApi, type Event, type CreateEventPayload, type EventStatus } from '@/lib/api/events';
+import { eventsApi } from '@/lib/api/events';
+import type { IEvent, IEventCreate } from '@/types';
+import { EventStatus } from '@/types';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -24,22 +26,27 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import { AdminEventsHeader, AdminEventsEmpty, AdminEventsTable, AdminEventFormDialog } from './ui';
-import type { FormErrors } from './ui/AdminEventFormDialog';
+import {
+  AdminEventsHeader,
+  AdminEventsEmpty,
+  AdminEventsTable,
+  AdminEventFormDialog,
+  type FormErrors,
+} from './ui';
 
 const ITEMS_PER_PAGE = 6;
 
 export function AdminEventsClient() {
   const { loading: authLoading } = useAuth();
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<IEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [createOpen, setCreateOpen] = useState(false);
-  const [editEvent, setEditEvent] = useState<Event | null>(null);
+  const [editEvent, setEditEvent] = useState<IEvent | null>(null);
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState<CreateEventPayload>({
+  const [form, setForm] = useState<IEventCreate>({
     title: '',
     description: '',
     date: '',
@@ -50,7 +57,7 @@ export function AdminEventsClient() {
     bg: 'event1.jpg',
   });
   const [errors, setErrors] = useState<FormErrors>({});
-  const [eventToDelete, setEventToDelete] = useState<Event | null>(null);
+  const [eventToDelete, setEventToDelete] = useState<IEvent | null>(null);
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -115,17 +122,20 @@ export function AdminEventsClient() {
     setCreateOpen(true);
   };
 
-  const openEdit = (e: Event) => {
-    setEditEvent(e);
+  const openEdit = (event: IEvent) => {
+    setEditEvent(event);
     setForm({
-      title: e.title,
-      description: e.description || '',
-      date: e.date.slice(0, 10),
-      time: e.time,
-      location: e.location,
-      capacity: e.capacity,
-      price: e.price ?? 0,
-      bg: e.bg || 'event1.jpg',
+      title: event.title,
+      description: event.description || '',
+      date:
+        event.date instanceof Date
+          ? event.date.toISOString().slice(0, 10)
+          : event.date.slice(0, 10),
+      time: event.time,
+      location: event.location,
+      capacity: event.capacity,
+      price: event.price ?? 0,
+      bg: event.bg || 'event1.jpg',
     });
     setErrors({});
     setCreateOpen(true);
@@ -175,11 +185,11 @@ export function AdminEventsClient() {
     }
   };
 
-  const handleStatusChange = async (event: Event, status: EventStatus) => {
+  const handleStatusChange = async (event: IEvent, status: EventStatus) => {
     try {
       await eventsApi.updateStatus(event._id, status);
       toast.success(
-        `Status set to ${status === 'PUBLISHED' ? 'Published' : status === 'CANCELED' ? 'Canceled' : status}`,
+        `Status set to ${status === EventStatus.PUBLISHED ? 'Published' : status === EventStatus.CANCELED ? 'Canceled' : status}`,
       );
       fetchEvents(page);
     } catch (err: unknown) {
