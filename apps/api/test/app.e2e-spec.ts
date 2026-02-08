@@ -3,8 +3,10 @@ import { resolve } from 'path';
 
 config({ path: resolve(__dirname, '../.env') });
 
-const testDbUri = process.env.MONGODB_URI_TEST;
-process.env.MONGODB_URI = testDbUri;
+// CI sets MONGODB_URI; local can use MONGODB_URI_TEST; fallback to default test DB
+process.env.MONGODB_URI =
+  process.env.MONGODB_URI_TEST ||
+  'mongodb://localhost:27017/event-booking-test-e2e';
 console.log(
   `[E2E Test] Setting test database BEFORE module import: ${process.env.MONGODB_URI}`,
 );
