@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { Loader2, Calendar, TicketCheck } from 'lucide-react';
-import { reservationsApi, type ReservationWithEvent } from '@/lib/api/reservations';
+import { reservationsApi } from '@/lib/api/reservations';
+import type { IReservationWithDetails } from '@/types';
 import { eventsApi } from '@/lib/api/events';
 import {
   Chart as ChartJS,
@@ -87,14 +88,14 @@ export default function ParticipantDashboard() {
   const [totalEvents, setTotalEvents] = useState(0);
   const [perMonth, setPerMonth] = useState<number[]>([]);
   const [perDay, setPerDay] = useState<number[]>([]);
-  const [reservations, setReservations] = useState<ReservationWithEvent[]>([]);
+  const [reservations, setReservations] = useState<IReservationWithDetails[]>([]);
 
   useEffect(() => {
     if (!user) return;
     reservationsApi
       .findAll()
       .then(list => {
-        const arr = (list ?? []) as ReservationWithEvent[];
+        const arr = (list ?? []) as IReservationWithDetails[];
         setReservations(arr);
         setReservationsCount(arr.length);
         const status: Record<string, number> = {

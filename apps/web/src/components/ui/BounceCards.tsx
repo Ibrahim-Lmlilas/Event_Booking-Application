@@ -2,18 +2,9 @@
 
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import {BounceCardsProps} from '@/types';
 
-interface BounceCardsProps {
-  className?: string;
-  images?: string[];
-  containerWidth?: number;
-  containerHeight?: number;
-  animationDelay?: number;
-  animationStagger?: number;
-  easeType?: string;
-  transformStyles?: string[];
-  enableHover?: boolean;
-}
+
 
 export default function BounceCards({
   className = '',

@@ -1,47 +1,8 @@
 import apiClient from './client';
-
-export type EventStatus = 'DRAFT' | 'PUBLISHED' | 'CANCELED';
-
-export interface Event {
-  _id: string;
-  title: string;
-  description?: string;
-  date: string;
-  time: string;
-  location: string;
-  capacity: number;
-  price: number;
-  seatsTaken: number;
-  status: EventStatus;
-  bg: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface CreateEventPayload {
-  title: string;
-  description?: string;
-  date: string;
-  time: string;
-  location: string;
-  capacity: number;
-  price: number;
-  status?: EventStatus;
-  bg: string;
-}
-
-export interface UpdateEventPayload extends Partial<CreateEventPayload> {}
-
-export interface PaginatedEventsResponse {
-  events: Event[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
+import type { EventStatus, IEvent, IEventCreate, IEventUpdate, IPaginatedEvents } from '@/types';
 
 export const eventsApi = {
-  async list(page: number = 1, limit: number = 10): Promise<PaginatedEventsResponse> {
+  async list(page: number = 1, limit: number = 10): Promise<IPaginatedEvents> {
     const response = await apiClient.get('/events', {
       params: { page, limit },
     });
@@ -58,7 +19,7 @@ export const eventsApi = {
       date?: string;
       time?: string;
     },
-  ): Promise<PaginatedEventsResponse> {
+  ): Promise<IPaginatedEvents> {
     const params: any = {
       page,
       limit,
@@ -75,22 +36,22 @@ export const eventsApi = {
     return response.data;
   },
 
-  async get(id: string): Promise<Event> {
+  async get(id: string): Promise<IEvent> {
     const response = await apiClient.get(`/events/${id}`);
     return response.data;
   },
 
-  async create(payload: CreateEventPayload): Promise<Event> {
+  async create(payload: IEventCreate): Promise<IEvent> {
     const response = await apiClient.post('/events', payload);
     return response.data;
   },
 
-  async update(id: string, payload: UpdateEventPayload): Promise<Event> {
+  async update(id: string, payload: IEventUpdate): Promise<IEvent> {
     const response = await apiClient.patch(`/events/${id}`, payload);
     return response.data;
   },
 
-  async updateStatus(id: string, status: EventStatus): Promise<Event> {
+  async updateStatus(id: string, status: EventStatus): Promise<IEvent> {
     const response = await apiClient.patch(`/events/${id}/status`, { status });
     return response.data;
   },

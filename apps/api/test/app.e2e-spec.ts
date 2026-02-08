@@ -1,10 +1,11 @@
-// CRITICAL: Set test database URI BEFORE importing AppModule
-// This ensures MongooseModule.forRoot() uses the test database, not production
-const existingUri = process.env.MONGODB_URI || 'mongodb://localhost:27017';
-const uriMatch = existingUri.match(/^(mongodb:\/\/[^\/]+)/);
-const baseUri = uriMatch ? uriMatch[1] : 'mongodb://localhost:27017';
-const testDbName = `event-booking-test-e2e-${Date.now()}`;
-process.env.MONGODB_URI = `${baseUri}/${testDbName}`;
+import { config } from 'dotenv';
+import { resolve } from 'path';
+
+config({ path: resolve(__dirname, '../.env') });
+
+// Use MONGODB_URI_TEST from .env, or fallback to hardcoded value
+const testDbUri = process.env.MONGODB_URI_TEST ;
+process.env.MONGODB_URI = testDbUri;
 console.log(
   `[E2E Test] Setting test database BEFORE module import: ${process.env.MONGODB_URI}`,
 );
@@ -14,8 +15,9 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
-import { EventStatus } from '../src/common/enums/event-status.enum';
-import { ReservationStatus } from '../src/common/enums/reservation-status.enum';
+import { EventStatus } from '../src/common/enums/event-status.enum.js';
+import { ReservationStatus } from '../src/common/enums/reservation-status.enum.js';
+import { UserRole } from '../src/common/enums/user-role.enum.js';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../src/users/schemas/user.schema';
@@ -103,7 +105,7 @@ describe('App E2E - Complete Reservation Flow with Roles', () => {
         password: 'Admin123',
         firstName: 'Admin',
         lastName: 'User',
-        role: 'admin',
+        role: UserRole.ADMIN,
       };
 
       const response = await request(app.getHttpServer())
@@ -112,7 +114,7 @@ describe('App E2E - Complete Reservation Flow with Roles', () => {
         .expect(201);
 
       expect(response.body).toHaveProperty('access_token');
-      expect(response.body.user.role).toBe('admin');
+      expect(response.body.user.role).toBe(UserRole.ADMIN);
       adminToken = response.body.access_token;
       adminUserId = response.body.user.id;
     });
@@ -124,7 +126,7 @@ describe('App E2E - Complete Reservation Flow with Roles', () => {
         password: 'Participant123',
         firstName: 'Participant',
         lastName: 'User',
-        role: 'participant',
+        role: UserRole.PARTICIPANT,
       };
 
       const response = await request(app.getHttpServer())
@@ -133,7 +135,7 @@ describe('App E2E - Complete Reservation Flow with Roles', () => {
         .expect(201);
 
       expect(response.body).toHaveProperty('access_token');
-      expect(response.body.user.role).toBe('participant');
+      expect(response.body.user.role).toBe(UserRole.PARTICIPANT);
       participantToken = response.body.access_token;
       participantUserId = response.body.user.id;
     });

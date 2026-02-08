@@ -1,12 +1,11 @@
 import { INestApplicationContext } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../app.module';
-import { UsersService } from '../users/users.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../users/schemas/user.schema';
 import * as bcrypt from 'bcrypt';
-import { UserRole } from '../common/enums/user-role.enum';
+import { UserRole } from '../common/enums/user-role.enum.js';
 
 export async function runSeedAdmin(
   app: INestApplicationContext,

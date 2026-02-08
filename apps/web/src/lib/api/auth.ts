@@ -1,4 +1,5 @@
 import axios from 'axios';
+import type { IUserCreate ,LoginData } from '@/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
@@ -10,20 +11,8 @@ const authClient = axios.create({
   },
 });
 
-interface RegisterData {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-}
-
-interface LoginData {
-  email: string;
-  password: string;
-}
-
 export const authApi = {
-  async register(data: RegisterData) {
+  async register(data: IUserCreate) {
     try {
       const response = await authClient.post('/auth/register', data);
       return response.data;

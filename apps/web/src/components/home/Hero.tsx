@@ -1,6 +1,5 @@
 import ClickSpark from '@/components/ClickSpark';
 import CurvedLoop from '@/components/CurvedLoop';
-import { Button } from '@/components/ui/button';
 
 export default function Hero() {
   return (

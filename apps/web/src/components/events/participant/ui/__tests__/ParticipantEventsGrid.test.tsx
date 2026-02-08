@@ -1,8 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ParticipantEventsGrid } from '../ParticipantEventsGrid';
-import type { Event } from '@/lib/api/events';
-import type { ReservationWithEvent } from '@/lib/api/reservations';
+import type { IEvent, IReservationWithDetails } from '@/types';
+import { EventStatus } from '@/types';
 import { reservationsApi } from '@/lib/api/reservations';
 import { toast } from 'sonner';
 
@@ -15,7 +15,7 @@ jest.mock('sonner', () => ({
   },
 }));
 
-const mockEvent1: Event = {
+const mockEvent1: IEvent = {
   _id: 'event-1',
   title: 'Test Event 1',
   description: 'Test Description 1',
@@ -25,11 +25,11 @@ const mockEvent1: Event = {
   capacity: 100,
   price: 50,
   seatsTaken: 10,
-  status: 'PUBLISHED',
+  status: EventStatus.PUBLISHED,
   bg: 'event1.jpg',
 };
 
-const mockEvent2: Event = {
+const mockEvent2: IEvent = {
   _id: 'event-2',
   title: 'Test Event 2',
   description: 'Test Description 2',
@@ -39,20 +39,21 @@ const mockEvent2: Event = {
   capacity: 50,
   price: 75,
   seatsTaken: 50,
-  status: 'PUBLISHED',
+  status: EventStatus.PUBLISHED,
   bg: 'event2.jpg',
 };
 
-const mockReservation: ReservationWithEvent = {
+const mockReservation: IReservationWithDetails = {
   _id: 'reservation-1',
   userId: {
     _id: 'user-1',
     email: 'test@example.com',
     firstName: 'John',
     lastName: 'Doe',
+    role: 'PARTICIPANT' as any,
   },
   eventId: mockEvent1,
-  status: 'PENDING',
+  status: 'PENDING' as any,
   createdAt: new Date().toISOString(),
 };
 

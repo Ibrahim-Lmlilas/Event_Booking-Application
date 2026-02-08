@@ -1,17 +1,7 @@
 'use client';
 
 import { useRef, useEffect, useState, useMemo, useId, FC, PointerEvent } from 'react';
-
-interface CurvedLoopProps {
-  marqueeText?: string;
-  speed?: number;
-  className?: string;
-  curveAmount?: number;
-  direction?: 'left' | 'right';
-  interactive?: boolean;
-  compact?: boolean;
-  compactTextColor?: string;
-}
+import type { CurvedLoopProps } from '@/types';
 
 const CurvedLoop: FC<CurvedLoopProps> = ({
   marqueeText = '',

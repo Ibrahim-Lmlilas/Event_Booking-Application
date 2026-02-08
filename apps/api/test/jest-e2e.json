@@ -4,8 +4,25 @@
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
+    "^.+\\.(t|j)s$": [
+      "ts-jest",
+      {
+        "tsconfig": {
+          "module": "commonjs",
+          "moduleResolution": "node",
+          "resolvePackageJsonExports": false,
+          "esModuleInterop": true,
+          "allowSyntheticDefaultImports": true
+        }
+      }
+    ]
   },
+  "moduleNameMapper": {
+    "^@shared/(.*)$": "<rootDir>/../../../shared/$1",
+    "^(\\.\\.?/.*)\\.js$": "$1"
+  },
+  "modulePaths": ["<rootDir>"],
+  "moduleDirectories": ["node_modules", "<rootDir>/../../../"],
   "testTimeout": 30000,
   "setupFilesAfterEnv": []
 }

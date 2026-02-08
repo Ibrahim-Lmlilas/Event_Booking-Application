@@ -1,5 +1,5 @@
 import { Calendar, MapPin, Users, CalendarCheck, Download, XCircle } from 'lucide-react';
-import type { ReservationWithEvent } from '@/lib/api/reservations';
+import type { IReservationWithDetails } from '@/types';
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
@@ -23,7 +23,7 @@ function getEventStart(ev: { date: string | Date; time?: string }): Date {
   return d;
 }
 
-function canCancelReservation(reservation: ReservationWithEvent): boolean {
+function canCancelReservation(reservation: IReservationWithDetails): boolean {
   if (reservation.status !== 'PENDING' && reservation.status !== 'CONFIRMED') return false;
   const ev = reservation.eventId;
   if (!ev || typeof ev !== 'object' || !('date' in ev)) return false;
@@ -33,7 +33,7 @@ function canCancelReservation(reservation: ReservationWithEvent): boolean {
 }
 
 type Props = {
-  reservations: ReservationWithEvent[];
+  reservations: IReservationWithDetails[];
   onCancel?: (reservationId: string) => Promise<void>;
   onDownloadTicket?: (reservationId: string) => Promise<void>;
 };

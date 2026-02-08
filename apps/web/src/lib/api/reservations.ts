@@ -1,56 +1,30 @@
 import apiClient from './client';
-import type { Event } from './events';
+import type { IReservation, IReservationWithDetails , ReservationFilters ,CreateReservationPayload} from '@/types';
+import { ReservationStatus } from '@/types';
 
-export interface Reservation {
-  _id: string;
-  userId: string;
-  eventId: string | Event;
-  status: 'PENDING' | 'CONFIRMED' | 'REFUSED' | 'CANCELED';
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface ReservationWithEvent extends Omit<Reservation, 'eventId' | 'userId'> {
-  eventId: Event;
-  userId: {
-    _id: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-  };
-}
-
-export interface ReservationFilters {
-  eventTitle?: string;
-  userName?: string;
-  status?: 'PENDING' | 'CONFIRMED' | 'REFUSED' | 'CANCELED';
-}
-
-export interface CreateReservationPayload {
-  eventId: string;
-}
+export type { ReservationFilters };
 
 export const reservationsApi = {
-  async create(payload: CreateReservationPayload): Promise<Reservation> {
+  async create(payload: CreateReservationPayload): Promise<IReservation> {
     const response = await apiClient.post('/reservations', payload);
     return response.data;
   },
 
-  async findAll(filters?: ReservationFilters): Promise<ReservationWithEvent[]> {
+  async findAll(filters?: ReservationFilters): Promise<IReservationWithDetails[]> {
     const response = await apiClient.get('/reservations', { params: filters });
     return response.data;
   },
 
   async updateStatus(
     id: string,
-    status: 'PENDING' | 'CONFIRMED' | 'REFUSED' | 'CANCELED',
-  ): Promise<ReservationWithEvent> {
+    status: ReservationStatus,
+  ): Promise<IReservationWithDetails> {
     const response = await apiClient.patch(`/reservations/${id}/status`, { status });
     return response.data;
   },
 
   /** Cancel own reservation (allowed only ≥24h before event). */
-  async cancel(id: string): Promise<ReservationWithEvent> {
+  async cancel(id: string): Promise<IReservationWithDetails> {
     const response = await apiClient.patch(`/reservations/${id}/cancel`);
     return response.data;
   },

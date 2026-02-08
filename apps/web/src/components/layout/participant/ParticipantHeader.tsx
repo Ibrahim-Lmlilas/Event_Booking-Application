@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { UserRole } from '@/types';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -146,12 +147,12 @@ export default function ParticipantHeader({ onMenuClick, sidebarOpen = false }: 
                 <Label className="text-xs sm:text-sm text-gray-700">Role</Label>
                 <span
                   className={`px-2 py-0.5 sm:py-1 text-xs font-semibold rounded-full w-fit ${
-                    user.role === 'admin'
+                    user.role === UserRole.ADMIN
                       ? 'bg-pink-100 text-pink-800'
                       : 'bg-blue-100 text-blue-800'
                   }`}
                 >
-                  {user.role === 'admin' ? 'Administrator' : 'Participant'}
+                  {user.role === UserRole.ADMIN ? 'Administrator' : 'Participant'}
                 </span>
               </div>
             </div>

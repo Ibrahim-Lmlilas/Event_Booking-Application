@@ -1,25 +1,16 @@
 import apiClient from './client';
-
-export interface User {
-  _id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: 'ADMIN' | 'PARTICIPANT';
-  createdAt?: string;
-  updatedAt?: string;
-}
+import type { IUser, IUserUpdate } from '@/types';
 
 export const usersApi = {
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<IUser[]> {
     const response = await apiClient.get('/users');
     return response.data;
   },
 
   async update(
     id: string,
-    data: Partial<Pick<User, 'firstName' | 'lastName' | 'role'>>,
-  ): Promise<User> {
+    data: IUserUpdate,
+  ): Promise<IUser> {
     const response = await apiClient.patch(`/users/${id}`, data);
     return response.data;
   },

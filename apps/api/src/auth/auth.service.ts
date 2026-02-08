@@ -10,7 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from '../users/schemas/user.schema';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { UserRole } from '../common/enums/user-role.enum';
+import { UserRole } from '../common/enums/user-role.enum.js';
 
 @Injectable()
 export class AuthService {

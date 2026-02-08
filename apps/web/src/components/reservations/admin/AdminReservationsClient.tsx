@@ -1,11 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import {
-  reservationsApi,
-  type ReservationWithEvent,
-  type ReservationFilters,
-} from '@/lib/api/reservations';
+import { reservationsApi, type ReservationFilters } from '@/lib/api/reservations';
+import type { IReservationWithDetails } from '@/types';
+import { ReservationStatus } from '@/types';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -17,14 +15,16 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import { AdminReservationsTable } from './ui/AdminReservationsTable';
-import { AdminReservationsFilters } from './ui/AdminReservationsFilters';
-import { AdminReservationsEmpty } from './ui/AdminReservationsEmpty';
+import {
+  AdminReservationsTable,
+  AdminReservationsFilters,
+  AdminReservationsEmpty,
+} from './ui';
 
 const ITEMS_PER_PAGE = 8;
 
 export function AdminReservationsClient() {
-  const [allReservations, setAllReservations] = useState<ReservationWithEvent[]>([]);
+  const [allReservations, setAllReservations] = useState<IReservationWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<ReservationFilters>({});
   const [page, setPage] = useState(1);
@@ -93,7 +93,7 @@ export function AdminReservationsClient() {
 
   const handleStatusUpdate = async (
     id: string,
-    status: 'PENDING' | 'CONFIRMED' | 'REFUSED' | 'CANCELED',
+    status: ReservationStatus,
   ) => {
     try {
       await reservationsApi.updateStatus(id, status);

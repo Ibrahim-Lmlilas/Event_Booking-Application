@@ -1,4 +1,1 @@
-export enum UserRole {
-  ADMIN = 'admin',
-  PARTICIPANT = 'participant',
-}
+export { UserRole } from '../../../../../shared/enums/index.js';

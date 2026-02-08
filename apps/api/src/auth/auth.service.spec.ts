@@ -4,10 +4,9 @@ import { JwtService } from '@nestjs/jwt';
 import { Model } from 'mongoose';
 import { AuthService } from './auth.service';
 import { User } from '../users/schemas/user.schema';
-import { UserRole } from '../common/enums/user-role.enum';
+import { UserRole } from '../common/enums/user-role.enum.js';
 import { UnauthorizedException, ConflictException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { describe, it } from 'node:test';
 
 jest.mock('bcrypt');
 
@@ -60,7 +59,7 @@ describe('AuthService', () => {
     }).compile();
 
     service = module.get<AuthService>(AuthService);
-    userModel = module.get<Model<User>>(getModelToken(User.name));
+    userModel = module.get(getModelToken(User.name)); // Removed type for any
     jwtService = module.get<JwtService>(JwtService);
   });
 

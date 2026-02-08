@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { ReservationStatus } from '../../common/enums/reservation-status.enum';
+import { ReservationStatus } from '../../common/enums/reservation-status.enum.js';
 
 export type ReservationDocument = Reservation & Document;
 

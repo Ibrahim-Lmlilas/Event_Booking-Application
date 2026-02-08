@@ -1,7 +1,8 @@
 'use client';
 
 import { User, Shield, UserCircle, Trash2 } from 'lucide-react';
-import type { User as UserType } from '@/lib/api/users';
+import type { IUser } from '@/types';
+import { UserRole } from '@/types';
 import {
   Select,
   SelectContent,
@@ -11,14 +12,14 @@ import {
 } from '@/components/ui/select';
 
 type Props = {
-  users: UserType[];
-  onRoleUpdate: (id: string, role: 'ADMIN' | 'PARTICIPANT') => void;
+  users: IUser[];
+  onRoleUpdate: (id: string, role: UserRole) => void;
   onDeleteClick: (id: string) => void;
 };
 
-function normalizeRole(role: string): 'ADMIN' | 'PARTICIPANT' {
+function normalizeRole(role: string): UserRole {
   const r = String(role || '').toUpperCase();
-  return r === 'ADMIN' ? 'ADMIN' : 'PARTICIPANT';
+  return r === 'ADMIN' ? UserRole.ADMIN : UserRole.PARTICIPANT;
 }
 
 export function AdminUsersTable({ users, onRoleUpdate, onDeleteClick }: Props) {
@@ -62,19 +63,19 @@ export function AdminUsersTable({ users, onRoleUpdate, onDeleteClick }: Props) {
                 <td className="px-4 py-3 text-center">
                   <Select
                     value={normalizeRole(u.role)}
-                    onValueChange={(v: 'ADMIN' | 'PARTICIPANT') => onRoleUpdate(u._id, v)}
+                    onValueChange={(v: UserRole) => onRoleUpdate(u._id, v)}
                   >
                     <SelectTrigger className="w-[130px] mx-auto bg-white">
                       <SelectValue placeholder="Role" />
                     </SelectTrigger>
                     <SelectContent className="bg-white">
-                      <SelectItem value="ADMIN" className="hover:cursor-pointer">
+                      <SelectItem value={UserRole.ADMIN} className="hover:cursor-pointer">
                         <span className="flex items-center gap-2">
                           <Shield className="h-4 w-4" />
                           Admin
                         </span>
                       </SelectItem>
-                      <SelectItem value="PARTICIPANT" className="hover:cursor-pointer">
+                      <SelectItem value={UserRole.PARTICIPANT} className="hover:cursor-pointer">
                         <span className="flex items-center gap-2">
                           <UserCircle className="h-4 w-4" />
                           Participant

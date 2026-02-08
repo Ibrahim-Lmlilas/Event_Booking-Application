@@ -2,17 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import * as path from 'path';
 import * as fs from 'fs';
 import { PDFDocument, rgb, StandardFonts, degrees } from 'pdf-lib';
-
-export interface TicketData {
-  eventTitle: string;
-  eventDescription?: string;
-  eventLocation: string;
-  eventDate: Date | null;
-  eventTime: string;
-  eventPrice?: number;
-  participantName: string;
-  ticketNumber: string;
-}
+import type { ITicketData } from '../../../../shared/types/index.js';
 
 const PDF_TEMPLATE_FILENAME =
   'Modern Typography Simple Art Exhibition Concert Ticket.pdf';
@@ -27,7 +17,7 @@ export class TicketsService {
       path.join(process.cwd(), 'assets', PDF_TEMPLATE_FILENAME);
   }
 
-  async generatePdfBuffer(data: TicketData): Promise<Buffer> {
+  async generatePdfBuffer(data: ITicketData): Promise<Buffer> {
     if (!fs.existsSync(this.templatePath)) {
       throw new NotFoundException(
         `Ticket template not found at ${this.templatePath}. Place "${PDF_TEMPLATE_FILENAME}" in api/assets/ or set TICKET_TEMPLATE_PATH.`,

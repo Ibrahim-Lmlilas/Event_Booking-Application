@@ -3,8 +3,8 @@ FROM node:20-alpine AS deps
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy package files for web
+COPY apps/web/package*.json ./
 
 # Install dependencies
 RUN npm ci
@@ -17,8 +17,12 @@ WORKDIR /app
 # Copy dependencies from deps stage
 COPY --from=deps /app/node_modules ./node_modules
 
-# Copy source code
-COPY . .
+# Copy shared folder (required for @/types imports)
+COPY shared ../shared/
+
+# Copy web source code
+COPY apps/web/package*.json ./
+COPY apps/web .
 
 # Build the application
 RUN npm run build

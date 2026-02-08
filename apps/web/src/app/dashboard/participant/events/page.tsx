@@ -6,15 +6,15 @@ const ITEMS_PER_PAGE = 9;
 export default async function ParticipantEventsPage({
   searchParams,
 }: {
-  searchParams: { page?: string };
+  searchParams: Promise<{ page?: string }>;
 }) {
-  const page = parseInt(searchParams.page || '1', 10);
+  const params = await searchParams;
+  const page = parseInt(params.page || '1', 10);
 
   try {
     const data = await eventsApi.listPublished(page, ITEMS_PER_PAGE);
     return <ParticipantEventsClient initialData={data} initialPage={page} />;
   } catch (error) {
-    // Fallback to empty state if API fails
     const emptyData = {
       events: [],
       total: 0,

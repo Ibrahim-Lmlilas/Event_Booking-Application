@@ -2,17 +2,21 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy shared types first
+COPY shared ./shared
 
-# Install dependencies
+# Copy API package files
+COPY apps/api/package*.json ./apps/api/
+
+# Install API dependencies
+WORKDIR /app/apps/api
 RUN npm install
 
 # Install nest CLI globally for hot reload
 RUN npm install -g @nestjs/cli
 
-# Copy source code
-COPY . .
+# Copy API source code
+COPY apps/api ./
 
 # Expose port
 EXPOSE 3001
