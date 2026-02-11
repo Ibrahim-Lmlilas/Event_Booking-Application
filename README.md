@@ -115,14 +115,9 @@ npm run format
 1. Push the repo to GitHub.
 2. Go to [render.com](https://render.com) → **New** → **Web Service**.
 3. Connect your GitHub repo.
-4. Render will detect `render.yaml`; or set manually:
-   - **Root Directory:** (leave empty)
-   - **Build Command:** `cd apps/api && npm install && npm run build`
-   - **Start Command:** `cd apps/api && npm run start:prod`
-   - **Runtime:** Node 20
-5. Add **Environment Variables:**
-   - `MONGODB_URI` – MongoDB Atlas connection string
-   - `JWT_SECRET` – strong random secret
-   - `CORS_ORIGIN` – frontend URL (e.g. `https://your-app.vercel.app`)
-   - `JWT_EXPIRES_IN` – `24h` (optional)
+4. **Important – use these settings (Docker):**
+   - **Language:** Docker
+   - **Dockerfile Path:** `Dockerfile.api` (at repo root)
+   - **Docker Build Context Directory:** leave **empty** (repo root) – required for `shared` and `apps/api`
+5. Add **Environment Variables:** `MONGODB_URI`, `JWT_SECRET`, `CORS_ORIGIN`
 6. Deploy. API URL: `https://your-service.onrender.com/api`
