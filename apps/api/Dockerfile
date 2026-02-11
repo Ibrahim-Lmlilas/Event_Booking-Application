@@ -29,12 +29,12 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy package files (context = apps/api)
-COPY package*.json ./
-RUN npm ci --only=production
+# Copy package files and production node_modules
+COPY package*.json ./apps/api/
+RUN cd apps/api && npm ci --only=production
 
-# Copy built app from builder
-COPY --from=builder /app/apps/api/dist ./dist
+# Copy built app from builder (Nest output: dist/apps/api/src/main.js)
+COPY --from=builder /app/apps/api/dist ./apps/api/dist
 
 EXPOSE 3001
-CMD ["node", "dist/main.js"]
+CMD ["node", "apps/api/dist/apps/api/src/main.js"]
