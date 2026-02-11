@@ -1,40 +1,40 @@
+# Production Dockerfile - works with context = apps/api (Render)
+# Fetches shared from repo via git clone
+ARG GIT_REPO=https://github.com/Ibrahim-Lmlilas/Event_Booking-Application
+ARG GIT_BRANCH=preprod
+
 # Stage 1: Build
 FROM node:20-alpine AS builder
 
+ARG GIT_REPO
+ARG GIT_BRANCH
+
 WORKDIR /app
 
-# Copy package files for API
-COPY apps/api/package*.json ./apps/api/
+# Copy API contents (context = apps/api)
+COPY . ./apps/api/
 
-# Copy shared folder
-COPY shared ./shared/
+# Get shared from repo (not in context when context = apps/api)
+RUN apk add --no-cache git && \
+  git clone --depth 1 --single-branch --branch "${GIT_BRANCH}" "${GIT_REPO}" /tmp/repo && \
+  cp -r /tmp/repo/shared ./shared && \
+  rm -rf /tmp/repo
 
-# Install dependencies
+# Install and build
 WORKDIR /app/apps/api
-RUN npm ci
-
-# Copy API source code
-COPY apps/api ./
-
-# Build the application
-RUN npm run build
+RUN npm ci && npm run build
 
 # Stage 2: Production
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy package files
-COPY apps/api/package*.json ./
-
-# Install production dependencies only
+# Copy package files (context = apps/api)
+COPY package*.json ./
 RUN npm ci --only=production
 
-# Copy built application from builder
+# Copy built app from builder
 COPY --from=builder /app/apps/api/dist ./dist
 
-# Expose port
 EXPOSE 3001
-
-# Start the application
 CMD ["node", "dist/main.js"]

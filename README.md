@@ -115,11 +115,10 @@ npm run format
 1. Push the repo to GitHub.
 2. Go to [render.com](https://render.com) → **New** → **Web Service**.
 3. Connect your GitHub repo.
-4. Render will detect `render.yaml`; or set manually:
-   - **Root Directory:** (leave empty)
-   - **Build Command:** `cd apps/api && npm install && npm run build`
-   - **Start Command:** `cd apps/api && npm run start:prod`
-   - **Runtime:** Node 20
+4. **Settings (Docker):** Language = Docker
+   - **Dockerfile Path:** `apps/api/Dockerfile`
+   - **Docker Build Context Directory:** `apps/api`
+   - Build args (optional): `GIT_BRANCH=preprod` (match your branch)
 5. Add **Environment Variables:**
    - `MONGODB_URI` – MongoDB Atlas connection string
    - `JWT_SECRET` – strong random secret
