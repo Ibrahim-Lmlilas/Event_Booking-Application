@@ -37,4 +37,4 @@ COPY --from=builder /app/apps/api/dist ./dist
 EXPOSE 3001
 
 # Start the application
-CMD ["node", "dist/apps/api/src/main.js"]
+CMD ["node", "dist/main.js"]

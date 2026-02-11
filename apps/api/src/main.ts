@@ -30,13 +30,14 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  // Enable CORS
+  // Enable CORS (use CORS_ORIGIN for production, default localhost for dev)
+  const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:3000';
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: corsOrigin,
     credentials: true,
   });
 
-  const port = process.env.PORT!;
+  const port = process.env.PORT || 3001;
 
   await runSeedAdmin(app);
 

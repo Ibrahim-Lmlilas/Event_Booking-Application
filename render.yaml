@@ -1,0 +1,25 @@
+# Render Blueprint - Backend API
+# https://render.com/docs/blueprint-spec
+# Deploy: Connect repo to Render, it will use this file
+services:
+  - type: web
+    name: event-booking-api
+    runtime: node
+
+    # Monorepo: repo root has apps/api and shared
+    rootDir: .
+
+    buildCommand: cd apps/api && npm install && npm run build
+    startCommand: cd apps/api && npm run start:prod
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_EXPIRES_IN
+        value: 24h
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
