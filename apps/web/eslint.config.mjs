@@ -7,7 +7,15 @@ const eslintConfig = [
   ...nextTs,
   eslintPluginPrettierRecommended,
   {
-    ignores: ['.next/**', 'out/**', 'build/**', 'next-env.d.ts'],
+    ignores: [
+      '.next/**',
+      'out/**',
+      'build/**',
+      'next-env.d.ts',
+      'jest.config.js',
+      'jest.setup.js',
+      'tailwind.config.js',
+    ],
   },
   {
     rules: {

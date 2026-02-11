@@ -3,14 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { UserRole } from '@/types';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { User, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
@@ -148,12 +143,12 @@ export default function AdminHeader({ onMenuClick, sidebarOpen = false }: Props)
                 <Label className="text-xs sm:text-sm text-gray-700">Role</Label>
                 <span
                   className={`px-2 py-0.5 sm:py-1 text-xs font-semibold rounded-full w-fit ${
-                    user.role === 'admin'
+                    user.role === UserRole.ADMIN
                       ? 'bg-pink-100 text-pink-800'
                       : 'bg-gray-100 text-gray-800'
                   }`}
                 >
-                  {user.role === 'admin' ? 'Administrator' : 'Participant'}
+                  {user.role === UserRole.ADMIN ? 'Administrator' : 'Participant'}
                 </span>
               </div>
             </div>

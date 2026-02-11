@@ -3,7 +3,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { EventsService } from './events.service';
 import { Event, EventDocument } from './schemas/event.schema';
-import { EventStatus } from '../common/enums/event-status.enum';
+import { EventStatus } from '../common/enums/event-status.enum.js';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 describe('EventsService', () => {

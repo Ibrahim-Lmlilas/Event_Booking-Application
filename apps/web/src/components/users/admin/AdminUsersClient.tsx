@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { usersApi, type User } from '@/lib/api/users';
+import { usersApi } from '@/lib/api/users';
+import type { IUser } from '@/types';
+import { UserRole } from '@/types';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -23,14 +25,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import { AdminUsersTable } from './ui/AdminUsersTable';
-import { AdminUsersFilters } from './ui/AdminUsersFilters';
-import { AdminUsersEmpty } from './ui/AdminUsersEmpty';
+import { AdminUsersTable, AdminUsersFilters, AdminUsersEmpty } from './ui';
 
 const ITEMS_PER_PAGE = 8;
 
 export function AdminUsersClient() {
-  const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [allUsers, setAllUsers] = useState<IUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
@@ -95,7 +95,7 @@ export function AdminUsersClient() {
     return pages;
   };
 
-  const handleRoleUpdate = async (id: string, role: 'ADMIN' | 'PARTICIPANT') => {
+  const handleRoleUpdate = async (id: string, role: UserRole) => {
     try {
       await usersApi.update(id, { role });
       toast.success('User role updated');

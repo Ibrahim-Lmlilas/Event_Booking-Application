@@ -2,20 +2,29 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy shared types first
+COPY shared ./shared
 
-# Install dependencies
-RUN npm ci
+# Copy API package files
+COPY apps/api/package*.json ./apps/api/
+
+# Install API dependencies
+WORKDIR /app/apps/api
+RUN npm install
 
 # Install nest CLI globally for hot reload
 RUN npm install -g @nestjs/cli
 
-# Copy source code
-COPY . .
+# Copy API source code
+COPY apps/api ./
+
+# Copy entrypoint
+COPY apps/api/docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Expose port
 EXPOSE 3001
 
+ENTRYPOINT ["docker-entrypoint.sh"]
 # Start in development mode with hot-reload
 CMD ["npm", "run", "start:dev"]

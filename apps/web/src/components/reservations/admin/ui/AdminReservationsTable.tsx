@@ -1,8 +1,8 @@
 'use client';
 
 import { Calendar, MapPin, User, CheckCircle2, XCircle, Ban, Clock } from 'lucide-react';
-import type { ReservationWithEvent } from '@/lib/api/reservations';
-import { Button } from '@/components/ui/button';
+import type { IReservationWithDetails } from '@/types';
+import { ReservationStatus } from '@/types';
 import {
   Select,
   SelectContent,
@@ -12,8 +12,8 @@ import {
 } from '@/components/ui/select';
 
 type Props = {
-  reservations: ReservationWithEvent[];
-  onStatusUpdate: (id: string, status: 'PENDING' | 'CONFIRMED' | 'REFUSED' | 'CANCELED') => void;
+  reservations: IReservationWithDetails[];
+  onStatusUpdate: (id: string, status: ReservationStatus) => void;
 };
 
 export function AdminReservationsTable({ reservations, onStatusUpdate }: Props) {
@@ -145,24 +145,36 @@ export function AdminReservationsTable({ reservations, onStatusUpdate }: Props) 
                       <div className="flex justify-center hover:cursor-pointer">
                         <Select
                           value={reservation.status}
-                          onValueChange={(
-                            value: 'PENDING' | 'CONFIRMED' | 'REFUSED' | 'CANCELED',
-                          ) => onStatusUpdate(reservation._id, value)}
+                          onValueChange={(value: ReservationStatus) =>
+                            onStatusUpdate(reservation._id, value)
+                          }
                         >
                           <SelectTrigger className="w-40 bg-white hover:cursor-pointer">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent className="bg-white">
-                            <SelectItem value="PENDING" className="hover:cursor-pointer">
+                            <SelectItem
+                              value={ReservationStatus.PENDING}
+                              className="hover:cursor-pointer"
+                            >
                               PENDING
                             </SelectItem>
-                            <SelectItem value="CONFIRMED" className="hover:cursor-pointer">
+                            <SelectItem
+                              value={ReservationStatus.CONFIRMED}
+                              className="hover:cursor-pointer"
+                            >
                               CONFIRMED
                             </SelectItem>
-                            <SelectItem value="REFUSED" className="hover:cursor-pointer">
+                            <SelectItem
+                              value={ReservationStatus.REFUSED}
+                              className="hover:cursor-pointer"
+                            >
                               REFUSED
                             </SelectItem>
-                            <SelectItem value="CANCELED" className="hover:cursor-pointer">
+                            <SelectItem
+                              value={ReservationStatus.CANCELED}
+                              className="hover:cursor-pointer"
+                            >
                               CANCELED
                             </SelectItem>
                           </SelectContent>

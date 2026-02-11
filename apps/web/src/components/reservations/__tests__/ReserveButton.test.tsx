@@ -3,7 +3,8 @@ import userEvent from '@testing-library/user-event';
 import { ReserveButton } from '../ReserveButton';
 import { reservationsApi } from '@/lib/api/reservations';
 import { toast } from 'sonner';
-import type { Event } from '@/lib/api/events';
+import type { IEvent } from '@/types';
+import { EventStatus } from '@/types';
 
 // Mock dependencies
 jest.mock('@/lib/api/reservations');
@@ -14,7 +15,7 @@ jest.mock('sonner', () => ({
   },
 }));
 
-const mockEvent: Event = {
+const mockEvent: IEvent = {
   _id: 'event-1',
   title: 'Test Event',
   description: 'Test Description',
@@ -24,7 +25,7 @@ const mockEvent: Event = {
   capacity: 100,
   price: 50,
   seatsTaken: 0,
-  status: 'PUBLISHED',
+  status: EventStatus.PUBLISHED,
   bg: 'event1.jpg',
 };
 
@@ -49,7 +50,7 @@ describe('ReserveButton', () => {
   });
 
   it('displays Event Canceled when event is canceled', () => {
-    const canceledEvent = { ...mockEvent, status: 'CANCELED' };
+    const canceledEvent = { ...mockEvent, status: EventStatus.CANCELED };
     render(<ReserveButton event={canceledEvent} />);
 
     expect(screen.getByRole('button', { name: /event canceled/i })).toBeInTheDocument();
@@ -57,7 +58,7 @@ describe('ReserveButton', () => {
   });
 
   it('displays Not Available when event is DRAFT', () => {
-    const draftEvent = { ...mockEvent, status: 'DRAFT' };
+    const draftEvent = { ...mockEvent, status: EventStatus.DRAFT };
     render(<ReserveButton event={draftEvent} />);
 
     expect(screen.getByRole('button', { name: /not available/i })).toBeInTheDocument();

@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { UserRole } from '@/types';
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
@@ -36,7 +37,7 @@ export default function ProtectedRoute({
 
       if (!hasAccess) {
         // Redirect to appropriate dashboard based on user role
-        if (userRole === 'admin') {
+        if (user.role === UserRole.ADMIN) {
           router.push('/dashboard/admin');
         } else {
           router.push('/dashboard/participant');

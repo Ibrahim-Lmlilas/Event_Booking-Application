@@ -8,7 +8,7 @@ import { Model, Types } from 'mongoose';
 import { Event, EventDocument } from './schemas/event.schema';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
-import { EventStatus } from '../common/enums/event-status.enum';
+import { EventStatus } from '../common/enums/event-status.enum.js';
 
 @Injectable()
 export class EventsService {

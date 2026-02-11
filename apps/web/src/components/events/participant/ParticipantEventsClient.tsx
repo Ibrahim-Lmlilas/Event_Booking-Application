@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { eventsApi, type Event, type PaginatedEventsResponse } from '@/lib/api/events';
-import { reservationsApi, type ReservationWithEvent } from '@/lib/api/reservations';
+import { eventsApi } from '@/lib/api/events';
+import { reservationsApi } from '@/lib/api/reservations';
+import type { IEvent, IPaginatedEvents, IReservationWithDetails } from '@/types';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -24,7 +25,7 @@ import {
 const ITEMS_PER_PAGE = 9;
 
 type Props = {
-  initialData: PaginatedEventsResponse;
+  initialData: IPaginatedEvents;
   initialPage: number;
 };
 
@@ -32,7 +33,7 @@ export function ParticipantEventsClient({ initialData, initialPage }: Props) {
   const [data, setData] = useState(initialData);
   const [page, setPage] = useState(initialPage);
   const [loading, setLoading] = useState(false);
-  const [reservations, setReservations] = useState<ReservationWithEvent[]>([]);
+  const [reservations, setReservations] = useState<IReservationWithDetails[]>([]);
   const [filters, setFilters] = useState<Filters>({
     search: '',
     minPrice: '',

@@ -1,10 +1,10 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ReservedEventsGrid } from '../ReservedEventsGrid';
-import type { ReservationWithEvent } from '@/lib/api/reservations';
-import type { Event } from '@/lib/api/events';
+import type { IEvent, IReservationWithDetails } from '@/types';
+import { EventStatus, ReservationStatus, UserRole } from '@/types';
 
-const mockEvent: Event = {
+const mockEvent: IEvent = {
   _id: 'event-1',
   title: 'Test Event',
   description: 'Test Description',
@@ -14,27 +14,28 @@ const mockEvent: Event = {
   capacity: 100,
   price: 50,
   seatsTaken: 10,
-  status: 'PUBLISHED',
+  status: EventStatus.PUBLISHED,
   bg: 'event1.jpg',
 };
 
-const mockReservation: ReservationWithEvent = {
+const mockReservation: IReservationWithDetails = {
   _id: 'reservation-1',
   userId: {
     _id: 'user-1',
     email: 'test@example.com',
     firstName: 'John',
     lastName: 'Doe',
+    role: UserRole.PARTICIPANT,
   },
   eventId: mockEvent,
-  status: 'PENDING',
+  status: ReservationStatus.PENDING,
   createdAt: new Date().toISOString(),
 };
 
-const mockConfirmedReservation: ReservationWithEvent = {
+const mockConfirmedReservation: IReservationWithDetails = {
   ...mockReservation,
   _id: 'reservation-2',
-  status: 'CONFIRMED',
+  status: ReservationStatus.CONFIRMED,
   eventId: {
     ...mockEvent,
     date: new Date(Date.now() + 25 * 60 * 60 * 1000).toISOString(), // 25 hours from now

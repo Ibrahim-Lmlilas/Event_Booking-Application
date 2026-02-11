@@ -1,18 +1,19 @@
 import { Button } from '@/components/ui/button';
 import { Pencil, Trash2, Calendar, MapPin, Users } from 'lucide-react';
-import type { Event, EventStatus } from '@/lib/api/events';
+import type { IEvent } from '@/types';
+import { EventStatus } from '@/types';
 
 const STATUS_LABELS: Record<EventStatus, string> = {
-  DRAFT: 'Draft',
-  PUBLISHED: 'Published',
-  CANCELED: 'Canceled',
+  [EventStatus.DRAFT]: 'Draft',
+  [EventStatus.PUBLISHED]: 'Published',
+  [EventStatus.CANCELED]: 'Canceled',
 };
 
 type Props = {
-  events: Event[];
-  onEdit: (event: Event) => void;
-  onDelete: (event: Event) => void;
-  onStatusChange: (event: Event, status: EventStatus) => void;
+  events: IEvent[];
+  onEdit: (event: IEvent) => void;
+  onDelete: (event: IEvent) => void;
+  onStatusChange: (event: IEvent, status: EventStatus) => void;
 };
 
 export function AdminEventsTable({ events, onEdit, onDelete, onStatusChange }: Props) {
@@ -65,9 +66,9 @@ export function AdminEventsTable({ events, onEdit, onDelete, onStatusChange }: P
               <div className="mt-3">
                 <span
                   className={`inline-flex px-2 py-0.5 text-xs font-bold rounded-full ${
-                    ev.status === 'PUBLISHED'
+                    ev.status === EventStatus.PUBLISHED
                       ? 'bg-green-100 text-green-800'
-                      : ev.status === 'CANCELED'
+                      : ev.status === EventStatus.CANCELED
                         ? 'bg-red-100 text-red-800'
                         : 'bg-gray-100 text-gray-800'
                   }`}
@@ -76,21 +77,21 @@ export function AdminEventsTable({ events, onEdit, onDelete, onStatusChange }: P
                 </span>
               </div>
               <div className="mt-4 pt-3 border-t border-white/20 flex flex-wrap gap-2">
-                {ev.status !== 'PUBLISHED' && (
+                {ev.status !== EventStatus.PUBLISHED && (
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => onStatusChange(ev, 'PUBLISHED')}
+                    onClick={() => onStatusChange(ev, EventStatus.PUBLISHED)}
                     className="flex-1 sm:flex-none bg-white hover:bg-gray-100 text-gray-900 border-gray-300"
                   >
                     Publish
                   </Button>
                 )}
-                {ev.status !== 'CANCELED' && (
+                {ev.status !== EventStatus.CANCELED && (
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => onStatusChange(ev, 'CANCELED')}
+                    onClick={() => onStatusChange(ev, EventStatus.CANCELED)}
                     className="flex-1 sm:flex-none bg-white hover:bg-gray-100 text-gray-900 border-gray-300"
                   >
                     Cancel

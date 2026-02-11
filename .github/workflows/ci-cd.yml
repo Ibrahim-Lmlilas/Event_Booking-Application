@@ -291,7 +291,7 @@ jobs:
       - name: Build and push Backend image
         uses: docker/build-push-action@v5
         with:
-          context: ./apps/api
+          context: .
           file: ./apps/api/Dockerfile
           push: true
           tags: |
@@ -303,7 +303,7 @@ jobs:
       - name: Build and push Frontend image
         uses: docker/build-push-action@v5
         with:
-          context: ./apps/web
+          context: .
           file: ./apps/web/Dockerfile
           push: true
           tags: |

@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { Loader2, Calendar, TicketCheck } from 'lucide-react';
-import { reservationsApi, type ReservationWithEvent } from '@/lib/api/reservations';
+import { Loader2 } from 'lucide-react';
+import { reservationsApi } from '@/lib/api/reservations';
+import type { IReservationWithDetails } from '@/types';
 import { eventsApi } from '@/lib/api/events';
 import {
   Chart as ChartJS,
@@ -81,20 +82,20 @@ const chartOptions = {
 export default function ParticipantDashboard() {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const [reservationsCount, setReservationsCount] = useState(0);
+  const [, setReservationsCount] = useState(0);
   const [byStatus, setByStatus] = useState<Record<string, number>>({});
-  const [upcomingCount, setUpcomingCount] = useState(0);
+  const [, setUpcomingCount] = useState(0);
   const [totalEvents, setTotalEvents] = useState(0);
   const [perMonth, setPerMonth] = useState<number[]>([]);
   const [perDay, setPerDay] = useState<number[]>([]);
-  const [reservations, setReservations] = useState<ReservationWithEvent[]>([]);
+  const [reservations, setReservations] = useState<IReservationWithDetails[]>([]);
 
   useEffect(() => {
     if (!user) return;
     reservationsApi
       .findAll()
       .then(list => {
-        const arr = (list ?? []) as ReservationWithEvent[];
+        const arr = (list ?? []) as IReservationWithDetails[];
         setReservations(arr);
         setReservationsCount(arr.length);
         const status: Record<string, number> = {
@@ -108,7 +109,7 @@ export default function ParticipantDashboard() {
         const now = new Date();
         let upcoming = 0;
 
-        arr.forEach((r: { status?: string; createdAt?: string; eventId?: { date?: string } }) => {
+        arr.forEach((r: IReservationWithDetails) => {
           const s = (r.status || 'PENDING') as keyof typeof status;
           status[s] = (status[s] ?? 0) + 1;
           if (r.createdAt) {

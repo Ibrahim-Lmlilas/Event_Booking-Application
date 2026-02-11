@@ -3,16 +3,16 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { reservationsApi, type ReservationWithEvent } from '@/lib/api/reservations';
+import { reservationsApi } from '@/lib/api/reservations';
+import type { IReservationWithDetails } from '@/types';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { ReservedEventsGrid } from './ui/ReservedEventsGrid';
-import { ReservedEventsEmpty } from './ui/ReservedEventsEmpty';
+import { ReservedEventsGrid, ReservedEventsEmpty } from './ui';
 
 export function ParticipantReservationsClient() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
-  const [reservations, setReservations] = useState<ReservationWithEvent[]>([]);
+  const [reservations, setReservations] = useState<IReservationWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchReservations = useCallback(async () => {

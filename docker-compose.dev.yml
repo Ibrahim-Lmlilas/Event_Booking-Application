@@ -2,24 +2,30 @@ services:
   # MongoDB Database
   mongodb:
     image: mongo:latest
-    container_name: event-booking-mongodb-dev
+    container_name: event-booking-mongodb
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin123
       MONGO_INITDB_DATABASE: event_booking
     ports:
-      - '27018:27017'
+      - '27019:27017'
     volumes:
       - mongodb_data_dev:/data/db
+      - mongodb_config_dev:/data/configdb
     networks:
       - event-booking-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/event_booking --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # Backend API (Development mode with hot-reload)
+  # Backend API
   api:
     build:
-      context: ./apps/api
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: apps/api/Dockerfile.dev
     container_name: event-booking-api-dev
     restart: unless-stopped
     ports:
@@ -32,9 +38,10 @@ services:
       JWT_EXPIRES_IN: 24h
       CORS_ORIGIN: http://localhost:3000
     volumes:
-      - ./apps/api:/app
-      - /app/node_modules
-      - ./apps/api/uploads:/app/uploads
+      - ./apps/api:/app/apps/api
+      - ./shared:/app/shared
+      - api_node_modules:/app/apps/api/node_modules
+      - ./apps/api/uploads:/app/apps/api/uploads
     depends_on:
       - mongodb
     networks:
@@ -44,8 +51,8 @@ services:
   # Frontend Web (Development mode with hot-reload)
   web:
     build:
-      context: ./apps/web
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: apps/web/Dockerfile.dev
     container_name: event-booking-web-dev
     restart: unless-stopped
     ports:
@@ -57,9 +64,10 @@ services:
       NEXT_PUBLIC_APP_URL: http://localhost:3000
       WATCHPACK_POLLING: 'true'
     volumes:
-      - ./apps/web:/app
-      - /app/node_modules
-      - /app/.next
+      - ./apps/web:/app/apps/web
+      - ./shared:/app/shared
+      - web_node_modules:/app/apps/web/node_modules
+      - /app/apps/web/.next
     depends_on:
       - api
     networks:
@@ -72,4 +80,10 @@ networks:
 
 volumes:
   mongodb_data_dev:
+    driver: local
+  mongodb_config_dev:
+    driver: local
+  api_node_modules:
+    driver: local
+  web_node_modules:
     driver: local

@@ -5,10 +5,10 @@ import { Button } from '@/components/ui/button';
 import { reservationsApi } from '@/lib/api/reservations';
 import { toast } from 'sonner';
 import { Loader2, CalendarCheck } from 'lucide-react';
-import type { Event } from '@/lib/api/events';
+import type { IEvent } from '@/types';
 
 type Props = {
-  event: Event;
+  event: IEvent;
   hasReservation?: boolean;
   onReservationSuccess?: () => void;
 };

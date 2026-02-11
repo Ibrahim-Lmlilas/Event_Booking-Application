@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
-import type { CreateEventPayload, Event } from '@/lib/api/events';
+import type { IEvent, IEventCreate } from '@/types';
 
 export type FormErrors = {
   bg?: string;
@@ -28,14 +28,14 @@ export type FormErrors = {
 
 type Props = {
   open: boolean;
-  form: CreateEventPayload;
-  setForm: React.Dispatch<React.SetStateAction<CreateEventPayload>>;
+  form: IEventCreate;
+  setForm: React.Dispatch<React.SetStateAction<IEventCreate>>;
   errors: FormErrors;
   setErrors: React.Dispatch<React.SetStateAction<FormErrors>>;
   onSubmit: (e: React.FormEvent) => void;
   onClose: () => void;
   saving: boolean;
-  editEvent: Event | null;
+  editEvent: IEvent | null;
 };
 
 const BACKGROUND_IMAGES = ['event1.jpg', 'event2.jpg', 'event3.jpg', 'event4.jpg'];
@@ -307,7 +307,11 @@ export function AdminEventFormDialog({
                       <Input
                         id="date"
                         type="date"
-                        value={form.date}
+                        value={
+                          form.date instanceof Date
+                            ? form.date.toISOString().slice(0, 10)
+                            : form.date
+                        }
                         onChange={e => {
                           setForm(f => ({ ...f, date: e.target.value }));
                           if (errors.date) setErrors(prev => ({ ...prev, date: undefined }));
