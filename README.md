@@ -109,3 +109,19 @@ npm run format
 |------|--------|
 | **Admin** | CRUD events, users, reservation management |
 | **Participant** | View published events, reserve, cancel (per rules) |
+
+## 🚀 Deploy Backend on Render
+
+1. Push the repo to GitHub.
+2. Go to [render.com](https://render.com) → **New** → **Web Service**.
+3. Connect your GitHub repo.
+4. **Settings (Docker):** Language = Docker
+   - **Dockerfile Path:** `apps/api/Dockerfile`
+   - **Docker Build Context Directory:** `apps/api`
+   - Build args (optional): `GIT_BRANCH=preprod` (match your branch)
+5. Add **Environment Variables:**
+   - `MONGODB_URI` – MongoDB Atlas connection string
+   - `JWT_SECRET` – strong random secret
+   - `CORS_ORIGIN` – frontend URL (e.g. `https://your-app.vercel.app`)
+   - `JWT_EXPIRES_IN` – `24h` (optional)
+6. Deploy. API URL: `https://your-service.onrender.com/api`

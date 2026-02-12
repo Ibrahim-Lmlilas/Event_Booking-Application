@@ -7,5 +7,5 @@
     "assets": ["**/*.js"],
     "watchAssets": true
   },
-  "exec": "node dist/apps/api/src/main"
+  "exec": "node dist/apps/api/src/main.js"
 }

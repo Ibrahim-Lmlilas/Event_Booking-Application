@@ -30,13 +30,15 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  // Enable CORS
+  // Enable CORS - supports multiple origins separated by comma
+  const corsOriginRaw = process.env.CORS_ORIGIN || 'http://localhost:3000';
+  const corsOrigins = corsOriginRaw.split(',').map((o) => o.trim()).filter(Boolean);
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: corsOrigins.length > 0 ? corsOrigins : ['http://localhost:3000'],
     credentials: true,
   });
 
-  const port = process.env.PORT!;
+  const port = process.env.PORT || 3001;
 
   await runSeedAdmin(app);
 
